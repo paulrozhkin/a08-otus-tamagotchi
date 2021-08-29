@@ -7,6 +7,7 @@ This is a distributed system for the restaurant chain "Tamagotchi". Provides the
 
 ## Team
 1. Pavel Rozhkin. LinkedIn: https://www.linkedin.com/in/pavel-rozhkin/
+2. Igor Markov. LinkedIn: https://www.linkedin.com/in/igor-markov-4932101b7/
 3. Petr Barbanyaga. 
 
 ---
