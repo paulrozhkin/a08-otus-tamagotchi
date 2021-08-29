@@ -5,6 +5,11 @@ This is a distributed system for the restaurant chain "Tamagotchi". Provides the
 
 ---
 
+## Team
+1. Pavel Rozhkin. LinkedIn: https://www.linkedin.com/in/pavel-rozhkin/
+
+---
+
 ## Getting Started
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
 1.	Installation process
