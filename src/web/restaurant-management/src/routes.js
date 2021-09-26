@@ -4,6 +4,9 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const RestaurantsList = React.lazy(() =>
   import('./views/components/management/restaurants-list/RestaurantsList'),
 )
+const RestaurantCreate = React.lazy(() =>
+  import('./views/components/management/restaurant-create/RestaurantCreate'),
+)
 // const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 //
@@ -61,6 +64,7 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/management', name: 'Management', component: RestaurantsList },
   { path: '/management/restaurants', name: 'Restaurants', component: RestaurantsList },
+  { path: '/management/restaurants/create', name: 'RestaurantCreate', component: RestaurantCreate },
   // { path: '/theme', name: 'Theme', component: Colors, exact: true },
   // { path: '/theme/colors', name: 'Colors', component: Colors },
   // { path: '/theme/typography', name: 'Typography', component: Typography },
