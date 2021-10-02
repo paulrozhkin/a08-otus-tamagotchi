@@ -5,11 +5,11 @@ namespace Web.HttpAggregator.Models
 {
     public class PaginationResponse<T>
     {
-        public long CurrentPage { get; set; }
+        public int CurrentPage { get; set; }
 
-        public long PageSize { get; set; }
+        public int PageSize { get; set; }
 
-        public long TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
+        public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
 
         public int TotalCount { get; set; }
 

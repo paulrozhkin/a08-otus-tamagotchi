@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Web.HttpAggregator.Models
+namespace Restaurants.Domain.Models
 {
-    public class RestaurantResponse
+    public class Restaurant
     {
         public int Id { get; set; }
 

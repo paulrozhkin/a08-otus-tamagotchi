@@ -11,7 +11,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using RestaurantsApi;
+using Web.HttpAggregator.Config;
 using Web.HttpAggregator.Infrastructure.Exceptions;
+using Web.HttpAggregator.Infrastructure.Grpc;
 using Web.HttpAggregator.Services;
 
 namespace Web.HttpAggregator
@@ -28,12 +32,16 @@ namespace Web.HttpAggregator
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
-            services.AddScoped<IRestaurantService, RestaurantService>();
+
+            services.Configure<UrlsOptions>(Configuration.GetSection(
+                UrlsOptions.Urls));
+
+            services.AddGrpcServices();
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tamagotchi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Tamagotchi", Version = "v1"});
             });
         }
 
@@ -57,10 +65,25 @@ namespace Web.HttpAggregator
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
+    }
+
+    public static class GrpcServiceCollectionExtensions
+    {
+        public static IServiceCollection AddGrpcServices(this IServiceCollection services)
+        {
+            services.AddTransient<GrpcExceptionInterceptor>();
+
+            services.AddScoped<IRestaurantService, RestaurantService>();
+
+            services.AddGrpcClient<Restaurants.RestaurantsClient>((serviceProvider, options) =>
             {
-                endpoints.MapControllers();
-            });
+                var basketApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.RestaurantsGrpc;
+                options.Address = new Uri(basketApi);
+            }).AddInterceptor<GrpcExceptionInterceptor>();
+
+            return services;
         }
     }
 }
