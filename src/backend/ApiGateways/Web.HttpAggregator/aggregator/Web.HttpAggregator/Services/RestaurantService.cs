@@ -75,7 +75,6 @@ namespace Web.HttpAggregator.Services
         {
             return new Restaurant()
             {
-                Id = restaurant.Id,
                 Latitude = restaurant.Latitude,
                 Longitude = restaurant.Longitude,
                 IsCardPaymentPresent = restaurant.IsCardPaymentPresent,

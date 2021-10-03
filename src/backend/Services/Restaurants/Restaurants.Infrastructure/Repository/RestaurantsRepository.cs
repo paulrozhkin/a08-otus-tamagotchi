@@ -33,6 +33,7 @@ namespace Restaurants.Infrastructure.Repository
         public async Task<Restaurant> AddRestaurantAsync(Restaurant restaurant)
         { 
             await _dataContext.AddAsync(restaurant);
+            await _dataContext.SaveChangesAsync();
             return restaurant;
         }
     }
