@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package restaurants_api;
+
+service Restaurants {
+	rpc GetRestaurants (GetRestaurantsRequest) returns (GetRestaurantsResponse);
+	rpc GetRestaurant (GetRestaurantRequest) returns (GetRestaurantResponse);
+	rpc AddRestaurant (AddRestaurantRequest) returns (AddRestaurantResponse);
+}
+
+message Restaurant {
+	int32 id = 1;
+	string address = 2;
+	double latitude = 3;
+	double longitude = 4;
+	string phone_number = 5;
+	bool is_parking_present = 6;
+	bool is_card_payment_present = 7;
+	bool is_wi_fi_present = 8;
+
+}
+
+message GetRestaurantsRequest {
+	int32 page_number = 1;
+	int32 page_size = 2;
+	string address = 3;
+}
+
+message GetRestaurantsResponse {
+	int32 current_page = 1;
+	int32 page_size = 2;
+	int32 total_count = 3;
+	repeated Restaurant restaurants = 4;
+}
+
+
+message GetRestaurantRequest {
+	int32 id = 1;
+}
+
+message GetRestaurantResponse {
+	Restaurant restaurant = 1;
+}
+
+message AddRestaurantRequest {
+	Restaurant restaurant = 1;
+}
+
+message AddRestaurantResponse {
+	Restaurant restaurant = 1;
+}
