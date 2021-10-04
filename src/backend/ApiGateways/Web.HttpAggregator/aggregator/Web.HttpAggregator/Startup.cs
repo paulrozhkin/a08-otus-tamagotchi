@@ -17,6 +17,8 @@ using Web.HttpAggregator.Config;
 using Web.HttpAggregator.Infrastructure.Exceptions;
 using Web.HttpAggregator.Infrastructure.Grpc;
 using Web.HttpAggregator.Services;
+using MassTransit;
+using Web.HttpAggregator.Consumers;
 
 namespace Web.HttpAggregator
 {
@@ -39,9 +41,24 @@ namespace Web.HttpAggregator
 
             services.AddGrpcServices();
 
+            services.AddMassTransit(config =>
+            {
+                config.AddConsumer<KitchenOrderConsumer>();
+                config.UsingRabbitMq((ctx, cfg) =>
+                {
+                    cfg.Host("amqp://guest:guest@localhost:5672");
+                    cfg.ReceiveEndpoint("kitchen-order-queue", c =>
+                    {
+                        c.ConfigureConsumer<KitchenOrderConsumer>(ctx);
+                    });
+                });
+            });
+
+            services.AddMassTransitHostedService();
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Tamagotchi", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tamagotchi", Version = "v1" });
             });
         }
 

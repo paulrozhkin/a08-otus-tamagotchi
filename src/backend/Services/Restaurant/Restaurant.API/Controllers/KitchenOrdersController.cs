@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.API.Models.KitchenOrder;
 using Restaurant.Core.Abstractions.Repositories;
 using Restaurant.Core.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,13 +20,16 @@ namespace Restaurant.API.Controllers
         : ControllerBase
     {
         private readonly IRepository<KitchenOrder> _kitchenOrderRepository;
+        private readonly IPublishEndpoint _publishEndpoint;
         private readonly IMapper _mapper;
 
         public KitchenOrdersController(
             IRepository<KitchenOrder> kitchenOrderRepository,
+            IPublishEndpoint publishEndpoint,
             IMapper mapper)
         {
             _kitchenOrderRepository = kitchenOrderRepository;
+            _publishEndpoint = publishEndpoint;
             _mapper = mapper;
         }
 
@@ -53,6 +58,25 @@ namespace Restaurant.API.Controllers
                 return NotFound();
             }
             return _mapper.Map<KitchenOrderResponse>(order);
+        }
+
+        /// <summary>
+        /// Создать заказ для кухни
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpPost("{orderId:int}")]
+        public async Task<ActionResult> CreateAsync(int orderId)
+        {
+            var kitchenOrders = await _kitchenOrderRepository.FindAsync(x => x.OrderId == orderId);
+            if (kitchenOrders.Any())
+            {
+                return BadRequest();
+            }
+            var newKitchenOrder = new KitchenOrder { OrderId = orderId, KitchenOrderStatusId = 1, CreateTime = DateTime.Now };
+            await _kitchenOrderRepository.CreateAsync(newKitchenOrder);
+            await _publishEndpoint.Publish(_mapper.Map<ExchangeModels.KitchenOrder>(newKitchenOrder));
+            return Ok();
         }
     }
 }

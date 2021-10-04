@@ -1,5 +1,7 @@
 ﻿using Restaurant.Core.Domain;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Restaurant.Core.Abstractions.Repositories
@@ -12,5 +14,6 @@ namespace Restaurant.Core.Abstractions.Repositories
         Task CreateAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
     }
 }

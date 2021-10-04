@@ -8,6 +8,8 @@ namespace Restaurant.DataAccess
     {
         public DbSet<KitchenOrder> KitchenOrders { get; set; }
         public DbSet<KitchenOrderDish> Dishes { get; set; }
+        public DbSet<KitchenOrderStatus> KitchenOrderStatuses { get; set; }
+        public DbSet<DishStatus> DishStatuses { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions)
             : base(dbContextOptions)
         {

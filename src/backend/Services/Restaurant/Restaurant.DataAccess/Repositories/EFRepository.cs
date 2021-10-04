@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Restaurant.Core.Abstractions.Repositories;
 using Restaurant.Core.Domain;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Restaurant.DataAccess.Repositories
@@ -43,6 +46,10 @@ namespace Restaurant.DataAccess.Repositories
         public async Task UpdateAsync(T entity)
         {
             await _context.SaveChangesAsync();
+        }
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.Where(predicate).ToListAsync();
         }
     }
 }
