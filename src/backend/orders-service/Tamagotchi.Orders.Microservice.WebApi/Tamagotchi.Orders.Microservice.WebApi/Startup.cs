@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using System;
+using System.Linq;
 
 namespace Tamagotchi.Orders.Microservice.WebApi
 {
@@ -19,8 +22,17 @@ namespace Tamagotchi.Orders.Microservice.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
             services.AddControllers();
             services.AddRouting(options => options.LowercaseUrls = true);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",
@@ -38,6 +50,21 @@ namespace Tamagotchi.Orders.Microservice.WebApi
                 app.UseSwaggerUI(c =>
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tamagotchi.Orders.Microservice.WebApi v1"));
             }
+
+            app.UseCors(opts =>
+            {
+                var allowedCorsOrigins = Configuration
+                    .GetSection("AllowedCorsOrigins")
+                    .AsEnumerable()
+                    .Select(x => x.Value)
+                    .Where(x => !string.IsNullOrEmpty(x))
+                    .ToArray();
+
+                opts.WithOrigins(allowedCorsOrigins)
+                    .AllowCredentials()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
 
             app.UseHttpsRedirection();
 
