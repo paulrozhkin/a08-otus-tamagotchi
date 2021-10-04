@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-
+import { Button, Container } from 'react-bootstrap';
 class Restaurants extends Component {
 
   constructor(props) {
     super(props);
-     this.state = { restaurants: [], loading: true };
+    this.state = { restaurants: [], loading: true };
   }
 
   render() {
@@ -16,11 +16,12 @@ class Restaurants extends Component {
       <div>
         <h1 id="tabelLabel" >Select you restaurants</h1>
         {contents}
+        <Button variant="secondary">Secondary</Button>{' '}
       </div>
     );
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.populateRestaurants();
   }
 
