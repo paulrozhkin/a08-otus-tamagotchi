@@ -1,6 +1,10 @@
 import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+
+const RestaurantManagement = React.lazy(() =>
+  import('./views/components/management/restaurants-management/RestaurantManagement'),
+)
 const RestaurantsList = React.lazy(() =>
   import('./views/components/management/restaurants-list/RestaurantsList'),
 )
@@ -10,7 +14,7 @@ const RestaurantCreate = React.lazy(() =>
 // const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 //
-// // Base
+// Base
 // const Accordion = React.lazy(() => import('./views/components/base/accordion/Accordion'))
 // const Breadcrumbs = React.lazy(() => import('./views/components/base/breadcrumbs/Breadcrumbs'))
 // const Cards = React.lazy(() => import('./views/components/base/cards/Cards'))
@@ -60,11 +64,10 @@ const RestaurantCreate = React.lazy(() =>
 // const Widgets = React.lazy(() => import('./views/components/widgets/Widgets'))
 
 const routes = [
-  { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/management', name: 'Management', component: RestaurantsList },
-  { path: '/management/restaurants', name: 'Restaurants', component: RestaurantsList },
-  { path: '/management/restaurants/create', name: 'RestaurantCreate', component: RestaurantCreate },
+  {path: '/', exact: true, name: 'Home'},
+  {path: '/dashboard', name: 'Dashboard', component: Dashboard},
+  {path: '/restaurants', name: 'Restaurants', component: RestaurantManagement},
+  {path: '/restaurants/create', name: 'Create restaurant', component: RestaurantCreate},
   // { path: '/theme', name: 'Theme', component: Colors, exact: true },
   // { path: '/theme/colors', name: 'Colors', component: Colors },
   // { path: '/theme/typography', name: 'Typography', component: Typography },

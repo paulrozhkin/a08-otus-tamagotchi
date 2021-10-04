@@ -1,10 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router'
 import {
   CButton,
   CCol,
   CForm,
   CFormInput,
+  CLink,
   CPagination,
   CPaginationItem,
   CRow,
@@ -15,20 +15,27 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
+import {Link, useHistory} from "react-router-dom";
 
-const RestaurantsList = (props) => {
+const RestaurantsList = () => {
+  const history = useHistory();
+
   return (
     <CRow>
       <CCol sm={10}>
         <h2 className="display-6">Restaurants</h2>
       </CCol>
       <CCol sm={2} className="d-flex my-auto justify-content-end">
-        <CButton color="success">Create</CButton>
+        <CButton onClick={() => {
+          history.push('/restaurants/create')
+        }} color="success">
+          Create
+        </CButton>
       </CCol>
 
       <CCol sm={12}>
         <CForm className="d-flex">
-          <CFormInput type="search" className="me-2" placeholder="Search" />
+          <CFormInput type="search" className="me-2" placeholder="Search"/>
           <CButton type="submit" color="success" variant="outline">
             Search
           </CButton>

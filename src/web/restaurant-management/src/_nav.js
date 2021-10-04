@@ -3,16 +3,16 @@ import CIcon from '@coreui/icons-react'
 import {
   cilLayers,
   cilRestaurant,
-  // cilBell,
-  // cilCalculator,
-  // cilChartPie,
-  // cilCursor,
-  // cilDrop,
-  // cilNotes,
-  // cilPencil,
-  // cilPuzzle,
+  cilBell,
+  cilCalculator,
+  cilChartPie,
+  cilCursor,
+  cilDrop,
+  cilNotes,
+  cilPencil,
+  cilPuzzle,
   cilSpeedometer,
-  // cilStar,
+  cilStar,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -26,7 +26,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Restaurants',
-    to: '/management/restaurants',
+    to: '/restaurants',
     icon: <CIcon icon={cilRestaurant} customClassName="nav-icon" />,
   },
   // {
