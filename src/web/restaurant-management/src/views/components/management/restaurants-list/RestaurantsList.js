@@ -1,10 +1,9 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {
   CButton,
   CCol,
   CForm,
   CFormInput,
-  CLink,
   CPagination,
   CPaginationItem,
   CRow,
@@ -15,10 +14,91 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-import {Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 const RestaurantsList = () => {
   const history = useHistory();
+
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [restaurantsResponse, setRestaurantsResponse] = useState([]);
+  const [paginationPage, setPaginationPage] = useState(1);
+
+
+  useEffect(() => {
+    fetch(`/api/v1/Restaurant?PageNumber=${paginationPage}&PageSize=13`)
+      .then(res => res.json())
+      .then((result) => {
+          setRestaurantsResponse(result);
+          setIsLoaded(true);
+        },
+        (error) => {
+          setError(error);
+          setIsLoaded(true);
+        })
+  }, [paginationPage])
+
+  let content;
+  if (error) {
+    content = (<div>Error: {error.message}</div>)
+  } else if (!isLoaded) {
+    content = (<div>Loading...</div>)
+  } else {
+    const restaurantsDom = restaurantsResponse.items.map((restaurant) => {
+      return <CTableRow key={restaurant.id}>
+        <CTableHeaderCell scope="row">{restaurant.id}</CTableHeaderCell>
+        <CTableDataCell>{restaurant.address}</CTableDataCell>
+        <CTableDataCell>{restaurant.phoneNumber}</CTableDataCell>
+      </CTableRow>
+    })
+
+    const totalPages = restaurantsResponse.totalPages
+    const currentPage = restaurantsResponse.currentPage
+    const pagesNumbers = Array.from({length: totalPages}, (_, i) => i + 1)
+
+    const isNextPageDisabled = totalPages === currentPage
+    const isPreviousPageDisabled = 1 === currentPage
+
+    content = (
+      <div>
+        <CCol sm={12}>
+          <CTable>
+            <CTableHead>
+              <CTableRow>
+                <CTableHeaderCell scope="col">#</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Address</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Phone number</CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {restaurantsDom}
+            </CTableBody>
+          </CTable>
+        </CCol>
+
+        <CCol sm={12} >
+          <CPagination align="center" aria-label="Page navigation example">
+            <CPaginationItem disabled={isPreviousPageDisabled} onClick={() => {
+              setPaginationPage(currentPage - 1)
+            }}>Previous</CPaginationItem>
+            {pagesNumbers.map((number) => {
+              const isActive = currentPage === number
+              return <CPaginationItem key={number} active={isActive}
+                                      onClick={() => {
+                                        setPaginationPage(number)
+                                      }}
+              >
+                {number}
+              </CPaginationItem>
+            })}
+            <CPaginationItem disabled={isNextPageDisabled} onClick={() => {
+              setPaginationPage(currentPage + 1)
+            }}>Next</CPaginationItem>
+          </CPagination>
+        </CCol>
+      </div>
+    )
+  }
 
   return (
     <CRow>
@@ -42,108 +122,7 @@ const RestaurantsList = () => {
         </CForm>
       </CCol>
 
-      <CCol sm={12}>
-        <CTable>
-          <CTableHead>
-            <CTableRow>
-              <CTableHeaderCell scope="col">#</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Address</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            <CTableRow>
-              <CTableHeaderCell scope="row">1</CTableHeaderCell>
-              <CTableDataCell>Address 1</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">2</CTableHeaderCell>
-              <CTableDataCell>Address 2</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">3</CTableHeaderCell>
-              <CTableDataCell>Address 3</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">4</CTableHeaderCell>
-              <CTableDataCell>Address 4</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">5</CTableHeaderCell>
-              <CTableDataCell>Address 5</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">6</CTableHeaderCell>
-              <CTableDataCell>Address 6</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">7</CTableHeaderCell>
-              <CTableDataCell>Address 7</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">8</CTableHeaderCell>
-              <CTableDataCell>Address 8</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">9</CTableHeaderCell>
-              <CTableDataCell>Address 9</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">10</CTableHeaderCell>
-              <CTableDataCell>Address 10</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">11</CTableHeaderCell>
-              <CTableDataCell>Address 11</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">12</CTableHeaderCell>
-              <CTableDataCell>Address 12</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-            <CTableRow>
-              <CTableHeaderCell scope="row">13</CTableHeaderCell>
-              <CTableDataCell>Address 13</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-              <CTableDataCell>???</CTableDataCell>
-            </CTableRow>
-          </CTableBody>
-        </CTable>
-      </CCol>
-
-      <CCol sm={12}>
-        <CPagination align="center" aria-label="Page navigation example">
-          <CPaginationItem disabled>Previous</CPaginationItem>
-          <CPaginationItem>1</CPaginationItem>
-          <CPaginationItem>2</CPaginationItem>
-          <CPaginationItem>3</CPaginationItem>
-          <CPaginationItem>Next</CPaginationItem>
-        </CPagination>
-      </CCol>
+      {content}
     </CRow>
   )
 }
