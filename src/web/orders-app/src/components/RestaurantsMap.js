@@ -21,6 +21,14 @@ class RestaurantsMap extends Component {
         this.state = { position: [59.92411630927836, 30.348041808214337] };
     }
 
+    handleItemChange = (e, data) => {
+        // here the data is available 
+        // ....
+    }
+
+    bookRestaurant(id, name) {
+        alert(`Would you like to book a table at a restaurant '${name}' ${id}?`);
+    }
 
     render() {
 
@@ -35,7 +43,7 @@ class RestaurantsMap extends Component {
                     <Popup>
                         <b>{item.name}</b><br />
                         <div>{item.address}</div><br />
-                        <Button>Book a table</Button>
+                        <Button onClick={() => this.bookRestaurant(item.id, item.name)} >Book a table</Button>
                     </Popup>
                 </Marker>
             ));
@@ -44,6 +52,7 @@ class RestaurantsMap extends Component {
             if (firstRestaurant) {
                 center = [firstRestaurant.latitude, firstRestaurant.longitude];
             }
+            console.log(center);
         }
 
         return (
