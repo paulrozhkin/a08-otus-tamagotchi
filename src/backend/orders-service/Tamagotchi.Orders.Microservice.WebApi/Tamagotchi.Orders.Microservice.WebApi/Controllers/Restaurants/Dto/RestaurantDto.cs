@@ -15,6 +15,16 @@
         /// <summary>
         /// Full address
         /// </summary>
-        public string Address { get; set; } 
+        public string Address { get; set; }
+
+        /// <summary>
+        /// Долгота
+        /// </summary>
+        public double Longitude { get; set; }
+
+        /// <summary>
+        /// Широта
+        /// </summary>
+        public double Latitude { get; set; }
     }
 }
