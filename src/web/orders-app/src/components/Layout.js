@@ -4,7 +4,7 @@ import { Link, Route, Switch } from 'react-router-dom';
 import { Navbar, Nav } from 'react-bootstrap';
 import Restaurants from "./Restaurants"
 import Sample from "./Sample"
-import Map from "./Map"
+import RestaurantsMap from "./RestaurantsMap"
 
 export class Layout extends Component {
   static displayName = Layout.name;
@@ -32,7 +32,7 @@ export class Layout extends Component {
           <Switch>
             <Route exact path='/' component={Restaurants}></Route>
             <Route exact path='/restaurants' component={Restaurants}></Route>
-            <Route exact path='/map' component={Map}></Route> 
+            <Route exact path='/map' component={RestaurantsMap}></Route> 
             <Route exact path='/about' component={Sample}></Route>
           </Switch>
         </Container>
