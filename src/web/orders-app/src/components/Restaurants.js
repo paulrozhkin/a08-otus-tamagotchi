@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Container } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import Map from "./Map"
+
 class Restaurants extends Component {
 
   constructor(props) {
@@ -16,6 +18,8 @@ class Restaurants extends Component {
       <div>
         <h1 id="tabelLabel" >Select you restaurants</h1>
         {contents}
+
+        <Map />
         <Button variant="secondary">Secondary</Button>{' '}
       </div>
     );
