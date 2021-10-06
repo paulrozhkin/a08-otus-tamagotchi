@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using OrderQueue.API.Mapping;
 using OrderQueue.DataAccess;
 using OrderQueue.DataAccess.Data;
+using OrderQueue.API.Consumers;
 
 namespace OrderQueue.API
 {
@@ -31,9 +32,14 @@ namespace OrderQueue.API
 
             services.AddMassTransit(config =>
             {
+                config.AddConsumer<NewKitchenOrderConsumer>();
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
-                    cfg.Host(Configuration["RabbitMqHost"]);
+                    cfg.Host(Configuration["RabbitMq:Host"]);
+                    cfg.ReceiveEndpoint("new-kitchen-order", c =>
+                    {
+                        c.ConfigureConsumer<NewKitchenOrderConsumer>(ctx);
+                    });
                 });
             });
 

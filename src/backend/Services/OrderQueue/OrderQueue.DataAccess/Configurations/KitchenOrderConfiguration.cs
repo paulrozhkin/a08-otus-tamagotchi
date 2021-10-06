@@ -17,6 +17,10 @@ namespace OrderQueue.DataAccess.Configurations
                 .IsRequired();
 
             builder
+                .Property(x => x.RestaurantId)
+                .IsRequired();
+
+            builder
                 .Property(x => x.CreateTime)
                 .IsRequired();
 

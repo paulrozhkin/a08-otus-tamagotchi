@@ -13,6 +13,10 @@ namespace OrderQueue.Core.Domain
         /// </summary>
         public int OrderId { get; set; }
         /// <summary>
+        /// Идентификатор ресторана
+        /// </summary>
+        public int RestaurantId { get; set; }
+        /// <summary>
         /// Идентификатор статуса заказа
         /// </summary>
         public int KitchenOrderStatusId { get; set; }

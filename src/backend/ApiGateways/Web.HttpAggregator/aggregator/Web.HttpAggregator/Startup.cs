@@ -19,6 +19,8 @@ using Web.HttpAggregator.Infrastructure.Grpc;
 using Web.HttpAggregator.Services;
 using MassTransit;
 using Web.HttpAggregator.Consumers;
+using Web.HttpAggregator.Hubs;
+using Web.HttpAggregator.Mapping;
 
 namespace Web.HttpAggregator
 {
@@ -36,6 +38,8 @@ namespace Web.HttpAggregator
         {
             services.AddControllers();
 
+            services.AddAutoMapper(typeof(MappingProfile));
+
             services.Configure<UrlsOptions>(Configuration.GetSection(
                 UrlsOptions.Urls));
 
@@ -47,7 +51,7 @@ namespace Web.HttpAggregator
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
                     cfg.Host("amqp://guest:guest@localhost:5672");
-                    cfg.ReceiveEndpoint("kitchen-order-queue", c =>
+                    cfg.ReceiveEndpoint("kitchen-order", c =>
                     {
                         c.ConfigureConsumer<KitchenOrderConsumer>(ctx);
                     });
@@ -56,10 +60,14 @@ namespace Web.HttpAggregator
 
             services.AddMassTransitHostedService();
 
+            services.AddSignalR();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tamagotchi", Version = "v1" });
             });
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,7 +90,21 @@ namespace Web.HttpAggregator
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:3000")
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "POST")
+                    .AllowCredentials();
+            });
+
+            app.UseEndpoints(
+                endpoints =>
+                {
+                    endpoints.MapControllers();
+                    endpoints.MapHub<KitchenOrderHub>("/hubs/kitchen-order");
+                }
+            );
         }
     }
 
