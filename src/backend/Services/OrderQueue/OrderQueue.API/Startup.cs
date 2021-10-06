@@ -26,14 +26,14 @@ namespace OrderQueue.API
             services.AddScoped<IDbInitializer, DbInitializer>();
 
             services.AddRepositories();
-            services.AddDataAccess("Host=localhost;Port=5432;Database=restaurant_db;Username=docker;Password=postgres");
+            services.AddDataAccess(Configuration["ConnectionStrings:OrderQueueDb"]);
             services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddMassTransit(config =>
             {
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
-                    cfg.Host("amqp://guest:guest@localhost:5672");
+                    cfg.Host(Configuration["RabbitMqHost"]);
                 });
             });
 
