@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\ExchangeModels\OrderQueue\DishStatus.cs" Link="Kitchen\DishStatus.cs" />
+    <Compile Include="..\..\..\ExchangeModels\OrderQueue\KitchenOrder.cs" Link="Kitchen\KitchenOrder.cs" />
+    <Compile Include="..\..\..\ExchangeModels\OrderQueue\KitchenOrderDish.cs" Link="Kitchen\KitchenOrderDish.cs" />
+    <Compile Include="..\..\..\ExchangeModels\OrderQueue\KitchenOrderStatus.cs" Link="Kitchen\KitchenOrderStatus.cs" />
+    <Compile Include="..\..\..\ExchangeModels\OrderQueue\NewKitchenOrder.cs" Link="Kitchen\NewKitchenOrder.cs" />
+    <Compile Include="..\..\..\ExchangeModels\OrderQueue\NewOrderDish.cs" Link="Kitchen\NewOrderDish.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos\orders.proto" GrpcServices="Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
+    <PackageReference Include="MassTransit" Version="7.2.2" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.2.2" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Kitchen\" />
+  </ItemGroup>
+
+</Project>

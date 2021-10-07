@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Protobuf Include="..\..\..\..\Services\Orders\Orders.API\Protos\orders.proto">
+      <Link>Protos\orders.proto</Link>
+    </Protobuf>
     <Protobuf Include="..\..\..\..\Services\Restaurants\Restaurants.API\Protos\restaurants.proto" GrpcService="Client" Link="Protos\restaurants.proto" />
   </ItemGroup>
 
@@ -27,6 +30,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\ExchangeModels\Infrastructure.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Protos\" />
   </ItemGroup>
 
 </Project>
