@@ -1,4 +1,4 @@
-﻿namespace ExchangeModels.OrderQueue
+﻿namespace Infrastructure.Core.OrderQueue
 {
     public class KitchenOrderStatus
     {

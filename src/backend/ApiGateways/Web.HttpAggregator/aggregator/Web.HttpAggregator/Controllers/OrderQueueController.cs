@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Web.HttpAggregator.Models.OrderQueue;
+using Infrastructure.Core.OrderQueue;
 
 namespace Web.HttpAggregator.Controllers
 {
@@ -28,7 +29,7 @@ namespace Web.HttpAggregator.Controllers
         public async Task<ActionResult> CreateAsync([FromBody] KitchenOrderCreateRequest request)
         {
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:new-kitchen-order"));
-            await endpoint.Send(_mapper.Map<ExchangeModels.OrderQueue.NewKitchenOrder>(request));
+            await endpoint.Send(_mapper.Map<NewKitchenOrder>(request));
             return Ok();
         }
     }

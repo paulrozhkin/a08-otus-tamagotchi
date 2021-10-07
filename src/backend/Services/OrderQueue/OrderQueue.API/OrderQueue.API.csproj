@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ExchangeModels\ExchangeModels.csproj" />
+    <ProjectReference Include="..\..\..\ExchangeModels\Infrastructure.Core.csproj" />
     <ProjectReference Include="..\OrderQueue.DataAccess\OrderQueue.DataAccess.csproj" />
     <ProjectReference Include="..\OrderQueue.Domain\OrderQueue.Core.csproj" />
   </ItemGroup>

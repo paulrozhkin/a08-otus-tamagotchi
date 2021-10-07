@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ExchangeModels.OrderQueue
+namespace Infrastructure.Core.OrderQueue
 {
     public class NewKitchenOrder
     {

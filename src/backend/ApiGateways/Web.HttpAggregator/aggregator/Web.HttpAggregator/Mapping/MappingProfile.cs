@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Web.HttpAggregator.Models.OrderQueue;
+using Infrastructure.Core.OrderQueue;
+using KitchenOrderDish = Web.HttpAggregator.Models.OrderQueue.KitchenOrderDish;
 
 namespace Web.HttpAggregator.Mapping
 {
@@ -7,8 +9,8 @@ namespace Web.HttpAggregator.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<KitchenOrderDish, ExchangeModels.OrderQueue.NewOrderDish>();
-            CreateMap<KitchenOrderCreateRequest, ExchangeModels.OrderQueue.NewKitchenOrder>();
+            CreateMap<KitchenOrderDish, NewOrderDish>();
+            CreateMap<KitchenOrderCreateRequest, NewKitchenOrder>();
         }
     }
 }
