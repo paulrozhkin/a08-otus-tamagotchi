@@ -27,7 +27,31 @@ class RestaurantsMap extends Component {
     }
 
     bookRestaurant(id, name) {
-        alert(`Would you like to book a table at a restaurant '${name}' ${id}?`);
+
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: 'Sample body' })
+        };
+        // TODO - вынести базовый адрес в настройки
+        fetch(`https://localhost:5001/api/orders?restaurantId=${id}`, requestOptions)
+            .then(async response => {
+                const isJson = response.headers.get('content-type')?.includes('application/json');
+                const data = isJson && await response.json();
+    
+                // check for error response
+                if (!response.ok) {
+                    // get error message from body or default to response status
+                    const error = (data && data.message) || response.status;
+                    return Promise.reject(error);
+                }
+
+                alert("Table was booked! Thank you!")
+            })
+            .catch(error => {
+                this.setState({ errorMessage: error.toString() });
+                console.error('There was an error!', error);
+            });
     }
 
     render() {
@@ -62,25 +86,6 @@ class RestaurantsMap extends Component {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
-                {/*                 <Marker position={this.state.position}>
-                    <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                        <Button >Order</Button>
-                    </Popup>
-                </Marker>
-
-                <Marker position={[59.94431630927836, 30.348061808214337]}>
-                    <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </Marker>
-
-                <Marker position={[59.9431630927836, 30.37061808214337]}>
-                    <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </Marker>
- */}
                 {content}
 
             </MapContainer>);

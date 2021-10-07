@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Tamagotchi.Orders.Microservice.WebApi.Controllers.Orders
 {
@@ -16,7 +17,7 @@ namespace Tamagotchi.Orders.Microservice.WebApi.Controllers.Orders
         [HttpPut]
         public void Order(int restaurantId)
         {
-            // TODO call gRPC OrderService logic 
+            Console.WriteLine($"You order restaurant with id {restaurantId}");
         }
     }
 }

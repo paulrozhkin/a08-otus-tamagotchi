@@ -49,6 +49,7 @@ class Restaurants extends Component {
     } */
 
   async populateRestaurants() {
+    // TODO - вынести базовый адрес в конфиги приложения
     const response = await fetch('https://localhost:5001/api/restaurants');
     const data = await response.json();
     this.setState({ restaurants: data, loading: false });
