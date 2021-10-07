@@ -17,6 +17,10 @@ namespace OrderQueue.DataAccess.Configurations
                 .IsRequired();
 
             builder
+                .Property(x => x.DishStatusId)
+                .HasDefaultValue(1);
+
+            builder
                 .HasOne(x => x.Status)
                 .WithMany()
                 .HasForeignKey(x => x.DishStatusId);

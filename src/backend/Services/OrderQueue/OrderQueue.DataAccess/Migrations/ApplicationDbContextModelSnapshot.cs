@@ -47,7 +47,9 @@ namespace OrderQueue.DataAccess.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("KitchenOrderStatusId")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
 
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
@@ -70,7 +72,9 @@ namespace OrderQueue.DataAccess.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("DishStatusId")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
 
                     b.Property<int?>("KitchenOrderId")
                         .HasColumnType("integer");

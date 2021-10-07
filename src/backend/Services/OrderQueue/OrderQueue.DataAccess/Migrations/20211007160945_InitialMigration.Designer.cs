@@ -10,7 +10,7 @@ using OrderQueue.DataAccess;
 namespace OrderQueue.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211006214701_InitialMigration")]
+    [Migration("20211007160945_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,7 +49,9 @@ namespace OrderQueue.DataAccess.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("KitchenOrderStatusId")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
 
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
@@ -72,7 +74,9 @@ namespace OrderQueue.DataAccess.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("DishStatusId")
-                        .HasColumnType("integer");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
 
                     b.Property<int?>("KitchenOrderId")
                         .HasColumnType("integer");

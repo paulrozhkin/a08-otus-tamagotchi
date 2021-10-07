@@ -42,7 +42,7 @@ namespace OrderQueue.DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     OrderId = table.Column<int>(type: "integer", nullable: false),
                     RestaurantId = table.Column<int>(type: "integer", nullable: false),
-                    KitchenOrderStatusId = table.Column<int>(type: "integer", nullable: false),
+                    KitchenOrderStatusId = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
                     CreateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
@@ -64,7 +64,7 @@ namespace OrderQueue.DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
                     MenuId = table.Column<int>(type: "integer", nullable: false),
-                    DishStatusId = table.Column<int>(type: "integer", nullable: false),
+                    DishStatusId = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
                     KitchenOrderId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>

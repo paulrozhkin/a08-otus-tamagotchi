@@ -13,10 +13,8 @@ namespace OrderQueue.API.Mapping
             CreateMap<KitchenOrderDish, Infrastructure.Core.OrderQueue.KitchenOrderDish>();
             CreateMap<KitchenOrder, Infrastructure.Core.OrderQueue.KitchenOrder>();
 
-            CreateMap<Infrastructure.Core.OrderQueue.NewOrderDish, KitchenOrderDish>()
-                .ForMember(dest => dest.DishStatusId, opt => opt.MapFrom(src => 1));
+            CreateMap<Infrastructure.Core.OrderQueue.NewOrderDish, KitchenOrderDish>();
             CreateMap<Infrastructure.Core.OrderQueue.NewKitchenOrder, KitchenOrder>()
-                .ForMember(dest => dest.KitchenOrderStatusId, opt => opt.MapFrom(src => 1))
                 .ForMember(dest => dest.CreateTime, opt => opt.MapFrom(src => DateTime.Now));
         }
     }
