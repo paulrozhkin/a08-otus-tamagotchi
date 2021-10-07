@@ -75,6 +75,14 @@ namespace Web.HttpAggregator
         {
             if (env.IsDevelopment())
             {
+                app.UseCors(builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .WithMethods("GET", "POST")
+                        .AllowCredentials();
+                });
+
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tamagotchi v1"));
@@ -89,14 +97,6 @@ namespace Web.HttpAggregator
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseCors(builder =>
-            {
-                builder.WithOrigins("http://localhost:3000")
-                    .AllowAnyHeader()
-                    .WithMethods("GET", "POST")
-                    .AllowCredentials();
-            });
 
             app.UseEndpoints(
                 endpoints =>
