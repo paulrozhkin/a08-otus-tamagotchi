@@ -34,7 +34,7 @@ class RestaurantsMap extends Component {
             body: JSON.stringify({ title: 'Sample body' })
         };
         // TODO - вынести базовый адрес в настройки
-        fetch(`https://localhost:5001/api/orders?restaurantId=${id}`, requestOptions)
+        fetch(`https://localhost:5001/api/v1/Orders=${id}`, requestOptions)
             .then(async response => {
                 const isJson = response.headers.get('content-type')?.includes('application/json');
                 const data = isJson && await response.json();
@@ -65,8 +65,10 @@ class RestaurantsMap extends Component {
             content = this.props.restaurants.map(item => (
                 <Marker position={[item.latitude, item.longitude]}>
                     <Popup>
+                        <b>Restaurant id: {item.id}</b><br />
                         <b>{item.name}</b><br />
                         <div>{item.address}</div><br />
+                        <div>Phone: {item.phoneNumber}</div><br/>
                         <Button onClick={() => this.bookRestaurant(item.id, item.name)} >Book a table</Button>
                     </Popup>
                 </Marker>
