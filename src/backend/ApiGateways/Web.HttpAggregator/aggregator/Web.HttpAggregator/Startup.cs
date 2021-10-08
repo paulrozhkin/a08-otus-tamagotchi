@@ -79,6 +79,8 @@ namespace Web.HttpAggregator
                 app.UseCors(builder =>
                 {
                     builder.WithOrigins("http://localhost:3000")
+                        .WithOrigins("http://localhost:3001")
+                        .WithOrigins("http://localhost:3002")
                         .AllowAnyHeader()
                         .WithMethods("GET", "POST")
                         .AllowCredentials();

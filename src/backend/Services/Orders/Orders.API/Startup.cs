@@ -22,12 +22,10 @@ namespace Orders.API
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
                     cfg.Host("amqp://guest:guest@localhost:5672");
-                    cfg.ReceiveEndpoint("kitchen-order", c =>
-                    {
-                    });
                 });
             });
             services.AddAutoMapper(typeof(Startup));
+
             services.AddMassTransitHostedService();
 
             services.AddGrpc();
