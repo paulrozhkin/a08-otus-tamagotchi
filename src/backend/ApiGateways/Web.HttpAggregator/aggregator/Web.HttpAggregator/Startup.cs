@@ -21,6 +21,7 @@ using MassTransit;
 using Web.HttpAggregator.Consumers;
 using Web.HttpAggregator.Hubs;
 using Web.HttpAggregator.Mapping;
+using static Orders.API.Orders;
 
 namespace Web.HttpAggregator
 {
@@ -115,11 +116,18 @@ namespace Web.HttpAggregator
             services.AddTransient<GrpcExceptionInterceptor>();
 
             services.AddScoped<IRestaurantService, RestaurantService>();
+            services.AddScoped<IOrdersService, OrdersService>();
 
             services.AddGrpcClient<Restaurants.RestaurantsClient>((serviceProvider, options) =>
             {
                 var basketApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.RestaurantsGrpc;
                 options.Address = new Uri(basketApi);
+            }).AddInterceptor<GrpcExceptionInterceptor>();
+
+            services.AddGrpcClient<OrdersClient>((serviceProvider, options) =>
+            {
+                var ordersApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.OrdersGrpc;
+                options.Address = new Uri(ordersApi);
             }).AddInterceptor<GrpcExceptionInterceptor>();
 
             return services;

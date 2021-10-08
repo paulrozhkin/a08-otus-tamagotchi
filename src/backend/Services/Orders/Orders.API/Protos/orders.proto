@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "Orders.API";
+
+package orders_api;
+
+service Orders {
+  rpc BookRestaurant (BookRestauranRequest) returns (BookRestauranResponse);
+}
+
+message BookRestauranRequest {
+  int32 restaurantId = 1;
+}
+
+message BookRestauranResponse {
+  int32 restaurantId = 1;
+}
