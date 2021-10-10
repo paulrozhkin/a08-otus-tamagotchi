@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Core.OrderQueue
+﻿namespace Infrastructure.Core.Messages.OrderQueue
 {
     public class DishStatus
     {

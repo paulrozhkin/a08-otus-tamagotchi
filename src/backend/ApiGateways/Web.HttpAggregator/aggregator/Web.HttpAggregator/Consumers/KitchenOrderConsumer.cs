@@ -1,4 +1,4 @@
-﻿using Infrastructure.Core.OrderQueue;
+﻿using Infrastructure.Core.Messages.OrderQueue;
 using MassTransit;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;

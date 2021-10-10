@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Web.HttpAggregator.Models.OrderQueue;
-using Infrastructure.Core.OrderQueue;
+using Infrastructure.Core.Messages.OrderQueue;
 using KitchenOrderDish = Web.HttpAggregator.Models.OrderQueue.KitchenOrderDish;
 
 namespace Web.HttpAggregator.Mapping

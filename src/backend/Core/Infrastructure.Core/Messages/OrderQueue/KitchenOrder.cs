@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Core.OrderQueue
+namespace Infrastructure.Core.Messages.OrderQueue
 {
     public class KitchenOrder
     {

@@ -1,14 +1,12 @@
-using Grpc.Core;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Grpc.Core;
+using Infrastructure.Core.Messages.OrderQueue;
 using MassTransit;
-using Infrastructure.Core.OrderQueue;
+using Microsoft.Extensions.Logging;
 
-namespace Orders.API
+namespace Orders.API.Services
 {
     public class OrdersService : Orders.OrdersBase
     {

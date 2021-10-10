@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using OrderQueue.Core.Domain;
 using System;
+using OrderMessages = Infrastructure.Core.Messages.OrderQueue;
 
 namespace OrderQueue.API.Mapping
 {
@@ -8,13 +9,13 @@ namespace OrderQueue.API.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<KitchenOrderStatus, Infrastructure.Core.OrderQueue.KitchenOrderStatus>();
-            CreateMap<DishStatus, Infrastructure.Core.OrderQueue.DishStatus>();
-            CreateMap<KitchenOrderDish, Infrastructure.Core.OrderQueue.KitchenOrderDish>();
-            CreateMap<KitchenOrder, Infrastructure.Core.OrderQueue.KitchenOrder>();
+            CreateMap<KitchenOrderStatus, OrderMessages.KitchenOrderStatus>();
+            CreateMap<DishStatus, OrderMessages.DishStatus>();
+            CreateMap<KitchenOrderDish, OrderMessages.KitchenOrderDish>();
+            CreateMap<KitchenOrder, OrderMessages.KitchenOrder>();
 
-            CreateMap<Infrastructure.Core.OrderQueue.NewOrderDish, KitchenOrderDish>();
-            CreateMap<Infrastructure.Core.OrderQueue.NewKitchenOrder, KitchenOrder>()
+            CreateMap<OrderMessages.NewOrderDish, KitchenOrderDish>();
+            CreateMap<OrderMessages.NewKitchenOrder, KitchenOrder>()
                 .ForMember(dest => dest.CreateTime, opt => opt.MapFrom(src => DateTime.Now));
         }
     }

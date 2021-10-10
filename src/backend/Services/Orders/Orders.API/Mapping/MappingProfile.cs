@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Infrastructure.Core.OrderQueue;
+using Infrastructure.Core.Messages.OrderQueue;
 
 namespace Orders.API.Mapping
 {

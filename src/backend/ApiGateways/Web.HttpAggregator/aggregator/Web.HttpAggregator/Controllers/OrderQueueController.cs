@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Web.HttpAggregator.Models.OrderQueue;
-using Infrastructure.Core.OrderQueue;
+using Infrastructure.Core.Messages.OrderQueue;
 
 namespace Web.HttpAggregator.Controllers
 {
