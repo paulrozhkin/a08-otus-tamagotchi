@@ -1,12 +1,12 @@
-﻿using Infrastructure.Core.Messages.OrderQueue;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
+using Infrastructure.Core.Messages.OrderQueueMessages;
 using Web.HttpAggregator.Hubs;
 
 namespace Web.HttpAggregator.Consumers
 {
-    public class KitchenOrderConsumer : IConsumer<KitchenOrder>
+    public class KitchenOrderConsumer : IConsumer<KitchenOrderMessage>
     {
         private readonly IHubContext<KitchenOrderHub> _kitchenOrderHubContext;
 
@@ -15,7 +15,7 @@ namespace Web.HttpAggregator.Consumers
             _kitchenOrderHubContext = kitchenOrderHubContext;
         }
 
-        public async Task Consume(ConsumeContext<KitchenOrder> context)
+        public async Task Consume(ConsumeContext<KitchenOrderMessage> context)
         {
             await _kitchenOrderHubContext.Clients.All.SendAsync("messageReceived", context.Message);
         }

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Infrastructure.Core.Messages.OrderQueue;
+using Infrastructure.Core.Messages.OrderQueueMessages;
 
 namespace Orders.API.Mapping
 {
@@ -7,7 +7,7 @@ namespace Orders.API.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<BookRestauranRequest, NewKitchenOrder>()
+            CreateMap<BookRestauranRequest, NewKitchenOrderMessage>()
                 .ForMember(dst => dst.Dishes, opt => opt.Ignore())
                 .ForMember(dst => dst.OrderId, opt => opt.Ignore())
                 .ForMember(dst => dst.RestaurantId, opt => opt.MapFrom(src => src.RestaurantId));

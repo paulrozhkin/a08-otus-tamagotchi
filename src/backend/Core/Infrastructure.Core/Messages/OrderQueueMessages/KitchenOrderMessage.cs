@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Core.Messages.OrderQueue
+namespace Infrastructure.Core.Messages.OrderQueueMessages
 {
-    public class KitchenOrder
+    public class KitchenOrderMessage
     {
         public int Id { get; set; }
         public int OrderId { get; set; }
         public int RestaurantId { get; set; }
         public DateTime CreateTime { get; set; }
-        public KitchenOrderStatus Status { get; set; }
-        public List<KitchenOrderDish> Dishes { get; set; }
+        public KitchenOrderStatusMessage StatusMessage { get; set; }
+        public List<KitchenOrderDishMessage> Dishes { get; set; }
     }
 }
