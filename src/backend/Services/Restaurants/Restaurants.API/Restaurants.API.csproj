@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Infrastructure.Core\Infrastructure.Core.csproj" />
     <ProjectReference Include="..\Restaurants.Domain\Restaurants.Domain.csproj" />
     <ProjectReference Include="..\Restaurants.Infrastructure\Restaurants.Infrastructure.csproj" />
   </ItemGroup>
