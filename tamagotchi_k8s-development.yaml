@@ -1,0 +1,269 @@
+# Http aggregator
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tamagotchi-http-aggregator
+  labels:
+    environment: production
+    app: tamagotchi-http-aggregator
+    version: "1"
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        service: http-aggregator
+  template:
+    metadata:
+      labels:
+        service: http-aggregator
+    spec:
+      containers:
+        - name: tamagotchi-http-aggregator
+          image: paulrozhkin/tamagotchi-http-aggregator:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: Tamagotchi_RabbitMq__Host
+              value: amqp://guest:guest@rabbitmq-cluster-ip-service:5672
+            - name: Tamagotchi_Urls__RestaurantsGrpc
+              value: http://restaurants-api-cluster-ip-service:5000
+            - name: Tamagotchi_Urls__OrdersGrpc
+              value: http://localhost:5002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tamagotchi-http-aggregator-service
+  labels:
+    app: tamagotchi-http-aggregator-service
+    version: "1"
+spec:
+  type: LoadBalancer
+  selector:
+    service: http-aggregator
+  ports:
+  - name: web-http-aggregator
+    port: 5000
+    targetPort: 80
+---
+# Restaurants API
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tamagotchi-restaurants-api
+  labels:
+    environment: production
+    app: tamagotchi-restaurants-api
+    version: "1"
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        service: restaurants-microservice
+  template:
+    metadata:
+      labels:
+        service: restaurants-microservice
+    spec:
+      containers:
+        - name: tamagotchi-restaurants-api
+          image: paulrozhkin/tamagotchi-restaurants-api
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:5000
+            - name: Tamagotchi_ConnectionStrings__Npgsql
+              value: Host=psql-service;Database=tamagotchi_restaurants;Username=postgres;Password=sql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: restaurants-api-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    service: restaurants-microservice
+  ports:
+    - targetPort: 5000
+      port: 5000
+---
+# Orders API
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tamagotchi-orders-api
+  labels:
+    environment: production
+    app: tamagotchi-orders-api
+    version: "1"
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        service: orders-microservice
+  template:
+    metadata:
+      labels:
+        service: orders-microservice
+    spec:
+      containers:
+        - name: tamagotchi-orders-api
+          image: paulrozhkin/tamagotchi-orders-api
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:5000
+            - name: Tamagotchi_RabbitMq__Host
+              value: amqp://guest:guest@rabbitmq-cluster-ip-service:5672
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders-api-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    service: orders-microservice
+  ports:
+    - targetPort: 5000
+      port: 5002
+---
+# Order Queue API
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tamagotchi-order-queue-api
+  labels:
+    environment: production
+    app: tamagotchi-order-queue-api
+    version: "1"
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        service: order-queue-microservice
+  template:
+    metadata:
+      labels:
+        service: order-queue-microservice
+    spec:
+      containers:
+        - name: tamagotchi-order-queue-api
+          image: paulrozhkin/tamagotchi-order-queue
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:5000
+            - name: Tamagotchi_RabbitMq__Host
+              value: amqp://guest:guest@rabbitmq-cluster-ip-service:5672
+            - name: Tamagotchi_ConnectionStrings__OrderQueueDb
+              value: Host=psql-service;Database=order_queue;Username=postgres;Password=sql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-queue-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    service: order-queue-microservice
+  ports:
+    - targetPort: 5000
+      port: 5004
+---
+# TODO: configure rabbit for claster
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tamagotchi-rabbitmq
+  labels:
+    environment: production
+    app: tamagotchi-rabbitmq
+    version: "1"
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        service: rabbitmq
+  template:
+    metadata:
+        labels:
+          service: rabbitmq
+    spec:
+      containers:
+        - name: tamagotchi-rabbitmq
+          image: rabbitmq:3.9-management
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5672
+              protocol: TCP
+            - containerPort: 15672
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-service
+  labels:
+    app: rabbitmq
+    version: "1"
+spec:
+  type: LoadBalancer
+  selector:
+    service: rabbitmq
+  ports:
+  - name: rabbitmq-balancer
+    port: 15672
+    targetPort: 15672
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    service: rabbitmq
+  ports:
+    - targetPort: 5672
+      port: 5672
+---
+# SQL endpoint for localhost
+apiVersion: v1
+kind: Service
+metadata:
+   name: psql
+spec:
+   clusterIP: None
+   ports:
+   - protocol: TCP
+     port: 5432
+     targetPort: psql-port
+   selector:  
+     name:  psql
+   type: ClusterIP
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: psql-service
+subsets:
+  - addresses:
+    - ip: 192.168.0.8
+    ports:
+      - name: psql-port
+        port: 5432

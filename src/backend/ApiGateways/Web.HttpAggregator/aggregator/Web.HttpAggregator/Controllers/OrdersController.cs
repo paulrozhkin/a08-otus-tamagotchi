@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Web.HttpAggregator.Models;
 using Web.HttpAggregator.Services;
 
 namespace Web.HttpAggregator.Controllers
@@ -12,8 +13,7 @@ namespace Web.HttpAggregator.Controllers
     [Route("api/v1/[controller]")]
     public class OrdersController : Controller
     {
-
-        IOrdersService _ordersService;
+        private readonly IOrdersService _ordersService;
 
         public OrdersController(IOrdersService ordersService)
         {
@@ -24,15 +24,15 @@ namespace Web.HttpAggregator.Controllers
         /// <summary>
         /// Order table in selected restaurant
         /// </summary>
-        /// <param name="restaurantId"></param>
-        [HttpPut]
-        public async Task<ActionResult> OrderAsync([FromQuery] int restaurantId)
+        /// <param name="orderRequest"></param>
+        [HttpPost]
+        public async Task<ActionResult> OrderAsync([FromBody] OrderRequest orderRequest)
         {
-            Console.WriteLine($"You order restaurant with id {restaurantId}");
+            Console.WriteLine($"You order restaurant with id {orderRequest.RestaurantId}");
 
             try
             {
-                await _ordersService.BookRestaurant(restaurantId);
+                await _ordersService.BookRestaurant(orderRequest.RestaurantId);
                 return Ok();
             }
             catch (Exception)

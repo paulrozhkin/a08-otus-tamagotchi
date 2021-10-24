@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.HttpAggregator.Infrastructure.Exceptions
 {
-    public static class ExceptionHandlerMiddlewareAppBuilderExtensions
+    public static class ExceptionHandler
     {
         public static IApplicationBuilder UseJsonExceptionHandler(this IApplicationBuilder builder)
         {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Restaurants.Domain.Models
+﻿namespace Restaurants.Domain.Models
 {
     public class Restaurant
     {

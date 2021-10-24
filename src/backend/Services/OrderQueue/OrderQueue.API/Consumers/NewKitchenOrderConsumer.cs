@@ -4,10 +4,11 @@ using OrderQueue.Core.Abstractions.Repositories;
 using OrderQueue.Core.Domain;
 using System;
 using System.Threading.Tasks;
+using Infrastructure.Core.Messages.OrderQueueMessages;
 
 namespace OrderQueue.API.Consumers
 {
-    public class NewKitchenOrderConsumer : IConsumer<Infrastructure.Core.OrderQueue.NewKitchenOrder>
+    public class NewKitchenOrderConsumer : IConsumer<NewKitchenOrderMessage>
     {
         private readonly IRepository<KitchenOrder> _kitchenOrderRepository;
         private readonly ISendEndpointProvider _sendEndpointProvider;
@@ -23,12 +24,12 @@ namespace OrderQueue.API.Consumers
             _mapper = mapper;
         }
 
-        public async Task Consume(ConsumeContext<Infrastructure.Core.OrderQueue.NewKitchenOrder> context)
+        public async Task Consume(ConsumeContext<NewKitchenOrderMessage> context)
         {
             var newKitchenOrder = _mapper.Map<KitchenOrder>(context.Message);
             await _kitchenOrderRepository.CreateAsync(newKitchenOrder);
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:kitchen-order"));
-            await endpoint.Send(_mapper.Map<Infrastructure.Core.OrderQueue.KitchenOrder>(newKitchenOrder));
+            await endpoint.Send(_mapper.Map<KitchenOrderMessage>(newKitchenOrder));
         }
     }
 }

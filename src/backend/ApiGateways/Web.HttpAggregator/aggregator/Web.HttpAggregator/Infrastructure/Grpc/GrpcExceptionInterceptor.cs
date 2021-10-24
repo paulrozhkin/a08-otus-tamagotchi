@@ -33,7 +33,7 @@ namespace Web.HttpAggregator.Infrastructure.Grpc
             }
             catch (RpcException e)
             {
-                _logger.LogError("Error calling via grpc: {Status} - {Message}", e.Status, e.Message);
+                _logger.LogError("Error calling via grpc: {StatusMessage} - {Message}", e.Status, e.Message);
                 return default;
             }
         }

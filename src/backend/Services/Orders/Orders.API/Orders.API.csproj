@@ -2,16 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>3e86b761-4407-46ea-af00-6f55558b6102</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="..\..\..\ExchangeModels\OrderQueue\DishStatus.cs" Link="Kitchen\DishStatus.cs" />
-    <Compile Include="..\..\..\ExchangeModels\OrderQueue\KitchenOrder.cs" Link="Kitchen\KitchenOrder.cs" />
-    <Compile Include="..\..\..\ExchangeModels\OrderQueue\KitchenOrderDish.cs" Link="Kitchen\KitchenOrderDish.cs" />
-    <Compile Include="..\..\..\ExchangeModels\OrderQueue\KitchenOrderStatus.cs" Link="Kitchen\KitchenOrderStatus.cs" />
-    <Compile Include="..\..\..\ExchangeModels\OrderQueue\NewKitchenOrder.cs" Link="Kitchen\NewKitchenOrder.cs" />
-    <Compile Include="..\..\..\ExchangeModels\OrderQueue\NewOrderDish.cs" Link="Kitchen\NewOrderDish.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <Protobuf Include="Protos\orders.proto" GrpcServices="Server" />
@@ -23,11 +17,13 @@
     <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
     <PackageReference Include="MassTransit" Version="7.2.2" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.2.2" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.2.2" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Kitchen\" />
+    <ProjectReference Include="..\..\..\Core\Infrastructure.Core\Infrastructure.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -29,12 +29,12 @@ class RestaurantsMap extends Component {
     bookRestaurant(id, name) {
 
         const requestOptions = {
-            method: 'PUT',
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: 'Sample body' })
+            body: JSON.stringify({ RestaurantId: id })
         };
         // TODO - вынести базовый адрес в настройки
-        fetch(`https://localhost:5001/api/v1/Orders=${id}`, requestOptions)
+        fetch(`https://localhost:5001/api/v1/Orders`, requestOptions)
             .then(async response => {
                 const isJson = response.headers.get('content-type')?.includes('application/json');
                 const data = isJson && await response.json();
@@ -63,7 +63,7 @@ class RestaurantsMap extends Component {
 
         if (this.props.restaurants) {
             content = this.props.restaurants.map(item => (
-                <Marker position={[item.latitude, item.longitude]}>
+                <Marker key={item.id} position={[item.latitude, item.longitude]}>
                     <Popup>
                         <b>Restaurant id: {item.id}</b><br />
                         <b>{item.name}</b><br />

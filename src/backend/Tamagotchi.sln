@@ -25,9 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurants.Infrastructure"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrderQueue", "OrderQueue", "{9F71782E-88BF-44E0-B6A6-7F535C6F7CA9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventBus", "EventBus", "{49A67FDD-A8E3-49EF-A34C-865A4292239F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{49A67FDD-A8E3-49EF-A34C-865A4292239F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Core", "ExchangeModels\Infrastructure.Core.csproj", "{D8A1EF14-2722-47AC-8F23-8EDE3CC7B921}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Core", "Core\Infrastructure.Core\Infrastructure.Core.csproj", "{D8A1EF14-2722-47AC-8F23-8EDE3CC7B921}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderQueue.API", "Services\OrderQueue\OrderQueue.API\OrderQueue.API.csproj", "{EACEC465-6739-44A8-AC2B-B52E18AF7DA6}"
 EndProject

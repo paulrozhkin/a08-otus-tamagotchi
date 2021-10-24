@@ -1,14 +1,12 @@
-using Grpc.Core;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Grpc.Core;
+using Infrastructure.Core.Messages.OrderQueueMessages;
 using MassTransit;
-using Infrastructure.Core.OrderQueue;
+using Microsoft.Extensions.Logging;
 
-namespace Orders.API
+namespace Orders.API.Services
 {
     public class OrdersService : Orders.OrdersBase
     {
@@ -29,7 +27,7 @@ namespace Orders.API
         public override async Task<BookRestauranResponse> BookRestaurant(BookRestauranRequest request, ServerCallContext context)
         {
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:new-kitchen-order"));
-            await endpoint.Send(_mapper.Map<NewKitchenOrder>(request));
+            await endpoint.Send(_mapper.Map<NewKitchenOrderMessage>(request));
 
             return new BookRestauranResponse {RestaurantId = request.RestaurantId};
         }

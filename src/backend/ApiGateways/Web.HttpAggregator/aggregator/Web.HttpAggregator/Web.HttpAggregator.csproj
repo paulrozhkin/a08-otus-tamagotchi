@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>7afdc6c7-5db7-4bb0-abfd-866bbf43b6b6</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -9,9 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\..\..\..\Services\Orders\Orders.API\Protos\orders.proto">
-      <Link>Protos\orders.proto</Link>
-    </Protobuf>
+    <Protobuf Include="..\..\..\..\Services\Orders\Orders.API\Protos\orders.proto" GrpcService="Client" Link="Protos\orders.proto" />
     <Protobuf Include="..\..\..\..\Services\Restaurants\Restaurants.API\Protos\restaurants.proto" GrpcService="Client" Link="Protos\restaurants.proto" />
   </ItemGroup>
 
@@ -22,6 +23,7 @@
     <PackageReference Include="MassTransit.AspNetCore" Version="7.2.2" />
     <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.2.2" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
     <PackageReference Include="Grpc.Net.ClientFactory" Version="2.34.0" />
@@ -29,11 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\ExchangeModels\Infrastructure.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Protos\" />
+    <ProjectReference Include="..\..\..\..\Core\Infrastructure.Core\Infrastructure.Core.csproj" />
   </ItemGroup>
 
 </Project>
