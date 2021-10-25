@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Protobuf Include="Protos\restaurants.proto" GrpcService="Server" />
+    <Protobuf Include="..\..\..\Services\Geocoding\Geocoding.API\Protos\geocoding.proto" GrpcService="Client" Link="Protos\geocoding.proto" />
   </ItemGroup>
 
   <ItemGroup>
