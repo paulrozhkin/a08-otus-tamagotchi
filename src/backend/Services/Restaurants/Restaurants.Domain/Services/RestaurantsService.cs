@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Restaurants.Domain.Models;
@@ -9,16 +10,17 @@ namespace Restaurants.Domain.Services
     {
         private readonly ILogger<RestaurantsService> _logger;
         private readonly IRestaurantsRepository _restaurantsRepository;
+        private readonly IAddressService _addressService;
 
-        public RestaurantsService(ILogger<RestaurantsService> logger, IRestaurantsRepository restaurantsRepository)
+        public RestaurantsService(ILogger<RestaurantsService> logger, IRestaurantsRepository restaurantsRepository, IAddressService addressService)
         {
             _logger = logger;
             _restaurantsRepository = restaurantsRepository;
+            _addressService = addressService;
         }
 
         public async Task<PagedList<Restaurant>> GetRestaurantsAsync(int pageNumber, int pageSize, string address)
         {
-            // TODO: implement geocoding
             if (!string.IsNullOrEmpty(address))
             {
                 _logger.LogError("User try to invoke unsupported geocoding");
@@ -27,11 +29,26 @@ namespace Restaurants.Domain.Services
 
             var restaurants = await _restaurantsRepository.GetRestaurantsAsync(pageNumber, pageSize);
 
-            restaurants.ForEach(restaurant =>
+            async Task FillAddress(Restaurant restaurant)
             {
-                restaurant.Address =
-                    $"representation of the address by coordinates: {restaurant.Latitude} {restaurant.Longitude}"; // TODO: implement geocoding
-            });
+                try
+                {
+                    restaurant.Address = await _addressService.GetAddressFromLocation(restaurant.Latitude, restaurant.Longitude);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError($"Can't get address for restaurant {restaurant.Id} cause {e}");
+                }
+            }
+
+            var fillAddressesTasks = new List<Task>();
+            foreach (var restaurant in restaurants)
+            {
+                fillAddressesTasks.Add(FillAddress(restaurant));
+
+            }
+
+            await Task.WhenAll(fillAddressesTasks);
 
             return restaurants;
         }
@@ -39,16 +56,14 @@ namespace Restaurants.Domain.Services
         public async Task<Restaurant> GetRestaurantByIdAsync(int id)
         {
             var restaurant = await _restaurantsRepository.GetRestaurantByIdAsync(id);
-            restaurant.Address =
-                $"representation of the address by coordinates: {restaurant.Latitude} {restaurant.Longitude}"; // TODO: implement geocoding
+            restaurant.Address = await _addressService.GetAddressFromLocation(restaurant.Latitude, restaurant.Longitude);
             return restaurant;
         }
 
         public async Task<Restaurant> AddRestaurantAsync(Restaurant restaurant)
         {
             var newRestaurant = await _restaurantsRepository.AddRestaurantAsync(restaurant);
-            newRestaurant.Address =
-                $"representation of the address by coordinates: {newRestaurant.Latitude} {newRestaurant.Longitude}"; // TODO: implement geocoding
+            newRestaurant.Address = await _addressService.GetAddressFromLocation(restaurant.Latitude, restaurant.Longitude);
             return newRestaurant;
         }
     }

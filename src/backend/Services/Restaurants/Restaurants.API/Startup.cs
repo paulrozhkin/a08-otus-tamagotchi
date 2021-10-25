@@ -1,4 +1,6 @@
-﻿using Infrastructure.Core.Config;
+﻿using System;
+using Infrastructure.Core.Config;
+using Infrastructure.Core.Grpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,9 +9,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Restaurants.API.Config;
 using Restaurants.API.Services;
 using Restaurants.Domain.Services;
 using Restaurants.Infrastructure.Repository;
+using static Geocoding.API.Geocoding;
 
 namespace Restaurants.API
 {
@@ -27,9 +32,13 @@ namespace Restaurants.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+            services.AddGrpcServices();
 
             services.AddScoped<IRestaurantsService, RestaurantsService>();
             services.AddScoped<IRestaurantsRepository, RestaurantsRepository>();
+
+            var urlsConfig = _configuration.GetSection(UrlsOptions.Urls);
+            services.Configure<UrlsOptions>(urlsConfig);
 
             services.AddDbContext<RestaurantsDataContext>(builder =>
             {
@@ -61,6 +70,24 @@ namespace Restaurants.API
                             "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                     });
             });
+        }
+    }
+
+    public static class GrpcServiceCollectionExtensions
+    {
+        public static IServiceCollection AddGrpcServices(this IServiceCollection services)
+        {
+            services.AddTransient<GrpcExceptionInterceptor>();
+
+            services.AddScoped<IAddressService, AddressService>();
+
+            services.AddGrpcClient<GeocodingClient>((serviceProvider, options) =>
+            {
+                var geocodingApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.GeocodingGrpc;
+                options.Address = new Uri(geocodingApi);
+            }).AddInterceptor<GrpcExceptionInterceptor>();
+
+            return services;
         }
     }
 }
