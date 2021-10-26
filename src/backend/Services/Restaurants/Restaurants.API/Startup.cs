@@ -32,7 +32,8 @@ namespace Restaurants.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
-            services.AddGrpcServices();
+
+            services.AddGeocodingService(_configuration);
 
             services.AddScoped<IRestaurantsService, RestaurantsService>();
             services.AddScoped<IRestaurantsRepository, RestaurantsRepository>();
@@ -75,8 +76,27 @@ namespace Restaurants.API
 
     public static class GrpcServiceCollectionExtensions
     {
-        public static IServiceCollection AddGrpcServices(this IServiceCollection services)
+        public static IServiceCollection AddGeocodingService(this IServiceCollection services, IConfiguration configuration)
         {
+            var env = services.BuildServiceProvider().GetRequiredService<IWebHostEnvironment>();
+            var useGeocodingInDevelopment = false;
+            var settingUseGeoConfigurationSection = configuration.GetSection("UseRealGeocodingInDevelopment");
+
+            if (settingUseGeoConfigurationSection != null)
+            {
+                if (bool.TryParse(settingUseGeoConfigurationSection.Value, out var isUsedGeo))
+                {
+                    useGeocodingInDevelopment = isUsedGeo;
+                }
+            }
+
+            // For dev use fake object
+            if (env.IsDevelopment() && !useGeocodingInDevelopment)
+            {
+                services.AddScoped<IAddressService, AddressServiceFake>();
+                return services;
+            }
+
             services.AddTransient<GrpcExceptionInterceptor>();
 
             services.AddScoped<IAddressService, AddressService>();
