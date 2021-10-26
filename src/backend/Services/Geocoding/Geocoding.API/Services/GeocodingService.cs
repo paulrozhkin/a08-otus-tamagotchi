@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Geocoding.API.Services.Cache;
 using Geocoding.API.Services.Geocoding;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
@@ -9,11 +10,15 @@ namespace Geocoding.API
     {
         private readonly ILogger<GeocodingService> _logger;
         private readonly IGeocoding _geocoding;
+        private readonly IGeocodingCache _geocodingCache;
 
-        public GeocodingService(ILogger<GeocodingService> logger, IGeocoding geocoding)
+        public GeocodingService(ILogger<GeocodingService> logger,
+            IGeocoding geocoding,
+            IGeocodingCache geocodingCache)
         {
             _logger = logger;
             _geocoding = geocoding;
+            _geocodingCache = geocodingCache;
         }
 
         public override async Task<GeocodeResponse> Geocode(GeocodeRequest request, ServerCallContext context)
@@ -22,13 +27,12 @@ namespace Geocoding.API
             { 
                 throw new RpcException(new Status(StatusCode.InvalidArgument, "Address null or empty"));
             }
-
+            
             var result = await _geocoding.GeocodeAsync(request.Address);
 
             if (result == null)
             {
                 throw new RpcException(new Status(StatusCode.NotFound, "Not found information about address"));
-
             }
 
             return new GeocodeResponse()
@@ -46,7 +50,14 @@ namespace Geocoding.API
                 throw new RpcException(new Status(StatusCode.InvalidArgument, "Longitude and Latitude can't be 0"));
             }
 
-            var result = await _geocoding.ReverseGeocodeAsync(request.Latitude, request.Longitude);
+            var cachedAddress = await _geocodingCache.GetLocationFromCache(request.Latitude, request.Longitude);
+            var result = cachedAddress;
+
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                result = await _geocoding.ReverseGeocodeAsync(request.Latitude, request.Longitude);
+                await _geocodingCache.AddLocationToCache(request.Latitude, request.Longitude, result);
+            }
 
             if (result == null)
             {

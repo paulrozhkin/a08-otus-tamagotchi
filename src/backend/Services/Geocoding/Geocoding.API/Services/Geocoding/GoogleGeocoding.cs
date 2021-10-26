@@ -11,6 +11,7 @@ namespace Geocoding.API.Services.Geocoding
     public class GoogleGeocoding : IGeocoding
     {
         private readonly IGeocoder _geocoder;
+        private const string DefaultLanguage = "ru";
 
         public GoogleGeocoding(IOptions<GoogleMapConfigOptions> googleMapConfig)
         {
@@ -19,7 +20,10 @@ namespace Geocoding.API.Services.Geocoding
                 throw new ArgumentNullException(nameof(googleMapConfig.Value.GoogleApiKey));
             }
 
-            _geocoder = new GoogleGeocoder() {ApiKey = googleMapConfig.Value.GoogleApiKey};
+            _geocoder = new GoogleGeocoder()
+            {
+                ApiKey = googleMapConfig.Value.GoogleApiKey, Language = DefaultLanguage
+            };
         }
 
         public async Task<GeocodeInfo> GeocodeAsync(string address)

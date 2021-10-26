@@ -8,9 +8,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Geocoding.API.Config;
+using Geocoding.API.Services.Cache;
 using Geocoding.API.Services.Geocoding;
 using Geocoding.Google;
 using Infrastructure.Core.Config;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -35,6 +38,13 @@ namespace Geocoding.API
             services.Configure<GoogleMapConfigOptions>(googleConfig);
 
             services.AddScoped<IGeocoding, GoogleGeocoding>();
+            services.AddScoped<IGeocodingCache, GeocodingCache>();
+
+            services.Add(ServiceDescriptor.Singleton<IDistributedCache, RedisCache>());
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = _configuration.GetSection("Redis")["ConnectionString"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
