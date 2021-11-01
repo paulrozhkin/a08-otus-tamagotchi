@@ -1,7 +1,9 @@
-﻿namespace OrderQueue.Core.Domain
+﻿using System;
+
+namespace OrderQueue.Core.Domain
 {
     public class BaseEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

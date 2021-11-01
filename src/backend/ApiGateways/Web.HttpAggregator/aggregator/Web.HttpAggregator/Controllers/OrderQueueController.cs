@@ -1,10 +1,9 @@
-﻿using AutoMapper;
-using MassTransit;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web.HttpAggregator.Models.OrderQueue;
-using Infrastructure.Core.Messages.OrderQueueMessages;
+using Web.HttpAggregator.Services;
 
 namespace Web.HttpAggregator.Controllers
 {
@@ -13,24 +12,20 @@ namespace Web.HttpAggregator.Controllers
     public class OrderQueueController
         : ControllerBase
     {
-        private readonly ISendEndpointProvider _sendEndpointProvider;
-        private readonly IMapper _mapper;
+        private readonly ILogger<OrderQueueController> _logger;
+        private readonly IOrderQueueService _orderQueueService;
 
-        public OrderQueueController(ISendEndpointProvider sendEndpointProvider, IMapper mapper)
+        public OrderQueueController(ILogger<OrderQueueController> logger, IOrderQueueService orderQueueService)
         {
-            _sendEndpointProvider = sendEndpointProvider;
-            _mapper = mapper;
+            _logger = logger;
+            _orderQueueService = orderQueueService;
         }
 
-        /// <summary>
-        /// Создать заказ для кухни
-        /// </summary>        
-        [HttpPost]
-        public async Task<ActionResult> CreateAsync([FromBody] KitchenOrderCreateRequest request)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<KitchenOrderResponse>>> GetAllAsync()
         {
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:new-kitchen-order"));
-            await endpoint.Send(_mapper.Map<NewKitchenOrderMessage>(request));
-            return Ok();
+            var response = await _orderQueueService.GetKitchenOrders();
+            return Ok(response);
         }
     }
 }

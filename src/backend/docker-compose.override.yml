@@ -50,6 +50,7 @@ services:
       - "RabbitMq:Host=amqp://guest:guest@rabbitmq:5672"
       - "Urls:RestaurantsGrpc=http://restaurants.api"
       - "Urls:OrdersGrpc=http://orders.api"
+      - "Urls:OrderQueueGrpc=http://orderqueue.api"
     ports:
       - "5000:80"      
   

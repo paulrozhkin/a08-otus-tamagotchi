@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace OrderQueue.Core.Domain
 {
@@ -11,26 +10,14 @@ namespace OrderQueue.Core.Domain
         /// <summary>
         /// Идентификатор заказа из БД сервиса Orders
         /// </summary>
-        public int OrderId { get; set; }
+        public Guid OrderId { get; set; }
         /// <summary>
-        /// Идентификатор ресторана
+        /// Статус заказа кухни
         /// </summary>
-        public int RestaurantId { get; set; }
-        /// <summary>
-        /// Идентификатор статуса заказа
-        /// </summary>
-        public int KitchenOrderStatusId { get; set; }
-        /// <summary>
-        /// Статус заказа
-        /// </summary>
-        public virtual KitchenOrderStatus Status { get; set; }
-        /// <summary>
-        /// Блюда в заказе
-        /// </summary>
-        public virtual ICollection<KitchenOrderDish> Dishes { get; set; }
+        public KitchenOrderStatus Status { get; set; }
         /// <summary>
         /// Дата создания
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        public DateTime CreateDate { get; set; }
     }
 }
