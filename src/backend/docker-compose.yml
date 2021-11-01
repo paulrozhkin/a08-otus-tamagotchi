@@ -1,0 +1,52 @@
+version: '3.4'
+
+services:
+  pgadmin:
+    image: dpage/pgadmin4
+    
+  tamagotchi_restaurants:
+    image: postgres
+
+  order_queue:
+    image: postgres  
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine  
+
+  web.httpaggregator:
+    image: ${DOCKER_REGISTRY-}webhttpaggregator
+    build:
+      context: .
+      dockerfile: ApiGateways/Web.HttpAggregator/aggregator/Web.HttpAggregator/Dockerfile
+    depends_on:
+      - rabbitmq
+
+  orderqueue.api:
+    image: ${DOCKER_REGISTRY-}orderqueueapi
+    build:
+      context: .
+      dockerfile: Services/OrderQueue/OrderQueue.API/Dockerfile
+    depends_on:
+      - rabbitmq
+      - order_queue
+
+  orders.api:
+    image: ${DOCKER_REGISTRY-}ordersapi
+    build:
+      context: .
+      dockerfile: Services/Orders/Orders.API/Dockerfile
+    depends_on:
+      - rabbitmq
+
+  restaurants.api:
+    image: ${DOCKER_REGISTRY-}restaurantsapi
+    build:
+      context: .
+      dockerfile: Services/Restaurants/Restaurants.API/Dockerfile
+    depends_on:
+      - tamagotchi_restaurants
+
+volumes:
+  tamagotchi_restaurants_data:
+  order_queue_data:
+  pgadmin_data:

@@ -1,0 +1,79 @@
+version: '3.4'
+
+services:
+  tamagotchi_restaurants:
+    container_name: tamagotchi_restaurants
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=sql
+      - POSTGRES_DB=tamagotchi_restaurants
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - tamagotchi_restaurants_data:/var/lib/postgresql/data/
+
+  order_queue:
+    container_name: order_queue
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=sql
+      - POSTGRES_DB=order_queue
+    restart: always
+    ports:
+      -  "5433:5432"
+    volumes:
+      - order_queue_data:/var/lib/postgresql/data/
+      
+  pgadmin:
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@tamagotchi.com
+      - PGADMIN_DEFAULT_PASSWORD=admin1234
+    restart: always
+    ports:
+        - "5050:80"
+    volumes:
+      - pgadmin_data:/root/.pgadmin
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  web.httpaggregator:
+    container_name: web.httpaggregator
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development      
+      - "RabbitMq:Host=amqp://guest:guest@rabbitmq:5672"
+      - "Urls:RestaurantsGrpc=http://restaurants.api"
+      - "Urls:OrdersGrpc=http://orders.api"
+    ports:
+      - "5000:80"      
+  
+  orderqueue.api:
+    container_name: orderqueue.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "RabbitMq:Host=amqp://guest:guest@rabbitmq:5672"
+      - "ConnectionStrings:OrderQueueDb=Server=order_queue;Port=5432;Database=order_queue;User Id=postgres;Password=sql"    
+    ports:
+      - "6005:80"
+  
+  orders.api:
+    container_name: orders.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "RabbitMq:Host=amqp://guest:guest@rabbitmq:5672"
+    ports:
+      - "10000:80"         
+
+  restaurants.api:
+    container_name: restaurants.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  
+      - "ConnectionStrings:Npgsql=Server=tamagotchi_restaurants;Port=5432;Database=tamagotchi_restaurants;User Id=postgres;Password=sql"    
+    ports:
+      - "6000:80"     

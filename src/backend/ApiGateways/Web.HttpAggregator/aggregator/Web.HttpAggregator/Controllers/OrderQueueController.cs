@@ -3,8 +3,8 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using Infrastructure.Core.Messages.OrderQueueMessages;
 using Web.HttpAggregator.Models.OrderQueue;
+using Infrastructure.Core.Messages.OrderQueueMessages;
 
 namespace Web.HttpAggregator.Controllers
 {
