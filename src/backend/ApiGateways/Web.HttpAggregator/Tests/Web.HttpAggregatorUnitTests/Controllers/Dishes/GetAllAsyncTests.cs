@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using Domain.Core.Exceptions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

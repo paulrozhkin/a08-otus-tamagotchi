@@ -54,13 +54,14 @@ namespace Web.HttpAggregator.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DishResponse))]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult> CreateDishAsync(DishRequest dish)
         {
             try
             {
                 var createdDish = await _dishesService.CreateDishAsync(dish);
-                return CreatedAtAction(nameof(CreateDishAsync), new {id = createdDish.Id}, createdDish);
+                return CreatedAtAction("CreateDish", new {id = createdDish.Id}, createdDish);
             }
             catch (NameAlreadyExistsException e)
             {
