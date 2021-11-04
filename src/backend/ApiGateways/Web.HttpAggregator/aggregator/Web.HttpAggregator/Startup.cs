@@ -5,20 +5,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
 using Infrastructure.Core.Config;
-using Microsoft.Extensions.Options;
-using RestaurantsApi;
 using Web.HttpAggregator.Config;
 using Web.HttpAggregator.Infrastructure.Exceptions;
-using Web.HttpAggregator.Infrastructure.Grpc;
-using Web.HttpAggregator.Services;
 using MassTransit;
 using Microsoft.AspNetCore.HttpOverrides;
 using Web.HttpAggregator.Consumers;
 using Web.HttpAggregator.Hubs;
+using Web.HttpAggregator.Infrastructure.Extensions;
 using Web.HttpAggregator.Mapping;
-using static Orders.API.Orders;
 
 namespace Web.HttpAggregator
 {
@@ -42,6 +37,7 @@ namespace Web.HttpAggregator
             services.Configure<UrlsOptions>(urlsConfig);
 
             services.AddGrpcServices();
+            services.AddFluentValidation();
 
             services.AddMassTransit(config =>
             {
@@ -115,31 +111,6 @@ namespace Web.HttpAggregator
                     endpoints.MapHub<KitchenOrderHub>("/hubs/kitchen-order");
                 }
             );
-        }
-    }
-
-    public static class GrpcServiceCollectionExtensions
-    {
-        public static IServiceCollection AddGrpcServices(this IServiceCollection services)
-        {
-            services.AddTransient<GrpcExceptionInterceptor>();
-
-            services.AddScoped<IRestaurantService, RestaurantService>();
-            services.AddScoped<IOrdersService, OrdersService>();
-
-            services.AddGrpcClient<Restaurants.RestaurantsClient>((serviceProvider, options) =>
-            {
-                var basketApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.RestaurantsGrpc;
-                options.Address = new Uri(basketApi);
-            }).AddInterceptor<GrpcExceptionInterceptor>();
-
-            services.AddGrpcClient<OrdersClient>((serviceProvider, options) =>
-            {
-                var ordersApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.OrdersGrpc;
-                options.Address = new Uri(ordersApi);
-            }).AddInterceptor<GrpcExceptionInterceptor>();
-
-            return services;
         }
     }
 }

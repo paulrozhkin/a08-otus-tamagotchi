@@ -19,18 +19,22 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-    <PackageReference Include="MassTransit" Version="7.2.2" />
-    <PackageReference Include="MassTransit.AspNetCore" Version="7.2.2" />
-    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.2.2" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.2" />
+    <PackageReference Include="FluentValidation" Version="10.3.4" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.4" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.4" />
+    <PackageReference Include="MassTransit" Version="7.2.4" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.2.4" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.2.4" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.4" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-    <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
-    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.34.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.34.0" PrivateAssets="All" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.40.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.41.1" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Core\Domain.Core\Domain.Core.csproj" />
     <ProjectReference Include="..\..\..\..\Core\Infrastructure.Core\Infrastructure.Core.csproj" />
   </ItemGroup>
 

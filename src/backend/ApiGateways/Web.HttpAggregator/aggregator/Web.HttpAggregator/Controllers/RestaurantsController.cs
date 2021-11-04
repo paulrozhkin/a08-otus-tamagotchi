@@ -1,6 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Domain.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Web.HttpAggregator.Models;
 using Web.HttpAggregator.Models.QueryParameters;
 using Web.HttpAggregator.Services;
@@ -9,12 +10,14 @@ namespace Web.HttpAggregator.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class RestaurantController : ControllerBase
+    public class RestaurantsController : ControllerBase
     {
+        private readonly ILogger<RestaurantsController> _logger;
         private readonly IRestaurantService _restaurantService;
 
-        public RestaurantController(IRestaurantService restaurantService)
+        public RestaurantsController(ILogger<RestaurantsController> logger, IRestaurantService restaurantService)
         {
+            _logger = logger;
             _restaurantService = restaurantService;
         }
 
@@ -34,8 +37,9 @@ namespace Web.HttpAggregator.Controllers
                 var restaurant = await _restaurantService.GetRestaurantByIdAsync(restaurantId);
                 return restaurant;
             }
-            catch (Exception)
+            catch (EntityNotFoundException)
             {
+                _logger.LogError($"Restaurant with id {restaurantId} not found");
                 return NotFound();
             }
         }
