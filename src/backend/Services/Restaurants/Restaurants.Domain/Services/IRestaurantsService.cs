@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Domain.Core.Models;
 using Restaurants.Domain.Models;
 
 namespace Restaurants.Domain.Services

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Domain.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Restaurants.Domain.Models;
 using Restaurants.Domain.Services;

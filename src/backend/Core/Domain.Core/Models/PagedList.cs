@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Restaurants.Domain.Models
+namespace Domain.Core.Models
 {
     public class PagedList<T> : List<T>
     {

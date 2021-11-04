@@ -1,8 +1,8 @@
 using Infrastructure.Core.Config;
+using Infrastructure.Core.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using OrderQueue.API.Extensions;
 using OrderQueue.DataAccess;
 
 namespace OrderQueue.API

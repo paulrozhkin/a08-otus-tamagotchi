@@ -42,7 +42,6 @@ namespace Restaurants.API
         {
             logger.LogInformation(ConfigurationSerializer.Serialize(_configuration).ToString());
 
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

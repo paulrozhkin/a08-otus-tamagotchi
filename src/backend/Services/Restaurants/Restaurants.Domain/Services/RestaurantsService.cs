@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Domain.Core.Models;
 using Microsoft.Extensions.Logging;
 using Restaurants.Domain.Models;
 

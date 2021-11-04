@@ -1,0 +1,15 @@
+﻿using Menu.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Menu.Infrastructure.Repository.Configuration
+{
+    public class DishConfiguration : IEntityTypeConfiguration<Dish>
+    {
+        public void Configure(EntityTypeBuilder<Dish> builder)
+        {
+            builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
+            builder.Property(x => x.Description).IsRequired().HasMaxLength(300);
+        }
+    }
+}
