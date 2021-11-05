@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using Domain.Core.Models;
 using Domain.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,20 @@ namespace Infrastructure.Core.Repositories
 
         public int Complete()
         {
+            var entries = _context.ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is BaseEntity && e.State is EntityState.Added or EntityState.Modified);
+
+            foreach (var entityEntry in entries)
+            {
+                ((BaseEntity)entityEntry.Entity).UpdatedDate = DateTime.Now;
+
+                if (entityEntry.State == EntityState.Added)
+                {
+                    ((BaseEntity)entityEntry.Entity).CreatedDate = DateTime.Now;
+                }
+            }
+
             return _context.SaveChanges();
         }
 

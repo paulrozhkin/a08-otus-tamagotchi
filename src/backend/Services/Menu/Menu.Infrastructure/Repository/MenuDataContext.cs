@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Menu.Infrastructure.Repository
 {
-    public class MenuDataContext: DbContext
+    public class MenuDataContext : DbContext
     {
         public MenuDataContext(DbContextOptions<MenuDataContext> options) : base(options)
         {

@@ -4,6 +4,11 @@ using System.Linq.Expressions;
 
 namespace Domain.Core.Repositories.Specifications
 {
+    /// <summary>
+    /// Specification pattern for query to database. More details:
+    /// https://medium.com/@rudyzio92/net-core-using-the-specification-pattern-alongside-a-generic-repository-318cd4eea4aa
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class BaseSpecification<T> : ISpecification<T>
     {
         protected BaseSpecification(Expression<Func<T, bool>> criteria)
