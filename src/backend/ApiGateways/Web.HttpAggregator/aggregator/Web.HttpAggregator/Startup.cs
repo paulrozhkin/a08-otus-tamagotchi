@@ -20,6 +20,8 @@ using Web.HttpAggregator.Hubs;
 using Web.HttpAggregator.Mapping;
 using static Orders.API.Orders;
 using OrderQueue.API.Protos;
+using System.Reflection;
+using Infrastructure.Logging;
 
 namespace Web.HttpAggregator
 {
@@ -28,6 +30,10 @@ namespace Web.HttpAggregator
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+            LogConfigs.ConfigureLogging(assemblyName, (IConfigurationRoot)configuration, environment);
         }
 
         public IConfiguration Configuration { get; }
@@ -133,7 +139,7 @@ namespace Web.HttpAggregator
             {
                 var orderQueueApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.OrderQueueGrpc;
                 options.Address = new Uri(orderQueueApi);
-            }).AddInterceptor<GrpcExceptionInterceptor>();                
+            }).AddInterceptor<GrpcExceptionInterceptor>();
 
             services.AddGrpcClient<Restaurants.RestaurantsClient>((serviceProvider, options) =>
             {

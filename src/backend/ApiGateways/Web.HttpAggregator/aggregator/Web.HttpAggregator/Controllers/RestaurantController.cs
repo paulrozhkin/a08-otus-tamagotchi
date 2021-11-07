@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Web.HttpAggregator.Models;
 using Web.HttpAggregator.Models.QueryParameters;
 using Web.HttpAggregator.Services;
@@ -12,16 +13,20 @@ namespace Web.HttpAggregator.Controllers
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
+        private readonly ILogger<RestaurantController> _logger;
 
-        public RestaurantController(IRestaurantService restaurantService)
+        public RestaurantController(IRestaurantService restaurantService, ILogger<RestaurantController> logger)
         {
             _restaurantService = restaurantService;
+            this._logger = logger;
         }
 
         [HttpGet]
         public Task<PaginationResponse<RestaurantResponse>> GetRestaurantsAsync(
             [FromQuery] RestaurantParameters parameters)
         {
+            _logger.LogInformation($"{nameof(RestaurantController)} Index executed at {DateTime.UtcNow}");
+
             return _restaurantService.GetRestaurantsAsync(parameters.PageNumber, parameters.PageSize,
                 parameters.Address);
         }

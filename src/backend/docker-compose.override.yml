@@ -1,6 +1,7 @@
 version: '3.4'
 
 services:
+
   tamagotchi_restaurants:
     container_name: tamagotchi_restaurants
     environment:
@@ -51,6 +52,7 @@ services:
       - "Urls:RestaurantsGrpc=http://restaurants.api"
       - "Urls:OrdersGrpc=http://orders.api"
       - "Urls:OrderQueueGrpc=http://orderqueue.api"
+      - "ElasticConfiguration:Uri=http://elasticsearch"
     ports:
       - "5000:80"      
   
