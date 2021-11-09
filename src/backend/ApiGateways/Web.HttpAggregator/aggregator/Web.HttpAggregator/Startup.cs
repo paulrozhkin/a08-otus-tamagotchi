@@ -33,6 +33,10 @@ namespace Web.HttpAggregator
 
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+
+
+
+
             LogConfigs.ConfigureLogging(assemblyName, (IConfigurationRoot)configuration, environment);
         }
 
@@ -85,6 +89,8 @@ namespace Web.HttpAggregator
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             logger.LogInformation(ConfigurationSerializer.Serialize(Configuration).ToString());
+
+            logger.LogInformation("!!! : " + Configuration["ElasticConfiguration:Uri"]);
 
             if (env.IsDevelopment())
             {

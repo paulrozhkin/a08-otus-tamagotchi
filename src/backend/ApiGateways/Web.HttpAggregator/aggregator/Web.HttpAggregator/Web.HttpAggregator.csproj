@@ -36,7 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Infrastructure.Logging\Infrastructure.Logging.csproj" />
     <ProjectReference Include="..\..\..\..\Core\Infrastructure.Core\Infrastructure.Core.csproj" />
   </ItemGroup>
 

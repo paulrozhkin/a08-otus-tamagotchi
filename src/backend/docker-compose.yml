@@ -14,8 +14,8 @@ services:
     - xpack.watcher.enabled=false
     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     - discovery.type=single-node
-   networks:
-    - elastic
+   #networks:
+   # - elastic
 
   kibana:
    container_name: kibana
@@ -25,10 +25,10 @@ services:
    depends_on:
     - elasticsearch
    environment:
-    #- ELASTICSEARCH_URL=http://elasticsearch
-    - ELASTICSEARCH_URL=http://localhost:9200
-   networks:
-    - elastic
+    - ELASTICSEARCH_URL=http://elasticsearch
+    #- ELASTICSEARCH_URL=http://localhost:9200
+   #networks:
+   # - elastic
 
   pgadmin:
     image: dpage/pgadmin4

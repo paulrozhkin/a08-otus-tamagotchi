@@ -36,18 +36,12 @@ namespace Web.HttpAggregator
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-        .ConfigureWebHostDefaults(webBuilder =>
+    Host.CreateDefaultBuilder(args)
+        .ConfigureAppConfiguration((_, config) =>
         {
-            webBuilder.UseStartup<Startup>();
+            config.AddEnvironmentVariables(TamagotchiConfiguration.Prefix);
         })
-        .ConfigureAppConfiguration(configuration =>
-        {
-            configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            configuration.AddJsonFile(
-                $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
-                optional: true);
-        })
+        .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
         .UseSerilog();
     }
 }

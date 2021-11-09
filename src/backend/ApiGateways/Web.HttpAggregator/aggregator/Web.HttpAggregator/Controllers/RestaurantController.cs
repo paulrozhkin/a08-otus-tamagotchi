@@ -25,7 +25,7 @@ namespace Web.HttpAggregator.Controllers
         public Task<PaginationResponse<RestaurantResponse>> GetRestaurantsAsync(
             [FromQuery] RestaurantParameters parameters)
         {
-            _logger.LogInformation($"{nameof(RestaurantController)} Index executed at {DateTime.UtcNow}");
+            _logger.LogCritical($"{nameof(RestaurantController)} Index executed at {DateTime.UtcNow}");
 
             return _restaurantService.GetRestaurantsAsync(parameters.PageNumber, parameters.PageSize,
                 parameters.Address);

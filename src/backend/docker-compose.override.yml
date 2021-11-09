@@ -48,11 +48,11 @@ services:
     container_name: web.httpaggregator
     environment:
       - ASPNETCORE_ENVIRONMENT=Development      
-      - "RabbitMq:Host=amqp://guest:guest@rabbitmq:5672"
-      - "Urls:RestaurantsGrpc=http://restaurants.api"
-      - "Urls:OrdersGrpc=http://orders.api"
-      - "Urls:OrderQueueGrpc=http://orderqueue.api"
-      - "ElasticConfiguration:Uri=http://elasticsearch"
+      - "Tamagotchi_RabbitMq__Host=amqp://guest:guest@rabbitmq:5672"
+      - "Tamagotchi_Urls__RestaurantsGrpc=http://restaurants.api"
+      - "Tamagotchi_Urls__OrdersGrpc=http://orders.api"
+      - "Tamagotchi_Urls__OrderQueueGrpc=http://orderqueue.api"
+      - "Tamagotchi_ElasticConfiguration__Uri=http://elasticsearch:9200"
     ports:
       - "5000:80"      
   
