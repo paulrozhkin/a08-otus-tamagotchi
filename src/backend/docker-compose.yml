@@ -4,11 +4,8 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     
-  tamagotchi_restaurants:
-    image: postgres
-
-  order_queue:
-    image: postgres  
+  postgres:
+    image: postgres    
 
   rabbitmq:
     image: rabbitmq:3-management-alpine  
@@ -47,6 +44,5 @@ services:
       - tamagotchi_restaurants
 
 volumes:
-  tamagotchi_restaurants_data:
-  order_queue_data:
+  postgres:  
   pgadmin_data:
