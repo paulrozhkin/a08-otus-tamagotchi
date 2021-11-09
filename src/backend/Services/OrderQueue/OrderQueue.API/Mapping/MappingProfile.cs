@@ -9,14 +9,10 @@ namespace OrderQueue.API.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<KitchenOrderStatus, KitchenOrderStatusMessage>();
-            CreateMap<DishStatus, DishStatusMessage>();
-            CreateMap<KitchenOrderDish, KitchenOrderDishMessage>();
-            CreateMap<KitchenOrder, KitchenOrderMessage>();
-
-            CreateMap<NewOrderDishMessage, KitchenOrderDish>();
+            CreateMap<KitchenOrder, KitchenOrderMessage>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
             CreateMap<NewKitchenOrderMessage, KitchenOrder>()
-                .ForMember(dest => dest.CreateTime, opt => opt.MapFrom(src => DateTime.Now));
+                .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(src => DateTime.Now));
         }
     }
 }

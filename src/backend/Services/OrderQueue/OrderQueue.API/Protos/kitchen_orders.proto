@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "OrderQueue.API.Protos";
+
+package kitchen_orders;
+
+service KitchenOrders {
+	rpc GetKitchenOrders (GetKitchenOrdersRequest) returns (GetKitchenOrdersResponse);
+}
+
+message KitchenOrder {
+	string id = 1;
+	string order_id = 2;
+	string status = 3;
+	string create_date = 4;
+}
+
+message GetKitchenOrdersRequest {}
+
+message GetKitchenOrdersResponse {
+	repeated KitchenOrder kitchen_orders = 1;
+}

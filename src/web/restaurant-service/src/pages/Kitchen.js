@@ -1,11 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import {Container} from "react-bootstrap";
 import {HubConnectionBuilder} from "@microsoft/signalr";
-import {KITCHEN_ORDER_HUB_URL} from "../config";
+import {BASE_URL, KITCHEN_ORDER_HUB_URL} from "../config";
+import axios from "axios";
 
 const Kitchen = () => {
     const [connection, setConnection] = useState(null);
     const [orders, setOrders] = useState([]);
+
+    useEffect(() => {
+        axios.get(BASE_URL + "api/v1/OrderQueue")
+            .then(res => {
+                const newOrders = res.data.map((order) => {
+                    return { id: order.id, createTime: order.createTime };
+                });
+                setOrders(newOrders);
+            })
+            .catch(e => console.log(e.message()));
+    }, []);
 
     useEffect(() => {
        const newConnection = new HubConnectionBuilder()

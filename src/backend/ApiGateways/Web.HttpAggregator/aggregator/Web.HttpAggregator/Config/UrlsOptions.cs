@@ -7,5 +7,7 @@
         public string RestaurantsGrpc { get; set; }
 
         public string OrdersGrpc { get; set; }
+
+        public string OrderQueueGrpc { get; set; }
     }
 }

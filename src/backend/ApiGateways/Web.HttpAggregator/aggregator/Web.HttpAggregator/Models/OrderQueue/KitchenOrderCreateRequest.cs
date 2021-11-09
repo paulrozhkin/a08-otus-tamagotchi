@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace Web.HttpAggregator.Models.OrderQueue
 {
     public class KitchenOrderCreateRequest
     {
-        public int OrderId { get; set; }
-        public int RestaurantId { get; set; }
-        public List<KitchenOrderDish> Dishes { get; set; }
+        public Guid OrderId { get; set; }
     }
 }

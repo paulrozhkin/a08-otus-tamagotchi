@@ -12,6 +12,7 @@ using OrderQueue.API.Mapping;
 using OrderQueue.DataAccess;
 using OrderQueue.DataAccess.Data;
 using OrderQueue.API.Consumers;
+using OrderQueue.API.Services;
 
 namespace OrderQueue.API
 {
@@ -28,6 +29,8 @@ namespace OrderQueue.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddGrpc();
+
             services.AddScoped<IDbInitializer, DbInitializer>();
 
             services.AddRepositories();
@@ -50,7 +53,7 @@ namespace OrderQueue.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Restaurant.API", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Restaurant.API", Version = "v1" });
             });
         }
 
@@ -69,6 +72,8 @@ namespace OrderQueue.API
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGrpcService<KitchenOrdersService>();
+
                 endpoints.MapGet("/", async context => { await context.Response.WriteAsync("RabbitMQ"); });
             });
 

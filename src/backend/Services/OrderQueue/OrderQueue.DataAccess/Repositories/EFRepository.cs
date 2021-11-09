@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OrderQueue.DataAccess.Repositories
 {
-    public class EFRepository<T> : IRepository<T>
+    public class EFRepository<T> : IRepository<T> 
         where T : BaseEntity
     {
         private readonly ApplicationDbContext _context;
@@ -38,7 +38,7 @@ namespace OrderQueue.DataAccess.Repositories
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(Guid id)
         {
             return await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
         }
