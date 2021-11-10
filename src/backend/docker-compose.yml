@@ -14,8 +14,6 @@ services:
     - xpack.watcher.enabled=false
     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     - discovery.type=single-node
-   #networks:
-   # - elastic
 
   kibana:
    container_name: kibana
@@ -27,17 +25,12 @@ services:
    environment:
     - ELASTICSEARCH_URL=http://elasticsearch
     #- ELASTICSEARCH_URL=http://localhost:9200
-   #networks:
-   # - elastic
 
   pgadmin:
     image: dpage/pgadmin4
     
-  tamagotchi_restaurants:
-    image: postgres
-
-  order_queue:
-    image: postgres  
+  postgres:
+    image: postgres    
 
   rabbitmq:
     image: rabbitmq:3-management-alpine  
@@ -58,7 +51,6 @@ services:
       dockerfile: Services/OrderQueue/OrderQueue.API/Dockerfile
     depends_on:
       - rabbitmq
-      - order_queue
 
   orders.api:
     image: ${DOCKER_REGISTRY-}ordersapi
@@ -73,15 +65,8 @@ services:
     build:
       context: .
       dockerfile: Services/Restaurants/Restaurants.API/Dockerfile
-    depends_on:
-      - tamagotchi_restaurants
-
-networks:
-  elastic:
-    driver: bridge
 
 volumes:
   elasticsearch-data:
-  tamagotchi_restaurants_data:
-  order_queue_data:
+  postgres:  
   pgadmin_data:

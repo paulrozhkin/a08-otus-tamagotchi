@@ -2,29 +2,16 @@ version: '3.4'
 
 services:
 
-  tamagotchi_restaurants:
-    container_name: tamagotchi_restaurants
+  postgres:
+    container_name: postgres
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=sql
-      - POSTGRES_DB=tamagotchi_restaurants
+      - POSTGRES_PASSWORD=sql      
     restart: always
     ports:
       - "5432:5432"
     volumes:
-      - tamagotchi_restaurants_data:/var/lib/postgresql/data/
-
-  order_queue:
-    container_name: order_queue
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=sql
-      - POSTGRES_DB=order_queue
-    restart: always
-    ports:
-      -  "5433:5432"
-    volumes:
-      - order_queue_data:/var/lib/postgresql/data/
+      - postgres:/var/lib/postgresql/data/  
       
   pgadmin:
     container_name: pgadmin
@@ -61,7 +48,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "RabbitMq:Host=amqp://guest:guest@rabbitmq:5672"
-      - "ConnectionStrings:OrderQueueDb=Server=order_queue;Port=5432;Database=order_queue;User Id=postgres;Password=sql"    
+      - "ConnectionStrings:OrderQueueDb=Server=postgres;Port=5432;Database=order_queue;User Id=postgres;Password=sql"    
     ports:
       - "6005:80"
   
@@ -77,6 +64,6 @@ services:
     container_name: restaurants.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development  
-      - "ConnectionStrings:Npgsql=Server=tamagotchi_restaurants;Port=5432;Database=tamagotchi_restaurants;User Id=postgres;Password=sql"    
+      - "ConnectionStrings:Npgsql=Server=postgres;Port=5432;Database=tamagotchi_restaurants;User Id=postgres;Password=sql"    
     ports:
       - "6000:80"     
