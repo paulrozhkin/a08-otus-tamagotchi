@@ -90,8 +90,6 @@ namespace Web.HttpAggregator
         {
             logger.LogInformation(ConfigurationSerializer.Serialize(Configuration).ToString());
 
-            logger.LogInformation("!!! : " + Configuration["ElasticConfiguration:Uri"]);
-
             if (env.IsDevelopment())
             {
                 app.UseCors(builder =>
