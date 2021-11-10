@@ -8,9 +8,7 @@ namespace Orders.API.Mapping
         public MappingProfile()
         {
             CreateMap<BookRestauranRequest, NewKitchenOrderMessage>()
-                .ForMember(dst => dst.Dishes, opt => opt.Ignore())
-                .ForMember(dst => dst.OrderId, opt => opt.Ignore())
-                .ForMember(dst => dst.RestaurantId, opt => opt.MapFrom(src => src.RestaurantId));
+                .ForMember(dst => dst.OrderId, opt => opt.Ignore());
         }
     }
 }

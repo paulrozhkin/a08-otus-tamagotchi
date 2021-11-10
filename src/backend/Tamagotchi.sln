@@ -39,6 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orders", "Orders", "{AB97B6
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders.API", "Services\Orders\Orders.API\Orders.API.csproj", "{68C039F2-B655-492A-838F-22109123EB95}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{7153F53F-7ABB-4D98-B784-1A7BC2DA6AF5}"
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Geocoding", "Geocoding", "{CCCC48B4-B6C9-42EF-B869-6FB95365C68D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geocoding.API", "Services\Geocoding\Geocoding.API\Geocoding.API.csproj", "{60B0B9F9-1C84-484A-9DB2-3684D485D803}"
@@ -89,6 +90,10 @@ Global
 		{60B0B9F9-1C84-484A-9DB2-3684D485D803}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60B0B9F9-1C84-484A-9DB2-3684D485D803}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60B0B9F9-1C84-484A-9DB2-3684D485D803}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7153F53F-7ABB-4D98-B784-1A7BC2DA6AF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7153F53F-7ABB-4D98-B784-1A7BC2DA6AF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7153F53F-7ABB-4D98-B784-1A7BC2DA6AF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7153F53F-7ABB-4D98-B784-1A7BC2DA6AF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

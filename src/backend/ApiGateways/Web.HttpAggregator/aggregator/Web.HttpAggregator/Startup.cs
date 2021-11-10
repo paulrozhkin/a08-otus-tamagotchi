@@ -19,6 +19,7 @@ using Web.HttpAggregator.Consumers;
 using Web.HttpAggregator.Hubs;
 using Web.HttpAggregator.Mapping;
 using static Orders.API.Orders;
+using OrderQueue.API.Protos;
 
 namespace Web.HttpAggregator
 {
@@ -126,6 +127,13 @@ namespace Web.HttpAggregator
 
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<IOrdersService, OrdersService>();
+            services.AddScoped<IOrderQueueService, OrderQueueService>();
+
+            services.AddGrpcClient<KitchenOrders.KitchenOrdersClient>((serviceProvider, options) =>
+            {
+                var orderQueueApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.OrderQueueGrpc;
+                options.Address = new Uri(orderQueueApi);
+            }).AddInterceptor<GrpcExceptionInterceptor>();                
 
             services.AddGrpcClient<Restaurants.RestaurantsClient>((serviceProvider, options) =>
             {
