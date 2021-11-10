@@ -33,13 +33,12 @@ namespace Restaurants.API
         {
             services.AddGrpc();
 
+            services.Configure<GeocodingOptions>(_configuration.GetSection(GeocodingOptions.Geocoding));
+            
             services.AddGeocodingService(_configuration);
 
             services.AddScoped<IRestaurantsService, RestaurantsService>();
             services.AddScoped<IRestaurantsRepository, RestaurantsRepository>();
-
-            var urlsConfig = _configuration.GetSection(UrlsOptions.Urls);
-            services.Configure<UrlsOptions>(urlsConfig);
 
             services.AddDbContext<RestaurantsDataContext>(builder =>
             {
@@ -78,20 +77,10 @@ namespace Restaurants.API
     {
         public static IServiceCollection AddGeocodingService(this IServiceCollection services, IConfiguration configuration)
         {
-            var env = services.BuildServiceProvider().GetRequiredService<IWebHostEnvironment>();
-            var useGeocodingInDevelopment = false;
-            var settingUseGeoConfigurationSection = configuration.GetSection("UseRealGeocodingInDevelopment");
+            var geocodingOptions = configuration.GetSection(GeocodingOptions.Geocoding).Get<GeocodingOptions>();
 
-            if (settingUseGeoConfigurationSection != null)
-            {
-                if (bool.TryParse(settingUseGeoConfigurationSection.Value, out var isUsedGeo))
-                {
-                    useGeocodingInDevelopment = isUsedGeo;
-                }
-            }
-
-            // For dev use fake object
-            if (env.IsDevelopment() && !useGeocodingInDevelopment)
+            // Use fake object
+            if (!geocodingOptions.UseGeocoding)
             {
                 services.AddScoped<IAddressService, AddressServiceFake>();
                 return services;
@@ -103,7 +92,7 @@ namespace Restaurants.API
 
             services.AddGrpcClient<GeocodingClient>((serviceProvider, options) =>
             {
-                var geocodingApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.GeocodingGrpc;
+                var geocodingApi = serviceProvider.GetRequiredService<IOptions<GeocodingOptions>>().Value.GeocodingGrpc;
                 options.Address = new Uri(geocodingApi);
             }).AddInterceptor<GrpcExceptionInterceptor>();
 
