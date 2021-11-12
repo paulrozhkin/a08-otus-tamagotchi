@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option csharp_namespace = "Geocoding.API";
+
+package geocoding_api;
+
+service Geocoding {
+	rpc Geocode(GeocodeRequest) returns (GeocodeResponse);
+	rpc ReverseGeocode(ReverseGeocodeRequest) returns (ReverseGeocodeResponse);
+}
+
+message GeocodeRequest {
+  string address = 1;
+}
+
+message GeocodeResponse {
+  string formatted_address = 1;
+  double latitude = 2;
+  double longitude = 3;
+}
+
+message ReverseGeocodeRequest {
+	double latitude = 1;
+	double longitude = 2;
+}
+
+message ReverseGeocodeResponse {
+	string formatted_address = 1;
+}

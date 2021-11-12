@@ -25,7 +25,7 @@ services:
       dockerfile: Services/OrderQueue/OrderQueue.API/Dockerfile
     depends_on:
       - rabbitmq
-      - order_queue
+      - postgres
 
   orders.api:
     image: ${DOCKER_REGISTRY-}ordersapi
@@ -41,7 +41,7 @@ services:
       context: .
       dockerfile: Services/Restaurants/Restaurants.API/Dockerfile
     depends_on:
-      - tamagotchi_restaurants
+      - postgres
 
 volumes:
   postgres:  
