@@ -32,6 +32,7 @@ namespace Restaurants.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+            services.AddAutoMapper(typeof(MappingProfile));
 
             services.Configure<GeocodingOptions>(_configuration.GetSection(GeocodingOptions.Geocoding));
             

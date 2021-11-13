@@ -1,6 +1,7 @@
 ﻿using Domain.Core.Repositories;
 using Infrastructure.Core.Config;
 using Infrastructure.Core.Repositories;
+using Menu.API.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,6 +30,7 @@ namespace Menu.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+            services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddScoped<IDishesService, DishesService>();
             services.AddScoped<IUnitOfWork, UnitOfWork<MenuDataContext>>();

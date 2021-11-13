@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DishesApi;
 using Domain.Core.Exceptions;
 using Google.Protobuf.WellKnownTypes;
@@ -15,11 +16,15 @@ namespace Menu.API.Services
     {
         private readonly ILogger<GrpcDishesService> _logger;
         private readonly IDishesService _dishesService;
+        private readonly IMapper _mapper;
 
-        public GrpcDishesService(ILogger<GrpcDishesService> logger, IDishesService dishesService)
+        public GrpcDishesService(ILogger<GrpcDishesService> logger,
+            IDishesService dishesService,
+            IMapper mapper)
         {
             _logger = logger;
             _dishesService = dishesService;
+            _mapper = mapper;
         }
 
         public override async Task<GetDishesResponse> GetDishes(GetDishesRequest request, ServerCallContext context)
@@ -39,8 +44,8 @@ namespace Menu.API.Services
                 Id = dish.Id.ToString(),
                 Name = dish.Name,
                 Photos = {Guid.Empty.ToString()}, // Not implemented,
-                CreatedDate = Timestamp.FromDateTimeOffset(dish.CreatedDate.ToUniversalTime()),
-                UpdatedDate = Timestamp.FromDateTimeOffset(dish.UpdatedDate.ToUniversalTime())
+                CreatedDate = Timestamp.FromDateTimeOffset(dish.CreatedDate),
+                UpdatedDate = Timestamp.FromDateTimeOffset(dish.UpdatedDate)
             });
 
             dishesResponse.Dishes.AddRange(dishesDto);
@@ -53,16 +58,17 @@ namespace Menu.API.Services
             try
             {
                 var dish = await _dishesService.GetDishByIdAsync(Guid.Parse(request.Id));
+                var dishDto = _mapper.Map<Dish>(dish);
 
-                var dishDto = new Dish()
-                {
-                    Descriptions = dish.Description,
-                    Id = dish.Id.ToString(),
-                    Name = dish.Name,
-                    Photos = {Guid.Empty.ToString()}, // Not implemented,
-                    CreatedDate = Timestamp.FromDateTimeOffset(dish.CreatedDate.ToUniversalTime()),
-                    UpdatedDate = Timestamp.FromDateTimeOffset(dish.UpdatedDate.ToUniversalTime())
-                };
+                //var dishDto = new Dish()
+                //{
+                //    Descriptions = dish.Description,
+                //    Id = dish.Id.ToString(),
+                //    Name = dish.Name,
+                //    Photos = {Guid.Empty.ToString()}, // Not implemented,
+                //    CreatedDate = Timestamp.FromDateTimeOffset(dish.CreatedDate),
+                //    UpdatedDate = Timestamp.FromDateTimeOffset(dish.UpdatedDate)
+                //};
 
                 var dishResponse = new GetDishResponse()
                 {
@@ -106,8 +112,8 @@ namespace Menu.API.Services
                     Id = createdDish.Id.ToString(),
                     Descriptions = createdDish.Description,
                     Name = createdDish.Name,
-                    CreatedDate = Timestamp.FromDateTimeOffset(createdDish.CreatedDate.ToUniversalTime()),
-                    UpdatedDate = Timestamp.FromDateTimeOffset(createdDish.UpdatedDate.ToUniversalTime())
+                    CreatedDate = Timestamp.FromDateTimeOffset(createdDish.CreatedDate),
+                    UpdatedDate = Timestamp.FromDateTimeOffset(createdDish.UpdatedDate)
                 }
             };
         }
@@ -146,8 +152,8 @@ namespace Menu.API.Services
                     Id = updateDish.Id.ToString(),
                     Descriptions = updateDish.Description,
                     Name = updateDish.Name,
-                    CreatedDate = Timestamp.FromDateTimeOffset(updateDish.CreatedDate.ToUniversalTime()),
-                    UpdatedDate = Timestamp.FromDateTimeOffset(updateDish.UpdatedDate.ToUniversalTime())
+                    CreatedDate = Timestamp.FromDateTimeOffset(updateDish.CreatedDate),
+                    UpdatedDate = Timestamp.FromDateTimeOffset(updateDish.UpdatedDate)
                 }
             };
         }
