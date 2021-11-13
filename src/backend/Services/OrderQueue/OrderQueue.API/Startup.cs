@@ -1,4 +1,5 @@
 using Infrastructure.Core.Config;
+using Infrastructure.Core.Extensions;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,9 +33,9 @@ namespace OrderQueue.API
             services.AddGrpc();
 
             services.AddScoped<IDbInitializer, DbInitializer>();
+            
+            services.AddDataAccess<OrderQueueDbContext>(_configuration.GetConnectionString("OrderQueueDb"));
 
-            services.AddRepositories();
-            services.AddDataAccess(_configuration["ConnectionStrings:OrderQueueDb"]);
             services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddMassTransit(config =>
@@ -53,7 +54,7 @@ namespace OrderQueue.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Restaurant.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Restaurant.API", Version = "v1"});
             });
         }
 

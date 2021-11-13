@@ -1,5 +1,6 @@
 ﻿using Domain.Core.Repositories;
 using Infrastructure.Core.Config;
+using Infrastructure.Core.Extensions;
 using Infrastructure.Core.Repositories;
 using Menu.API.Mapping;
 using Microsoft.AspNetCore.Builder;
@@ -33,12 +34,8 @@ namespace Menu.API
             services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddScoped<IDishesService, DishesService>();
-            services.AddScoped<IUnitOfWork, UnitOfWork<MenuDataContext>>();
 
-            services.AddDbContext<MenuDataContext>(builder =>
-            {
-                builder.UseNpgsql(_configuration.GetConnectionString("MenuDatabase"));
-            });
+            services.AddDataAccess<MenuDataContext>(_configuration.GetConnectionString("MenuDatabase"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -19,8 +19,9 @@ namespace Infrastructure.Core.Extensions
             }
             catch (Exception ex)
             {
-                var logger = services.GetRequiredService<ILogger>();
+                var logger = services.GetRequiredService<ILogger<T>>();
                 logger.LogError(ex, "An error occurred while migrating the database.");
+                throw;
             }
 
             return host;

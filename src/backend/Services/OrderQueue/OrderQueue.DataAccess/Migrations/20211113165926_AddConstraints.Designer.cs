@@ -2,18 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Restaurants.Infrastructure.Repository;
+using OrderQueue.DataAccess;
 
 #nullable disable
 
-namespace Restaurants.Infrastructure.Migrations
+namespace OrderQueue.DataAccess.Migrations
 {
-    [DbContext(typeof(RestaurantsDataContext))]
-    partial class RestaurantsDataContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(OrderQueueDbContext))]
+    [Migration("20211113165926_AddConstraints")]
+    partial class AddConstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +24,7 @@ namespace Restaurants.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Restaurants.Domain.Models.Restaurant", b =>
+            modelBuilder.Entity("OrderQueue.Core.Domain.KitchenOrder", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,23 +33,11 @@ namespace Restaurants.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("IsCardPaymentPresent")
-                        .HasColumnType("boolean");
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
 
-                    b.Property<bool>("IsParkingPresent")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsWiFiPresent")
-                        .HasColumnType("boolean");
-
-                    b.Property<double>("Latitude")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -56,7 +46,7 @@ namespace Restaurants.Infrastructure.Migrations
 
                     b.HasIndex("CreatedDate");
 
-                    b.ToTable("Restaurants");
+                    b.ToTable("KitchenOrders");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Domain.Core.Models;
 
 namespace OrderQueue.Core.Domain
 {
@@ -11,13 +12,10 @@ namespace OrderQueue.Core.Domain
         /// Идентификатор заказа из БД сервиса Orders
         /// </summary>
         public Guid OrderId { get; set; }
+
         /// <summary>
         /// Статус заказа кухни
         /// </summary>
         public KitchenOrderStatus Status { get; set; }
-        /// <summary>
-        /// Дата создания
-        /// </summary>
-        public DateTime CreateDate { get; set; }
     }
 }

@@ -62,6 +62,6 @@ services:
     container_name: restaurants.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development  
-      - "ConnectionStrings:Npgsql=Server=postgres;Port=5432;Database=tamagotchi_restaurants;User Id=postgres;Password=sql"    
+      - "ConnectionStrings:RestaurantsDb=Server=postgres;Port=5432;Database=tamagotchi_restaurants;User Id=postgres;Password=sql"    
     ports:
       - "6000:80"     

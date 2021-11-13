@@ -11,9 +11,13 @@ namespace OrderQueue.API.Mapping
         {
             CreateMap<KitchenOrder, KitchenOrderMessage>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+                .ForMember(dest => dest.CreateTime, opt => opt.MapFrom(src => src.CreatedDate.DateTime));
             CreateMap<NewKitchenOrderMessage, KitchenOrder>()
-                .ForMember(dest => dest.CreateDate, opt => opt.MapFrom(src => DateTime.Now));
+                .ForMember(dest => dest.Status, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
         }
     }
 }
