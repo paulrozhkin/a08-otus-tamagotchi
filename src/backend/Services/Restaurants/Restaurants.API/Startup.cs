@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Restaurants.API.Config;
+using Restaurants.API.Mapping;
 using Restaurants.API.Services;
 using Restaurants.Domain.Services;
 using Restaurants.Infrastructure.Repository;
