@@ -19,128 +19,24 @@ namespace OrderQueue.DataAccess.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("OrderQueue.Core.Domain.DishStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DishStatuses");
-                });
-
             modelBuilder.Entity("OrderQueue.Core.Domain.KitchenOrder", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreateTime")
+                    b.Property<DateTime>("CreateDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("KitchenOrderStatusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(1);
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RestaurantId")
+                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("KitchenOrderStatusId");
 
                     b.ToTable("KitchenOrders");
-                });
-
-            modelBuilder.Entity("OrderQueue.Core.Domain.KitchenOrderDish", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("DishStatusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(1);
-
-                    b.Property<int?>("KitchenOrderId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MenuId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DishStatusId");
-
-                    b.HasIndex("KitchenOrderId");
-
-                    b.ToTable("KitchenOrderDishes");
-                });
-
-            modelBuilder.Entity("OrderQueue.Core.Domain.KitchenOrderStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("KitchenOrderStatuses");
-                });
-
-            modelBuilder.Entity("OrderQueue.Core.Domain.KitchenOrder", b =>
-                {
-                    b.HasOne("OrderQueue.Core.Domain.KitchenOrderStatus", "Status")
-                        .WithMany()
-                        .HasForeignKey("KitchenOrderStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("OrderQueue.Core.Domain.KitchenOrderDish", b =>
-                {
-                    b.HasOne("OrderQueue.Core.Domain.DishStatus", "Status")
-                        .WithMany()
-                        .HasForeignKey("DishStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OrderQueue.Core.Domain.KitchenOrder", null)
-                        .WithMany("Dishes")
-                        .HasForeignKey("KitchenOrderId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("OrderQueue.Core.Domain.KitchenOrder", b =>
-                {
-                    b.Navigation("Dishes");
                 });
 #pragma warning restore 612, 618
         }

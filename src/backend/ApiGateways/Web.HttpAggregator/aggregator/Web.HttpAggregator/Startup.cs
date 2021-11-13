@@ -45,10 +45,7 @@ namespace Web.HttpAggregator
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
                     cfg.Host(Configuration["RabbitMq:Host"]);
-                    cfg.ReceiveEndpoint("kitchen-order", c =>
-                    {
-                        c.ConfigureConsumer<KitchenOrderConsumer>(ctx);
-                    });
+                    cfg.ReceiveEndpoint("kitchen-order", c => { c.ConfigureConsumer<KitchenOrderConsumer>(ctx); });
                 });
             });
 
@@ -58,7 +55,7 @@ namespace Web.HttpAggregator
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tamagotchi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Tamagotchi", Version = "v1"});
             });
 
             services.AddCors();

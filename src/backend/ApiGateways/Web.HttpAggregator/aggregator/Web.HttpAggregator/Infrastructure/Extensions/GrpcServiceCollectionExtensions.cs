@@ -1,10 +1,12 @@
 using System;
+using Infrastructure.Core.Grpc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using OrderQueue.API.Protos;
 using RestaurantsApi;
 using Web.HttpAggregator.Config;
-using Web.HttpAggregator.Infrastructure.Grpc;
 using Web.HttpAggregator.Services;
+using static Orders.API.Orders;
 
 namespace Web.HttpAggregator.Infrastructure.Extensions
 {
@@ -16,7 +18,13 @@ namespace Web.HttpAggregator.Infrastructure.Extensions
 
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<IOrdersService, OrdersService>();
-            services.AddScoped<IDishesService, DishesService>();
+            services.AddScoped<IOrderQueueService, OrderQueueService>();
+
+            services.AddGrpcClient<KitchenOrders.KitchenOrdersClient>((serviceProvider, options) =>
+            {
+                var orderQueueApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.OrderQueueGrpc;
+                options.Address = new Uri(orderQueueApi);
+            }).AddInterceptor<GrpcExceptionInterceptor>();
 
             services.AddGrpcClient<Restaurants.RestaurantsClient>((serviceProvider, options) =>
             {
@@ -24,7 +32,7 @@ namespace Web.HttpAggregator.Infrastructure.Extensions
                 options.Address = new Uri(basketApi);
             }).AddInterceptor<GrpcExceptionInterceptor>();
 
-            services.AddGrpcClient<Orders.API.Orders.OrdersClient>((serviceProvider, options) =>
+            services.AddGrpcClient<OrdersClient>((serviceProvider, options) =>
             {
                 var ordersApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.OrdersGrpc;
                 options.Address = new Uri(ordersApi);

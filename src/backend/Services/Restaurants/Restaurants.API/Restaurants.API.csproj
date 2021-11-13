@@ -6,10 +6,12 @@
     <UserSecretsId>cda484bf-be65-4616-b054-76689bb9ffef</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
     <Protobuf Include="Protos\restaurants.proto" GrpcService="Server" />
+    <Protobuf Include="..\..\..\Services\Geocoding\Geocoding.API\Protos\geocoding.proto" GrpcService="Client" Link="Protos\geocoding.proto" />
   </ItemGroup>
 
   <ItemGroup>
