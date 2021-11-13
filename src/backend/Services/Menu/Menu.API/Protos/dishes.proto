@@ -55,7 +55,7 @@ message DeleteDishRequest {
 message Dish {
 	string id = 1;
 	string name = 2;
-	string descriptions = 3;
+	string description = 3;
 	repeated string photos = 4;
 	google.protobuf.Timestamp updated_date = 5;
 	google.protobuf.Timestamp created_date = 6;

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -26,9 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Menu.API\Menu.API.csproj" />
-    <ProjectReference Include="..\..\Menu.Domain\Menu.Domain.csproj" />
-    <ProjectReference Include="..\..\Menu.Infrastructure\Menu.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\OrderQueue.API\OrderQueue.API.csproj" />
+    <ProjectReference Include="..\..\OrderQueue.DataAccess\OrderQueue.DataAccess.csproj" />
+    <ProjectReference Include="..\..\OrderQueue.Domain\OrderQueue.Core.csproj" />
   </ItemGroup>
 
 </Project>

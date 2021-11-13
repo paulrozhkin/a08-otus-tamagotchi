@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Geocoding.API.Config;
+using Geocoding.API.Services;
 using Geocoding.API.Services.Cache;
 using Geocoding.API.Services.Geocoding;
 using Geocoding.Google;

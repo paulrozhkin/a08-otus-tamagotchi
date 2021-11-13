@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -26,9 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Menu.API\Menu.API.csproj" />
-    <ProjectReference Include="..\..\Menu.Domain\Menu.Domain.csproj" />
-    <ProjectReference Include="..\..\Menu.Infrastructure\Menu.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Geocoding.API\Geocoding.API.csproj" />
   </ItemGroup>
 
 </Project>

@@ -40,7 +40,7 @@ namespace Menu.API.Services
 
             var dishesDto = dishes.Select(dish => new Dish()
             {
-                Descriptions = dish.Description,
+                Description = dish.Description,
                 Id = dish.Id.ToString(),
                 Name = dish.Name,
                 Photos = {Guid.Empty.ToString()}, // Not implemented,
@@ -89,7 +89,7 @@ namespace Menu.API.Services
             var createDishDto = request.Dish;
             var dishModel = new Domain.Models.Dish()
             {
-                Description = createDishDto.Descriptions,
+                Description = createDishDto.Description,
                 Name = createDishDto.Name
             };
 
@@ -110,7 +110,7 @@ namespace Menu.API.Services
                 Dish = new Dish()
                 {
                     Id = createdDish.Id.ToString(),
-                    Descriptions = createdDish.Description,
+                    Description = createdDish.Description,
                     Name = createdDish.Name,
                     CreatedDate = Timestamp.FromDateTimeOffset(createdDish.CreatedDate),
                     UpdatedDate = Timestamp.FromDateTimeOffset(createdDish.UpdatedDate)
@@ -123,7 +123,7 @@ namespace Menu.API.Services
             var updateDishDto = request.Dish;
             var dishModel = new Domain.Models.Dish()
             {
-                Description = updateDishDto.Descriptions,
+                Description = updateDishDto.Description,
                 Name = updateDishDto.Name,
                 Id = Guid.Parse(updateDishDto.Id)
             };
@@ -150,7 +150,7 @@ namespace Menu.API.Services
                 Dish = new Dish()
                 {
                     Id = updateDish.Id.ToString(),
-                    Descriptions = updateDish.Description,
+                    Description = updateDish.Description,
                     Name = updateDish.Name,
                     CreatedDate = Timestamp.FromDateTimeOffset(updateDish.CreatedDate),
                     UpdatedDate = Timestamp.FromDateTimeOffset(updateDish.UpdatedDate)

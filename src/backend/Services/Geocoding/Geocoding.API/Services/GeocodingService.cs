@@ -4,9 +4,9 @@ using Geocoding.API.Services.Geocoding;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 
-namespace Geocoding.API
+namespace Geocoding.API.Services
 {
-    public class GeocodingService : Geocoding.GeocodingBase
+    public class GeocodingService : API.Geocoding.GeocodingBase
     {
         private readonly ILogger<GeocodingService> _logger;
         private readonly IGeocoding _geocoding;
