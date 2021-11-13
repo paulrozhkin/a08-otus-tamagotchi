@@ -1,5 +1,6 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 package dishes_api;
 
@@ -56,4 +57,6 @@ message Dish {
 	string name = 2;
 	string descriptions = 3;
 	repeated string photos = 4;
+	google.protobuf.Timestamp updated_date = 5;
+	google.protobuf.Timestamp created_date = 6;
 }

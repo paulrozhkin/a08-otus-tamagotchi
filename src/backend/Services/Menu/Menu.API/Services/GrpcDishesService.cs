@@ -2,8 +2,10 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DishesApi;
+using Domain.Core.Exceptions;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using Infrastructure.Core.Localization;
 using Menu.Domain.Services;
 using Microsoft.Extensions.Logging;
 
@@ -31,12 +33,14 @@ namespace Menu.API.Services
                 TotalCount = dishes.TotalCount
             };
 
-            var dishesDto = dishes.Select(x => new Dish()
+            var dishesDto = dishes.Select(dish => new Dish()
             {
-                Descriptions = x.Description,
-                Id = x.Id.ToString(),
-                Name = x.Name,
-                Photos = { Guid.Empty.ToString() } // Not implemented
+                Descriptions = dish.Description,
+                Id = dish.Id.ToString(),
+                Name = dish.Name,
+                Photos = {Guid.Empty.ToString()}, // Not implemented,
+                CreatedDate = Timestamp.FromDateTimeOffset(dish.CreatedDate.ToUniversalTime()),
+                UpdatedDate = Timestamp.FromDateTimeOffset(dish.UpdatedDate.ToUniversalTime())
             });
 
             dishesResponse.Dishes.AddRange(dishesDto);
@@ -44,24 +48,124 @@ namespace Menu.API.Services
             return dishesResponse;
         }
 
-        public override Task<GetDishResponse> GetDish(GetDishRequest request, ServerCallContext context)
+        public override async Task<GetDishResponse> GetDish(GetDishRequest request, ServerCallContext context)
         {
-            return base.GetDish(request, context);
+            try
+            {
+                var dish = await _dishesService.GetDishByIdAsync(Guid.Parse(request.Id));
+
+                var dishDto = new Dish()
+                {
+                    Descriptions = dish.Description,
+                    Id = dish.Id.ToString(),
+                    Name = dish.Name,
+                    Photos = {Guid.Empty.ToString()}, // Not implemented,
+                    CreatedDate = Timestamp.FromDateTimeOffset(dish.CreatedDate.ToUniversalTime()),
+                    UpdatedDate = Timestamp.FromDateTimeOffset(dish.UpdatedDate.ToUniversalTime())
+                };
+
+                var dishResponse = new GetDishResponse()
+                {
+                    Dish = dishDto
+                };
+
+                return dishResponse;
+            }
+            catch (EntityNotFoundException)
+            {
+                _logger.LogError($"{Errors.Entities_Entity_not_found}, Dish {request.Id}");
+                throw new RpcException(new Status(StatusCode.NotFound, Errors.Entities_Entity_not_found));
+            }
         }
 
-        public override Task<CrateDishResponse> CrateDish(CrateDishRequest request, ServerCallContext context)
+        public override async Task<CrateDishResponse> CrateDish(CrateDishRequest request, ServerCallContext context)
         {
-            return base.CrateDish(request, context);
+            var createDishDto = request.Dish;
+            var dishModel = new Domain.Models.Dish()
+            {
+                Description = createDishDto.Descriptions,
+                Name = createDishDto.Name
+            };
+
+            Domain.Models.Dish createdDish;
+
+            try
+            {
+                createdDish = await _dishesService.CreateDishAsync(dishModel);
+            }
+            catch (NameAlreadyExistsException)
+            {
+                _logger.LogError(string.Format(Errors.Dishes_Dish_with_name__0__already_exist, dishModel.Name));
+                throw new RpcException(new Status(StatusCode.AlreadyExists, Errors.Dishes_Dish_already_exits));
+            }
+
+            return new CrateDishResponse()
+            {
+                Dish = new Dish()
+                {
+                    Id = createdDish.Id.ToString(),
+                    Descriptions = createdDish.Description,
+                    Name = createdDish.Name,
+                    CreatedDate = Timestamp.FromDateTimeOffset(createdDish.CreatedDate.ToUniversalTime()),
+                    UpdatedDate = Timestamp.FromDateTimeOffset(createdDish.UpdatedDate.ToUniversalTime())
+                }
+            };
         }
 
-        public override Task<UpdateDishResponse> UpdateDish(UpdateDishRequest request, ServerCallContext context)
+        public override async Task<UpdateDishResponse> UpdateDish(UpdateDishRequest request, ServerCallContext context)
         {
-            return base.UpdateDish(request, context);
+            var updateDishDto = request.Dish;
+            var dishModel = new Domain.Models.Dish()
+            {
+                Description = updateDishDto.Descriptions,
+                Name = updateDishDto.Name,
+                Id = Guid.Parse(updateDishDto.Id)
+            };
+
+            Domain.Models.Dish updateDish;
+
+            try
+            {
+                updateDish = await _dishesService.UpdateDish(dishModel);
+            }
+            catch (NameAlreadyExistsException)
+            {
+                _logger.LogError(string.Format(Errors.Dishes_Dish_with_name__0__already_exist, dishModel.Name));
+                throw new RpcException(new Status(StatusCode.AlreadyExists, Errors.Dishes_Dish_already_exits));
+            }
+            catch (EntityNotFoundException)
+            {
+                _logger.LogError($"{Errors.Entities_Entity_not_found}, Dish {dishModel.Id}");
+                throw new RpcException(new Status(StatusCode.NotFound, Errors.Entities_Entity_not_found));
+            }
+
+            return new UpdateDishResponse()
+            {
+                Dish = new Dish()
+                {
+                    Id = updateDish.Id.ToString(),
+                    Descriptions = updateDish.Description,
+                    Name = updateDish.Name,
+                    CreatedDate = Timestamp.FromDateTimeOffset(updateDish.CreatedDate.ToUniversalTime()),
+                    UpdatedDate = Timestamp.FromDateTimeOffset(updateDish.UpdatedDate.ToUniversalTime())
+                }
+            };
         }
 
-        public override Task<Empty> DeleteDish(DeleteDishRequest request, ServerCallContext context)
+        public override async Task<Empty> DeleteDish(DeleteDishRequest request, ServerCallContext context)
         {
-            return base.DeleteDish(request, context);
+            var idForDelete = request.Id;
+
+            try
+            {
+                await _dishesService.DeleteDishAsync(Guid.Parse(idForDelete));
+                return new Empty();
+            }
+            catch (EntityNotFoundException)
+            {
+                _logger.LogError($"{Errors.Entities_Entity_not_found}, Dish {idForDelete}");
+                throw new RpcException(new Status(StatusCode.NotFound, Errors.Entities_Entity_not_found));
+            }
         }
     }
 }

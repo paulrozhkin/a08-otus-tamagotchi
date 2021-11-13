@@ -9,8 +9,8 @@ namespace Domain.Core.Repositories
 {
     public interface IRepository<TEntity> where TEntity : BaseEntity
     {
-        TEntity FindById(int id);
-        ValueTask<TEntity> FindByIdAsync(int id);
+        TEntity FindById(Guid id);
+        ValueTask<TEntity> FindByIdAsync(Guid id);
 
         IEnumerable<TEntity> Find(ISpecification<TEntity> specification = null!);
         Task<IEnumerable<TEntity>> FindAsync(ISpecification<TEntity> specification = null!);

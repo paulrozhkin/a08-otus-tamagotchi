@@ -91,12 +91,12 @@ namespace Infrastructure.Core.Repositories
         }
 
 
-        public TEntity FindById(int id)
+        public TEntity FindById(Guid id)
         {
             return _context.Set<TEntity>().Find(id);
         }
 
-        public ValueTask<TEntity> FindByIdAsync(int id)
+        public ValueTask<TEntity> FindByIdAsync(Guid id)
         {
             return _context.Set<TEntity>().FindAsync(id);
         }
