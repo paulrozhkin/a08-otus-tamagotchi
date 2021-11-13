@@ -42,7 +42,7 @@ namespace Web.HttpAggregator.Services
             return result;
         }
 
-        public async Task<RestaurantResponse> GetRestaurantByIdAsync(int id)
+        public async Task<RestaurantResponse> GetRestaurantByIdAsync(Guid id)
         {
             var restaurantDto =
                 (await _restaurantsClient.GetRestaurantAsync(new GetRestaurantRequest() {Id = id.ToString()}))

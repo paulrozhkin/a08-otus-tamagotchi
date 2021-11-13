@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Core.Repositories.Configuration;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OrderQueue.Core.Domain;
+using OrderQueue.Core.Models;
 
 namespace OrderQueue.DataAccess.Configuration
 {

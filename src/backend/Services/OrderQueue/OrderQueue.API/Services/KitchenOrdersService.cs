@@ -10,12 +10,12 @@ namespace OrderQueue.API.Services
     public class KitchenOrdersService : KitchenOrders.KitchenOrdersBase
     {
         private readonly ILogger<KitchenOrdersService> _logger;
-        private readonly IRepository<Core.Domain.KitchenOrder> _kitchenOrderRepository;
+        private readonly IRepository<Core.Models.KitchenOrder> _kitchenOrderRepository;
 
         public KitchenOrdersService(ILogger<KitchenOrdersService> logger, IUnitOfWork kitchenOrderUnitOfWork)
         {
             _logger = logger;
-            _kitchenOrderRepository = kitchenOrderUnitOfWork.Repository<Core.Domain.KitchenOrder>();
+            _kitchenOrderRepository = kitchenOrderUnitOfWork.Repository<Core.Models.KitchenOrder>();
         }
 
         public override async Task<GetKitchenOrdersResponse> GetKitchenOrders(GetKitchenOrdersRequest request, ServerCallContext context)

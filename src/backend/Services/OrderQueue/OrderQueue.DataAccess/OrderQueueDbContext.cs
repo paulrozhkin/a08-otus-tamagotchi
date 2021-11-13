@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using OrderQueue.Core.Domain;
+using OrderQueue.Core.Models;
 
 namespace OrderQueue.DataAccess
 {

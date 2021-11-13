@@ -1,4 +1,4 @@
-﻿namespace OrderQueue.Core.Domain
+﻿namespace OrderQueue.Core.Models
 {
     public enum KitchenOrderStatus
     {

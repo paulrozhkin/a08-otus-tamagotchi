@@ -1,7 +1,7 @@
 ﻿using System;
 using Domain.Core.Models;
 
-namespace OrderQueue.Core.Domain
+namespace OrderQueue.Core.Models
 {
     /// <summary>
     /// Заказ кухни

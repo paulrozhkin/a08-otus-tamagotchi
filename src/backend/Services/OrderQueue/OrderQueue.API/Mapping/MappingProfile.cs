@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using OrderQueue.Core.Domain;
 using System;
 using Infrastructure.Core.Messages.OrderQueueMessages;
+using OrderQueue.Core.Models;
 
 namespace OrderQueue.API.Mapping
 {

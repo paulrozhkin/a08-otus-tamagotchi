@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Domain.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,8 +30,8 @@ namespace Web.HttpAggregator.Controllers
                 parameters.Address);
         }
 
-        [HttpGet("{restaurantId:int}")]
-        public async Task<ActionResult<RestaurantResponse>> GetRestaurantByIdAsync(int restaurantId)
+        [HttpGet("{restaurantId:Guid}")]
+        public async Task<ActionResult<RestaurantResponse>> GetRestaurantByIdAsync(Guid restaurantId)
         {
             try
             {

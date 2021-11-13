@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using MassTransit;
-using OrderQueue.Core.Domain;
 using System;
 using System.Threading.Tasks;
 using Domain.Core.Repositories;
 using Infrastructure.Core.Messages.OrderQueueMessages;
+using OrderQueue.Core.Models;
 
 namespace OrderQueue.API.Consumers
 {
