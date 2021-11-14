@@ -34,7 +34,7 @@ namespace Infrastructure.Core.Grpc
             catch (RpcException e)
             {
                 _logger.LogError("Error calling via grpc: {StatusMessage} - {Message}", e.Status, e.Message);
-                return default;
+                throw;
             }
         }
     }

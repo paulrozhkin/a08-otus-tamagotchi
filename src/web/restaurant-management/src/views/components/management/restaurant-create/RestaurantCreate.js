@@ -26,7 +26,7 @@ const RestaurantCreate = (props) => {
 
     console.log(newRestaurantDto)
 
-    fetch('/api/v1/Restaurant', {
+    fetch('http://localhost:5000/api/v1/Restaurants', {
       method: 'POST',
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(newRestaurantDto)

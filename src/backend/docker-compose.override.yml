@@ -48,7 +48,7 @@ services:
       - "Tamagotchi_RabbitMq__Host=amqp://guest:guest@rabbitmq:5672"
       - "Tamagotchi_ConnectionStrings__OrderQueueDb=Server=postgres;Port=5432;Database=order_queue;User Id=postgres;Password=sql"    
     ports:
-      - "6005:80"
+      - "5010:80"
   
   orders.api:
     container_name: orders.api
@@ -56,7 +56,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "Tamagotchi_RabbitMq__Host=amqp://guest:guest@rabbitmq:5672"
     ports:
-      - "10000:80"         
+      - "5011:80"         
 
   restaurants.api:
     container_name: restaurants.api
@@ -64,4 +64,17 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development  
       - "Tamagotchi_ConnectionStrings__RestaurantsDb=Server=postgres;Port=5432;Database=tamagotchi_restaurants;User Id=postgres;Password=sql"    
     ports:
-      - "6000:80"     
+      - "5012:80"     
+
+  management.ui:
+    container_name: management.ui
+    ports:
+      - "5005:80"
+  restaurant.ui:
+    container_name: restaurant.ui
+    ports:
+      - "5006:80"
+  orders.ui:
+    container_name: orders.ui
+    ports:
+      - "5007:80"

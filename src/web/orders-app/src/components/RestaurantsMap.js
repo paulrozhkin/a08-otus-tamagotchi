@@ -34,7 +34,7 @@ class RestaurantsMap extends Component {
             body: JSON.stringify({ RestaurantId: id })
         };
         // TODO - вынести базовый адрес в настройки
-        fetch(`https://localhost:5001/api/v1/Orders`, requestOptions)
+        fetch(`http://localhost:5000/api/v1/Orders`, requestOptions)
             .then(async response => {
                 const isJson = response.headers.get('content-type')?.includes('application/json');
                 const data = isJson && await response.json();

@@ -24,7 +24,8 @@ namespace Orders.API.Services
             _mapper = mapper;
         }
 
-        public override async Task<BookRestauranResponse> BookRestaurant(BookRestauranRequest request, ServerCallContext context)
+        public override async Task<BookRestauranResponse> BookRestaurant(BookRestauranRequest request,
+            ServerCallContext context)
         {
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:new-kitchen-order"));
             await endpoint.Send(_mapper.Map<NewKitchenOrderMessage>(request));

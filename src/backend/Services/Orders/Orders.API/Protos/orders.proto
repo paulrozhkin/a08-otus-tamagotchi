@@ -9,9 +9,9 @@ service Orders {
 }
 
 message BookRestauranRequest {
-  int32 restaurantId = 1;
+  string restaurantId = 1;
 }
 
 message BookRestauranResponse {
-  int32 restaurantId = 1;
+  string restaurantId = 1;
 }

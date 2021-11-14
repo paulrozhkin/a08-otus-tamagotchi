@@ -58,7 +58,15 @@ namespace Web.HttpAggregator
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Tamagotchi", Version = "v1"});
             });
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .SetIsOriginAllowed((_) => true)
+                        .AllowCredentials());
+            });
 
             services.Configure<ForwardedHeadersOptions>(options =>
             {
@@ -74,16 +82,6 @@ namespace Web.HttpAggregator
 
             if (env.IsDevelopment())
             {
-                app.UseCors(builder =>
-                {
-                    builder.WithOrigins("http://localhost:3000")
-                        .WithOrigins("http://localhost:3001")
-                        .WithOrigins("http://localhost:3002")
-                        .AllowAnyHeader()
-                        .WithMethods("*")
-                        .AllowCredentials();
-                });
-
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tamagotchi v1"));
@@ -98,6 +96,8 @@ namespace Web.HttpAggregator
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
