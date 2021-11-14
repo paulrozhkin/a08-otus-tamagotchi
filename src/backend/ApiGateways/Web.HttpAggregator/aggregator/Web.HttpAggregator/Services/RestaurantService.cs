@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using RestaurantsApi;
@@ -41,9 +42,10 @@ namespace Web.HttpAggregator.Services
             return result;
         }
 
-        public async Task<RestaurantResponse> GetRestaurantByIdAsync(int id)
+        public async Task<RestaurantResponse> GetRestaurantByIdAsync(Guid id)
         {
-            var restaurantDto = (await _restaurantsClient.GetRestaurantAsync(new GetRestaurantRequest() {Id = id}))
+            var restaurantDto =
+                (await _restaurantsClient.GetRestaurantAsync(new GetRestaurantRequest() {Id = id.ToString()}))
                 .Restaurant;
             return MapFromGrpcResponse(restaurantDto);
         }
@@ -59,7 +61,7 @@ namespace Web.HttpAggregator.Services
         {
             return new RestaurantResponse()
             {
-                Id = restaurant.Id,
+                Id = Guid.Parse(restaurant.Id),
                 Address = restaurant.Address,
                 Latitude = restaurant.Latitude,
                 Longitude = restaurant.Longitude,

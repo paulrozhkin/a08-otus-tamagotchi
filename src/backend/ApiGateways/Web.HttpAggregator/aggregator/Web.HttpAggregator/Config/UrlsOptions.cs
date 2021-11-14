@@ -9,5 +9,7 @@
         public string OrdersGrpc { get; set; }
 
         public string OrderQueueGrpc { get; set; }
+
+        public string DishesGrpc { get; set; }
     }
 }

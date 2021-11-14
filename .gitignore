@@ -361,3 +361,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /src/backend/.idea/.idea.Tamagotchi/.idea
+
+Dockerfile.original

@@ -1,0 +1,62 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+package dishes_api;
+
+service Dishes {
+  rpc GetDishes (GetDishesRequest) returns (GetDishesResponse);
+  rpc GetDish (GetDishRequest) returns (GetDishResponse);
+  rpc CrateDish (CrateDishRequest) returns (CrateDishResponse);
+  rpc UpdateDish (UpdateDishRequest) returns (UpdateDishResponse);
+  rpc DeleteDish (DeleteDishRequest) returns (google.protobuf.Empty);
+}
+
+message GetDishesRequest {
+	int32 page_number = 1;
+	int32 page_size = 2;
+}
+
+message GetDishesResponse {
+	int32 current_page = 1;
+	int32 page_size = 2;
+	int32 total_count = 3;
+	repeated Dish dishes = 4;
+}
+
+message GetDishRequest {
+	string id = 1;
+}
+
+message GetDishResponse {
+	Dish dish = 1;
+}
+
+message CrateDishRequest {
+	Dish dish = 1;
+}
+
+message CrateDishResponse {
+	Dish dish = 1;
+}
+
+message UpdateDishRequest {
+	Dish dish = 1;
+}
+
+message UpdateDishResponse {
+	Dish dish = 1;
+}
+
+message DeleteDishRequest {
+	string id = 1;
+}
+
+message Dish {
+	string id = 1;
+	string name = 2;
+	string description = 3;
+	repeated string photos = 4;
+	google.protobuf.Timestamp updated_date = 5;
+	google.protobuf.Timestamp created_date = 6;
+}

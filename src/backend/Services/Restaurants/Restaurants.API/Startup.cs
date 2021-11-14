@@ -1,5 +1,6 @@
 ﻿using System;
 using Infrastructure.Core.Config;
+using Infrastructure.Core.Extensions;
 using Infrastructure.Core.Grpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Restaurants.API.Config;
+using Restaurants.API.Mapping;
 using Restaurants.API.Services;
 using Restaurants.Domain.Services;
 using Restaurants.Infrastructure.Repository;
@@ -32,25 +34,21 @@ namespace Restaurants.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+            services.AddAutoMapper(typeof(MappingProfile));
 
             services.Configure<GeocodingOptions>(_configuration.GetSection(GeocodingOptions.Geocoding));
             
             services.AddGeocodingService(_configuration);
 
-            services.AddScoped<IRestaurantsService, RestaurantsService>();
-            services.AddScoped<IRestaurantsRepository, RestaurantsRepository>();
 
-            services.AddDbContext<RestaurantsDataContext>(builder =>
-            {
-                builder.UseNpgsql(_configuration.GetConnectionString("Npgsql"));
-            });
+            services.AddScoped<IRestaurantsService, RestaurantsService>();
+            services.AddDataAccess<RestaurantsDataContext>(_configuration.GetConnectionString("RestaurantsDb"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             logger.LogInformation(ConfigurationSerializer.Serialize(_configuration).ToString());
-
 
             if (env.IsDevelopment())
             {

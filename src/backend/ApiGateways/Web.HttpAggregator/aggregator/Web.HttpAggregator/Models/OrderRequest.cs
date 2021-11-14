@@ -1,7 +1,9 @@
-﻿namespace Web.HttpAggregator.Models
+﻿using System;
+
+namespace Web.HttpAggregator.Models
 {
     public class OrderRequest
     {
-        public int RestaurantId { get; set; }
+        public Guid RestaurantId { get; set; }
     }
 }

@@ -43,6 +43,38 @@ services:
     depends_on:
       - postgres
 
+  menu.api:
+    image: ${DOCKER_REGISTRY-}menuapi
+    build:
+      context: .
+      dockerfile: Services/Menu/Menu.API/Dockerfile
+    depends_on:
+      - postgres
+  
+  management.ui:
+    image: ${DOCKER_REGISTRY-}managementui
+    build:
+      context: ../web/restaurant-management/
+      dockerfile: Dockerfile
+    depends_on:
+      - web.httpaggregator
+
+  orders.ui:
+    image: ${DOCKER_REGISTRY-}ordersui
+    build:
+      context: ../web/orders-app/
+      dockerfile: Dockerfile
+    depends_on:
+      - web.httpaggregator
+
+  restaurant.ui:
+    image: ${DOCKER_REGISTRY-}restaurantui
+    build:
+      context: ../web/restaurant-service/
+      dockerfile: Dockerfile
+    depends_on:
+      - web.httpaggregator
+
 volumes:
   postgres:  
   pgadmin_data:

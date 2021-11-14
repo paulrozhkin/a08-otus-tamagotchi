@@ -15,7 +15,8 @@ message KitchenOrder {
 	string create_date = 4;
 }
 
-message GetKitchenOrdersRequest {}
+message GetKitchenOrdersRequest {
+}
 
 message GetKitchenOrdersResponse {
 	repeated KitchenOrder kitchen_orders = 1;

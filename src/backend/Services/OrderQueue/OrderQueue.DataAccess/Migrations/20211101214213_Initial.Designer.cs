@@ -9,7 +9,7 @@ using OrderQueue.DataAccess;
 
 namespace OrderQueue.DataAccess.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(OrderQueueDbContext))]
     [Migration("20211101214213_Initial")]
     partial class Initial
     {

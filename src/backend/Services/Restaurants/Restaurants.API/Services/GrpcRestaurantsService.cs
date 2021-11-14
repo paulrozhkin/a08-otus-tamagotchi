@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
@@ -34,7 +35,7 @@ namespace Restaurants.API.Services
 
             var restaurantsDto = restaurants.Select(restaurant => new Restaurant()
             {
-                Id = restaurant.Id,
+                Id = restaurant.Id.ToString(),
                 Address = restaurant.Address,
                 Latitude = restaurant.Latitude,
                 Longitude = restaurant.Longitude,
@@ -52,11 +53,11 @@ namespace Restaurants.API.Services
         public override async Task<GetRestaurantResponse> GetRestaurant(GetRestaurantRequest request,
             ServerCallContext context)
         {
-            var restaurant = await _restaurantsService.GetRestaurantByIdAsync(request.Id);
+            var restaurant = await _restaurantsService.GetRestaurantByIdAsync(Guid.Parse(request.Id));
 
             var restaurantDto = new Restaurant()
             {
-                Id = restaurant.Id,
+                Id = restaurant.Id.ToString(),
                 Address = restaurant.Address,
                 Latitude = restaurant.Latitude,
                 Longitude = restaurant.Longitude,
@@ -92,7 +93,7 @@ namespace Restaurants.API.Services
 
             var restaurantDto = new Restaurant()
             {
-                Id = restaurant.Id,
+                Id = restaurant.Id.ToString(),
                 Address = restaurant.Address,
                 Latitude = restaurant.Latitude,
                 Longitude = restaurant.Longitude,

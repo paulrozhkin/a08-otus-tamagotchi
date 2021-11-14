@@ -2,9 +2,9 @@
 {
     public class DbInitializer : IDbInitializer
     {
-        private ApplicationDbContext _context { get; set; }
+        private readonly OrderQueueDbContext _context;
 
-        public DbInitializer(ApplicationDbContext context)
+        public DbInitializer(OrderQueueDbContext context)
         {
             _context = context;
         }
