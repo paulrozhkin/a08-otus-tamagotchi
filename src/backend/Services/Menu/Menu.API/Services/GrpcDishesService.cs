@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DishesApi;
@@ -38,15 +38,7 @@ namespace Menu.API.Services
                 TotalCount = dishes.TotalCount
             };
 
-            var dishesDto = dishes.Select(dish => new Dish()
-            {
-                Description = dish.Description,
-                Id = dish.Id.ToString(),
-                Name = dish.Name,
-                Photos = {Guid.Empty.ToString()}, // Not implemented,
-                CreatedDate = Timestamp.FromDateTimeOffset(dish.CreatedDate),
-                UpdatedDate = Timestamp.FromDateTimeOffset(dish.UpdatedDate)
-            });
+            var dishesDto = _mapper.Map<List<Dish>>(dishes);
 
             dishesResponse.Dishes.AddRange(dishesDto);
 
@@ -59,16 +51,6 @@ namespace Menu.API.Services
             {
                 var dish = await _dishesService.GetDishByIdAsync(Guid.Parse(request.Id));
                 var dishDto = _mapper.Map<Dish>(dish);
-
-                //var dishDto = new Dish()
-                //{
-                //    Descriptions = dish.Description,
-                //    Id = dish.Id.ToString(),
-                //    Name = dish.Name,
-                //    Photos = {Guid.Empty.ToString()}, // Not implemented,
-                //    CreatedDate = Timestamp.FromDateTimeOffset(dish.CreatedDate),
-                //    UpdatedDate = Timestamp.FromDateTimeOffset(dish.UpdatedDate)
-                //};
 
                 var dishResponse = new GetDishResponse()
                 {
@@ -86,53 +68,36 @@ namespace Menu.API.Services
 
         public override async Task<CrateDishResponse> CrateDish(CrateDishRequest request, ServerCallContext context)
         {
-            var createDishDto = request.Dish;
-            var dishModel = new Domain.Models.Dish()
-            {
-                Description = createDishDto.Description,
-                Name = createDishDto.Name
-            };
-
-            Domain.Models.Dish createdDish;
+            var dishModel = _mapper.Map<Domain.Models.Dish>(request);
 
             try
             {
-                createdDish = await _dishesService.CreateDishAsync(dishModel);
+                var createdDish = await _dishesService.CreateDishAsync(dishModel);
+
+                return new CrateDishResponse()
+                {
+                    Dish = _mapper.Map<Dish>(createdDish)
+                };
             }
             catch (NameAlreadyExistsException)
             {
                 _logger.LogError(string.Format(Errors.Dishes_Dish_with_name__0__already_exist, dishModel.Name));
                 throw new RpcException(new Status(StatusCode.AlreadyExists, Errors.Dishes_Dish_already_exits));
             }
-
-            return new CrateDishResponse()
-            {
-                Dish = new Dish()
-                {
-                    Id = createdDish.Id.ToString(),
-                    Description = createdDish.Description,
-                    Name = createdDish.Name,
-                    CreatedDate = Timestamp.FromDateTimeOffset(createdDish.CreatedDate),
-                    UpdatedDate = Timestamp.FromDateTimeOffset(createdDish.UpdatedDate)
-                }
-            };
         }
 
         public override async Task<UpdateDishResponse> UpdateDish(UpdateDishRequest request, ServerCallContext context)
         {
-            var updateDishDto = request.Dish;
-            var dishModel = new Domain.Models.Dish()
-            {
-                Description = updateDishDto.Description,
-                Name = updateDishDto.Name,
-                Id = Guid.Parse(updateDishDto.Id)
-            };
-
-            Domain.Models.Dish updateDish;
+            var dishModel = _mapper.Map<Domain.Models.Dish>(request);
 
             try
             {
-                updateDish = await _dishesService.UpdateDish(dishModel);
+                var updateDish = await _dishesService.UpdateDish(dishModel);
+
+                return new UpdateDishResponse()
+                {
+                    Dish = _mapper.Map<Dish>(updateDish)
+                };
             }
             catch (NameAlreadyExistsException)
             {
@@ -144,18 +109,6 @@ namespace Menu.API.Services
                 _logger.LogError($"{Errors.Entities_Entity_not_found}, Dish {dishModel.Id}");
                 throw new RpcException(new Status(StatusCode.NotFound, Errors.Entities_Entity_not_found));
             }
-
-            return new UpdateDishResponse()
-            {
-                Dish = new Dish()
-                {
-                    Id = updateDish.Id.ToString(),
-                    Description = updateDish.Description,
-                    Name = updateDish.Name,
-                    CreatedDate = Timestamp.FromDateTimeOffset(updateDish.CreatedDate),
-                    UpdatedDate = Timestamp.FromDateTimeOffset(updateDish.UpdatedDate)
-                }
-            };
         }
 
         public override async Task<Empty> DeleteDish(DeleteDishRequest request, ServerCallContext context)

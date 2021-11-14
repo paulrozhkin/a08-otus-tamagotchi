@@ -1,7 +1,5 @@
-﻿using Domain.Core.Repositories;
-using Infrastructure.Core.Config;
+﻿using Infrastructure.Core.Config;
 using Infrastructure.Core.Extensions;
-using Infrastructure.Core.Repositories;
 using Menu.API.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,7 +9,6 @@ using Microsoft.Extensions.Hosting;
 using Menu.API.Services;
 using Menu.Domain.Services;
 using Menu.Infrastructure.Repository;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
