@@ -101,8 +101,8 @@
   <data name="Dishes_Dish_already_exits" xml:space="preserve">
     <value>Dish already exits</value>
   </data>
-  <data name="Dishes_Dish_with_id__0__not_found" xml:space="preserve">
-    <value>Dish with id {0} not found</value>
+  <data name="Entities_Entity_with_id__0__not_found" xml:space="preserve">
+    <value>Entity with id {0} not found</value>
   </data>
   <data name="Entities_Entity_not_found" xml:space="preserve">
     <value>Entity not found</value>

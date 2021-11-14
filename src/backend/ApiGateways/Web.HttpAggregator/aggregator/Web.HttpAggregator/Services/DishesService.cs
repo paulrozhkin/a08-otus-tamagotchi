@@ -51,7 +51,7 @@ namespace Web.HttpAggregator.Services
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
             {
-                throw new EntityNotFoundException(string.Format(Errors.Dishes_Dish_with_id__0__not_found, id));
+                throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found, id));
             }
         }
 
@@ -73,7 +73,7 @@ namespace Web.HttpAggregator.Services
             }
         }
 
-        public async Task<DishResponse> UpdateDish(Guid id, DishRequest dish)
+        public async Task<DishResponse> UpdateDishAsync(Guid id, DishRequest dish)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace Web.HttpAggregator.Services
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
             {
-                throw new EntityNotFoundException(string.Format(Errors.Dishes_Dish_with_id__0__not_found, id));
+                throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found, id));
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.AlreadyExists)
             {
@@ -106,7 +106,7 @@ namespace Web.HttpAggregator.Services
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
             {
-                throw new EntityNotFoundException(string.Format(Errors.Dishes_Dish_with_id__0__not_found, id));
+                throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found, id));
             }
         }
     }

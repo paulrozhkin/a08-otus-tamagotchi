@@ -79,7 +79,7 @@ namespace Web.HttpAggregator.Controllers
         {
             try
             {
-                var updatedDish = await _dishesService.UpdateDish(dishId, dish);
+                var updatedDish = await _dishesService.UpdateDishAsync(dishId, dish);
                 return Ok(updatedDish);
             }
             catch (EntityNotFoundException e)

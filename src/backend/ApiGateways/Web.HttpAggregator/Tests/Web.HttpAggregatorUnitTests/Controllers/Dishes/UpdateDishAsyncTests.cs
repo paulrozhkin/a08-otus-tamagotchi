@@ -34,7 +34,7 @@ namespace Web.HttpAggregatorUnitTests.Controllers.Dishes
             var dishRequest = _fixture.Create<DishRequest>();
             var dishResponse = _fixture.Create<DishResponse>();
 
-            _dishesServiceMock.Setup(x => x.UpdateDish(dishId, dishRequest))
+            _dishesServiceMock.Setup(x => x.UpdateDishAsync(dishId, dishRequest))
                 .Returns(Task.FromResult(dishResponse));
 
             // act
@@ -50,7 +50,7 @@ namespace Web.HttpAggregatorUnitTests.Controllers.Dishes
             // arrange
             var dishId = _fixture.Create<Guid>();
             var dishRequest = _fixture.Create<DishRequest>();
-            _dishesServiceMock.Setup(x => x.UpdateDish(dishId, dishRequest))
+            _dishesServiceMock.Setup(x => x.UpdateDishAsync(dishId, dishRequest))
                 .Throws(new NameAlreadyExistsException());
 
             // act
@@ -66,7 +66,7 @@ namespace Web.HttpAggregatorUnitTests.Controllers.Dishes
             // arrange
             var dishId = _fixture.Create<Guid>();
             var dishRequest = _fixture.Create<DishRequest>();
-            _dishesServiceMock.Setup(x => x.UpdateDish(dishId, dishRequest))
+            _dishesServiceMock.Setup(x => x.UpdateDishAsync(dishId, dishRequest))
                 .Throws(new EntityNotFoundException());
 
             // act

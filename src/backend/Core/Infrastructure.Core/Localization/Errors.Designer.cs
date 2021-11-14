@@ -19,7 +19,7 @@ namespace Infrastructure.Core.Localization {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Errors {
@@ -70,15 +70,6 @@ namespace Infrastructure.Core.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dish with id {0} not found.
-        /// </summary>
-        public static string Dishes_Dish_with_id__0__not_found {
-            get {
-                return ResourceManager.GetString("Dishes_Dish_with_id__0__not_found", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Dish with name {0} already exist.
         /// </summary>
         public static string Dishes_Dish_with_name__0__already_exist {
@@ -93,6 +84,15 @@ namespace Infrastructure.Core.Localization {
         public static string Entities_Entity_not_found {
             get {
                 return ResourceManager.GetString("Entities_Entity_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entity with id {0} not found.
+        /// </summary>
+        public static string Entities_Entity_with_id__0__not_found {
+            get {
+                return ResourceManager.GetString("Entities_Entity_with_id__0__not_found", resourceCulture);
             }
         }
     }

@@ -12,7 +12,7 @@ namespace Web.HttpAggregator.Services
 
         public Task<DishResponse> CreateDishAsync(DishRequest dish);
 
-        public Task<DishResponse> UpdateDish(Guid id, DishRequest dish);
+        public Task<DishResponse> UpdateDishAsync(Guid id, DishRequest dish);
 
         public Task DeleteDishAsync(Guid id);
     }

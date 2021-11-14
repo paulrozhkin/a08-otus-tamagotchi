@@ -16,7 +16,7 @@ namespace Web.HttpAggregator.Services
             this.logger = logger;
         }
 
-        public async Task<Orders.API.BookRestauranResponse> BookRestaurant(Guid restaurantId)
+        public async Task<Orders.API.BookRestauranResponse> BookRestaurantAsync(Guid restaurantId)
         {
             var restaurantResult = await _ordersClient
                 .BookRestaurantAsync(new Orders.API.BookRestauranRequest { RestaurantId = restaurantId.ToString() });
