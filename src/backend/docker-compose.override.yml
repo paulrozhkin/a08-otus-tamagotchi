@@ -38,6 +38,7 @@ services:
       - "Tamagotchi_Urls__RestaurantsGrpc=http://restaurants.api"
       - "Tamagotchi_Urls__OrdersGrpc=http://orders.api"
       - "Tamagotchi_Urls__OrderQueueGrpc=http://orderqueue.api"
+      - "Tamagotchi_Urls__DishesGrpc=http://menu.api"
     ports:
       - "5000:80"      
   
@@ -64,7 +65,15 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development  
       - "Tamagotchi_ConnectionStrings__RestaurantsDb=Server=postgres;Port=5432;Database=tamagotchi_restaurants;User Id=postgres;Password=sql"    
     ports:
-      - "5012:80"     
+      - "5012:80"
+      
+  menu.api:
+    container_name: menu.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  
+      - "Tamagotchi_ConnectionStrings__MenuDb=Server=postgres;Port=5432;Database=tamagotchi_menu;User Id=postgres;Password=sql"    
+    ports:
+      - "5013:80"
 
   management.ui:
     container_name: management.ui

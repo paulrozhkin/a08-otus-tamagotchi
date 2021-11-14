@@ -35,7 +35,7 @@ namespace Menu.API
 
             services.AddScoped<IDishesService, DishesService>();
 
-            services.AddDataAccess<MenuDataContext>(_configuration.GetConnectionString("MenuDatabase"));
+            services.AddDataAccess<MenuDataContext>(_configuration.GetConnectionString("MenuDb"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

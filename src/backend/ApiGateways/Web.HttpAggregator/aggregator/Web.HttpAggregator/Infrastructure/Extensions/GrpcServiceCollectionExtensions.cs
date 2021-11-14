@@ -1,4 +1,5 @@
 using System;
+using DishesApi;
 using Infrastructure.Core.Grpc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -19,6 +20,7 @@ namespace Web.HttpAggregator.Infrastructure.Extensions
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<IOrdersService, OrdersService>();
             services.AddScoped<IOrderQueueService, OrderQueueService>();
+            services.AddScoped<IDishesService, DishesService>();
 
             services.AddGrpcClient<KitchenOrders.KitchenOrdersClient>((serviceProvider, options) =>
             {
@@ -36,6 +38,12 @@ namespace Web.HttpAggregator.Infrastructure.Extensions
             {
                 var ordersApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.OrdersGrpc;
                 options.Address = new Uri(ordersApi);
+            }).AddInterceptor<GrpcExceptionInterceptor>();
+
+            services.AddGrpcClient<Dishes.DishesClient>((serviceProvider, options) =>
+            {
+                var dishesApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.DishesGrpc;
+                options.Address = new Uri(dishesApi);
             }).AddInterceptor<GrpcExceptionInterceptor>();
 
             return services;

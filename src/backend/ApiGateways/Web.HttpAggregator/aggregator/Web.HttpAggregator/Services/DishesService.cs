@@ -2,83 +2,110 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DishesApi;
 using Domain.Core.Exceptions;
 using Infrastructure.Core.Localization;
+using Microsoft.Extensions.Logging;
 using Web.HttpAggregator.Models;
 
 namespace Web.HttpAggregator.Services
 {
     public class DishesService : IDishesService
     {
-        private static readonly IDictionary<Guid, DishResponse> Cache = new Dictionary<Guid, DishResponse>();
+        private readonly ILogger<DishesService> _logger;
+        private readonly Dishes.DishesClient _dishesClient;
 
-        public Task<PaginationResponse<DishResponse>> GetDishesAsync(int pageNumber, int pageSize)
+        public DishesService(ILogger<DishesService> logger, Dishes.DishesClient dishesClient)
         {
-            return Task.FromResult(new PaginationResponse<DishResponse>()
+            _logger = logger;
+            _dishesClient = dishesClient;
+        }
+
+
+        public async Task<PaginationResponse<DishResponse>> GetDishesAsync(int pageNumber, int pageSize)
+        {
+            var dishes = await _dishesClient.GetDishesAsync(new GetDishesRequest() {PageNumber = pageNumber, PageSize = pageSize});
+
+            var dishesDto = dishes.Dishes.Select(x => new DishResponse()
             {
-                CurrentPage = 1,
-                PageSize = int.MaxValue,
-                TotalCount = Cache.Count,
-                Items = Cache.Values.ToList()
-            });
+                Description = x.Description,
+                Id = Guid.Parse(x.Id),
+                Name = x.Name
+            }).ToList();
+
+            return new PaginationResponse<DishResponse>()
+            {
+                CurrentPage = dishes.CurrentPage,
+                PageSize = dishes.PageSize,
+                TotalCount = dishes.TotalCount,
+                Items = dishesDto
+            };
         }
 
         public Task<DishResponse> GetDishByIdAsync(Guid id)
         {
-            if (!Cache.ContainsKey(id))
-            {
-                throw new EntityNotFoundException(string.Format(Errors.Dishes_Dish_with_id__0__not_found, id));
-            }
+            throw new NotImplementedException();
+            //if (!Cache.ContainsKey(id))
+            //{
+            //    throw new EntityNotFoundException(string.Format(Errors.Dishes_Dish_with_id__0__not_found, id));
+            //}
 
-            return Task.FromResult(Cache[id]);
+            //return Task.FromResult(Cache[id]);
         }
 
         public Task<DishResponse> CreateDishAsync(DishRequest dish)
         {
-            var newId = Guid.NewGuid();
+            throw new NotImplementedException();
 
-            if (Cache.Any(x => x.Value.Name == dish.Name))
-            {
-                throw new NameAlreadyExistsException(string.Format(Errors.Dishes_Dish_with_name__0__already_exist,
-                    dish.Name));
-            }
+            //var newId = Guid.NewGuid();
 
-            Cache.Add(newId, new DishResponse()
-            {
-                Description = dish.Description,
-                Id = newId,
-                Name = dish.Name,
-                Photos = new List<Uri>()
-            });
+            //if (Cache.Any(x => x.Value.Name == dish.Name))
+            //{
+            //    throw new NameAlreadyExistsException(string.Format(Errors.Dishes_Dish_with_name__0__already_exist,
+            //        dish.Name));
+            //}
 
-            return Task.FromResult(Cache[newId]);
+            //Cache.Add(newId, new DishResponse()
+            //{
+            //    Description = dish.Description,
+            //    Id = newId,
+            //    Name = dish.Name,
+            //    Photos = new List<Uri>()
+            //});
+
+            //return Task.FromResult(Cache[newId]);
         }
 
         public Task<DishResponse> UpdateDish(Guid id, DishRequest dish)
         {
-            if (!Cache.ContainsKey(id))
-            {
-                throw new EntityNotFoundException(string.Format(Errors.Dishes_Dish_with_id__0__not_found, id));
-            }
 
-            if (Cache.Any(x => x.Value.Name == dish.Name))
-            {
-                throw new NameAlreadyExistsException(string.Format(Errors.Dishes_Dish_with_name__0__already_exist,
-                    dish.Name));
-            }
+            throw new NotImplementedException();
 
-            var item = Cache[id];
+            //if (!Cache.ContainsKey(id))
+            //{
+            //    throw new EntityNotFoundException(string.Format(Errors.Dishes_Dish_with_id__0__not_found, id));
+            //}
 
-            item.Description = dish.Description;
-            item.Name = dish.Name;
-            item.Photos = dish.Photos;
-            return Task.FromResult(item);
+            //if (Cache.Any(x => x.Value.Name == dish.Name))
+            //{
+            //    throw new NameAlreadyExistsException(string.Format(Errors.Dishes_Dish_with_name__0__already_exist,
+            //        dish.Name));
+            //}
+
+            //var item = Cache[id];
+
+            //item.Description = dish.Description;
+            //item.Name = dish.Name;
+            //item.Photos = dish.Photos;
+            //return Task.FromResult(item);
         }
 
         public Task DeleteDishAsync(Guid id)
         {
-            Cache.Remove(id);
-            return Task.CompletedTask;
+            throw new NotImplementedException();
+
+            //Cache.Remove(id);
+            //return Task.CompletedTask;
         }
     }
 }
