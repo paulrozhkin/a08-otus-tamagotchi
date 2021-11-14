@@ -74,7 +74,10 @@ public class DishesService : IDishesService
             }
         }
 
-        _dishesRepository.Update(dish);
+        dishWithSameId.Description = dish.Description;
+        dishWithSameId.Name = dish.Name;
+
+        _dishesRepository.Update(dishWithSameId);
         _unitOfWork.Complete();
         return dish;
 
@@ -90,5 +93,6 @@ public class DishesService : IDishesService
         }
 
         _dishesRepository.Remove(dish);
+        _unitOfWork.Complete();
     }
 }
