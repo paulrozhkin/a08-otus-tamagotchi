@@ -51,7 +51,7 @@ namespace Web.HttpAggregatorUnitTests.Controllers.Dishes
             var dishId = _fixture.Create<Guid>();
             var dishRequest = _fixture.Create<DishRequest>();
             _dishesServiceMock.Setup(x => x.UpdateDishAsync(dishId, dishRequest))
-                .Throws(new NameAlreadyExistsException());
+                .Throws(new EntityAlreadyExistsException());
 
             // act
             var result = await _dishesController.UpdateDishAsync(dishId, dishRequest);

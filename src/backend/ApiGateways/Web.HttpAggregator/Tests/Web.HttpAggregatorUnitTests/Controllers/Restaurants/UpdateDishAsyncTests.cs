@@ -45,6 +45,22 @@ namespace Web.HttpAggregatorUnitTests.Controllers.Restaurants
         }
 
         [Fact]
+        private async Task RestaurantWithDuplicationLocation_TryUpdateRestaurant_ReturnConflictResponse()
+        {
+            // arrange
+            var restaurantId = _fixture.Create<Guid>();
+            var restaurantRequest = _fixture.Create<RestaurantRequest>();
+            _restaurantsServiceMock.Setup(x => x.UpdateRestaurantAsync(restaurantId, restaurantRequest))
+                .Throws(new EntityAlreadyExistsException());
+
+            // act
+            var result = await _restaurantsController.UpdateRestaurantAsync(restaurantId, restaurantRequest);
+
+            // assert
+            result.Should().BeAssignableTo<ObjectResult>().Which.StatusCode.Should().Be(409);
+        }
+
+        [Fact]
         private async Task NotExistedRestaurant_TryUpdateRestaurant_ReturnNotFoundResponse()
         {
             // arrange

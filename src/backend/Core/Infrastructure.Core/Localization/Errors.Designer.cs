@@ -61,20 +61,20 @@ namespace Infrastructure.Core.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dish already exits.
-        /// </summary>
-        public static string Dishes_Dish_already_exits {
-            get {
-                return ResourceManager.GetString("Dishes_Dish_already_exits", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Dish with name {0} already exist.
         /// </summary>
         public static string Dishes_Dish_with_name__0__already_exist {
             get {
                 return ResourceManager.GetString("Dishes_Dish_with_name__0__already_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entity already exits.
+        /// </summary>
+        public static string Entities_Entity_already_exits {
+            get {
+                return ResourceManager.GetString("Entities_Entity_already_exits", resourceCulture);
             }
         }
         
@@ -93,6 +93,16 @@ namespace Infrastructure.Core.Localization {
         public static string Entities_Entity_with_id__0__not_found {
             get {
                 return ResourceManager.GetString("Entities_Entity_with_id__0__not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restaurant with location (latitude - {0}, longitude - {1} already exist.
+        /// </summary>
+        public static string Restaurants_Restaurant_with_location__latitude____0___longitude____1__already_exist {
+            get {
+                return ResourceManager.GetString("Restaurants_Restaurant_with_location__latitude____0___longitude____1__already_exi" +
+                        "st", resourceCulture);
             }
         }
     }

@@ -47,7 +47,7 @@ public class DishesService : IDishesService
 
         if (dishWithSameNames.Any())
         {
-            throw new NameAlreadyExistsException();
+            throw new EntityAlreadyExistsException();
         }
 
         await _dishesRepository.AddAsync(dish);
@@ -70,7 +70,7 @@ public class DishesService : IDishesService
 
             if (dishWithSameNames.Any(x => x.Id != dish.Id))
             {
-                throw new NameAlreadyExistsException();
+                throw new EntityAlreadyExistsException();
             }
         }
 
@@ -79,7 +79,7 @@ public class DishesService : IDishesService
 
         _dishesRepository.Update(dishWithSameId);
         _unitOfWork.Complete();
-        return dish;
+        return dishWithSameId;
     }
 
     public async Task DeleteDishAsync(Guid id)

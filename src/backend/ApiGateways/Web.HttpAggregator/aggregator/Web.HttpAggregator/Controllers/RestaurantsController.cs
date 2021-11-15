@@ -57,8 +57,17 @@ namespace Web.HttpAggregator.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DishResponse))]
         public async Task<ActionResult> CreateRestaurantAsync(RestaurantRequest restaurant)
         {
-            var createdRestaurant = await _restaurantsService.CreateRestaurantAsync(restaurant);
-            return CreatedAtAction("CreateRestaurant", new {id = createdRestaurant.Id}, createdRestaurant);
+            try
+            {
+                var createdRestaurant = await _restaurantsService.CreateRestaurantAsync(restaurant);
+                return CreatedAtAction("CreateRestaurant", new {id = createdRestaurant.Id}, createdRestaurant);
+            }
+            catch (EntityAlreadyExistsException e)
+            {
+                _logger.LogError(e.ToString());
+                return Problem(statusCode: (int) HttpStatusCode.Conflict, detail: e.Message,
+                    title: Errors.Entities_Entity_already_exits);
+            }
         }
 
         [HttpPut("{restaurantId:guid}")]
@@ -71,6 +80,12 @@ namespace Web.HttpAggregator.Controllers
             {
                 var updatedDish = await _restaurantsService.UpdateRestaurantAsync(restaurantId, restaurant);
                 return Ok(updatedDish);
+            }
+            catch (EntityAlreadyExistsException e)
+            {
+                _logger.LogError(e.ToString());
+                return Problem(statusCode: (int)HttpStatusCode.Conflict, detail: e.Message,
+                    title: Errors.Entities_Entity_already_exits);
             }
             catch (EntityNotFoundException e)
             {

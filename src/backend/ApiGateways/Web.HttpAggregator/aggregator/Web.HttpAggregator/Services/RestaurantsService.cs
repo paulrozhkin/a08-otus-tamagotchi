@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Core.Exceptions;
@@ -37,17 +35,9 @@ namespace Web.HttpAggregator.Services
                 Address = address ?? string.Empty
             };
 
-            var restaurants = await _restaurantsClient.GetRestaurantsAsync(request);
+            var restaurantsResponse = await _restaurantsClient.GetRestaurantsAsync(request);
 
-            var result = new PaginationResponse<RestaurantResponse>()
-            {
-                CurrentPage = restaurants.CurrentPage,
-                PageSize = restaurants.PageSize,
-                TotalCount = restaurants.TotalCount,
-                Items = _mapper.Map<List<RestaurantResponse>>(restaurants.Restaurants)
-            };
-
-            return result;
+            return _mapper.Map<PaginationResponse<RestaurantResponse>>(restaurantsResponse);
         }
 
         public async Task<RestaurantResponse> GetRestaurantByIdAsync(Guid id)
@@ -66,19 +56,41 @@ namespace Web.HttpAggregator.Services
 
         public async Task<RestaurantResponse> CreateRestaurantAsync(RestaurantRequest restaurant)
         {
-            var restaurantCreateResponse = await _restaurantsClient.AddRestaurantAsync(new AddRestaurantRequest()
+            try
             {
-                Restaurant = _mapper.Map<Restaurant>(restaurant)
-            });
+                var restaurantCreateResponse = await _restaurantsClient.AddRestaurantAsync(new AddRestaurantRequest()
+                {
+                    Restaurant = _mapper.Map<Restaurant>(restaurant)
+                });
 
-            return _mapper.Map<RestaurantResponse>(restaurantCreateResponse.Restaurant);
+                return _mapper.Map<RestaurantResponse>(restaurantCreateResponse.Restaurant);
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.AlreadyExists)
+            {
+                throw new EntityAlreadyExistsException(string.Format(
+                    Errors.Restaurants_Restaurant_with_location__latitude____0___longitude____1__already_exist,
+                    restaurant.Latitude, restaurant.Longitude));
+            }
         }
 
-        public Task<RestaurantResponse> UpdateRestaurantAsync(Guid id, RestaurantRequest restaurant)
+        public async Task<RestaurantResponse> UpdateRestaurantAsync(Guid id, RestaurantRequest restaurant)
         {
             try
             {
-                throw new NotImplementedException();
+                var restaurantForRequest = _mapper.Map<Restaurant>(restaurant);
+                restaurantForRequest.Id = id.ToString();
+                var restaurantCreateResponse = await _restaurantsClient.UpdateRestaurantAsync(new UpdateRestaurantRequest()
+                {
+                    Restaurant = restaurantForRequest
+                });
+
+                return _mapper.Map<RestaurantResponse>(restaurantCreateResponse.Restaurant);
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.AlreadyExists)
+            {
+                throw new EntityAlreadyExistsException(string.Format(
+                    Errors.Restaurants_Restaurant_with_location__latitude____0___longitude____1__already_exist,
+                    restaurant.Latitude, restaurant.Longitude));
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
             {
@@ -86,11 +98,14 @@ namespace Web.HttpAggregator.Services
             }
         }
 
-        public Task DeleteRestaurantAsync(Guid id)
+        public async Task DeleteRestaurantAsync(Guid id)
         {
             try
             {
-                throw new NotImplementedException();
+                await _restaurantsClient.DeleteRestaurantAsync(new DeleteRestaurantRequest()
+                {
+                    Id = id.ToString()
+                });
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
             {

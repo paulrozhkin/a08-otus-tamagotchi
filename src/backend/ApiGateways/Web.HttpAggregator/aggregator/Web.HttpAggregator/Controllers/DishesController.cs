@@ -63,11 +63,11 @@ namespace Web.HttpAggregator.Controllers
                 var createdDish = await _dishesService.CreateDishAsync(dish);
                 return CreatedAtAction("CreateDish", new {id = createdDish.Id}, createdDish);
             }
-            catch (NameAlreadyExistsException e)
+            catch (EntityAlreadyExistsException e)
             {
                 _logger.LogError(e.ToString());
                 return Problem(statusCode: (int) HttpStatusCode.Conflict, detail: e.Message,
-                    title: Errors.Dishes_Dish_already_exits);
+                    title: Errors.Entities_Entity_already_exits);
             }
         }
 
@@ -89,11 +89,11 @@ namespace Web.HttpAggregator.Controllers
                 return Problem(title: Errors.Entities_Entity_not_found, statusCode: (int) HttpStatusCode.NotFound,
                     detail: message);
             }
-            catch (NameAlreadyExistsException e)
+            catch (EntityAlreadyExistsException e)
             {
                 _logger.LogError(e.ToString());
                 return Problem(statusCode: (int) HttpStatusCode.Conflict, detail: e.Message,
-                    title: Errors.Dishes_Dish_already_exits);
+                    title: Errors.Entities_Entity_already_exits);
             }
         }
 

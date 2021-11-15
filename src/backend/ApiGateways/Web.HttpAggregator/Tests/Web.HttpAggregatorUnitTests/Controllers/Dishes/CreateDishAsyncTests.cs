@@ -47,7 +47,7 @@ namespace Web.HttpAggregatorUnitTests.Controllers.Dishes
             // arrange
             var newDish = _fixture.Create<DishRequest>();
             _dishesServiceMock.Setup(x => x.CreateDishAsync(newDish))
-                .Throws(new NameAlreadyExistsException());
+                .Throws(new EntityAlreadyExistsException());
 
             // act
             var result = await _dishesController.CreateDishAsync(newDish);

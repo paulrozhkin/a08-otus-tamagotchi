@@ -12,5 +12,9 @@ namespace Restaurants.Domain.Services
         public Task<Restaurant> GetRestaurantByIdAsync(Guid id);
 
         public Task<Restaurant> AddRestaurantAsync(Restaurant restaurant);
+
+        public Task<Restaurant> UpdateRestaurant(Restaurant restaurant);
+
+        public Task DeleteRestaurantAsync(Guid id);
     }
 }
