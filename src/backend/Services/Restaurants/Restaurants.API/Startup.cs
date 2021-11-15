@@ -36,7 +36,7 @@ namespace Restaurants.API
             services.AddAutoMapper(typeof(MappingProfile));
 
             services.Configure<GeocodingOptions>(_configuration.GetSection(GeocodingOptions.Geocoding));
-            
+
             services.AddGeocodingService(_configuration);
 
 
@@ -72,17 +72,9 @@ namespace Restaurants.API
 
     public static class GrpcServiceCollectionExtensions
     {
-        public static IServiceCollection AddGeocodingService(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddGeocodingService(this IServiceCollection services,
+            IConfiguration configuration)
         {
-            var geocodingOptions = configuration.GetSection(GeocodingOptions.Geocoding).Get<GeocodingOptions>();
-
-            // Use fake object
-            if (!geocodingOptions.UseGeocoding)
-            {
-                services.AddScoped<IAddressService, AddressServiceFake>();
-                return services;
-            }
-
             services.AddTransient<GrpcExceptionInterceptor>();
 
             services.AddScoped<IAddressService, AddressService>();

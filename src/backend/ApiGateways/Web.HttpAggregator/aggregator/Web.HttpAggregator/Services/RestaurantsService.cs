@@ -10,7 +10,6 @@ using Web.HttpAggregator.Models;
 
 namespace Web.HttpAggregator.Services
 {
-    // TODO: GRPC error handling
     public class RestaurantsService : IRestaurantsService
     {
         private readonly ILogger<RestaurantsService> _logger;
@@ -79,10 +78,11 @@ namespace Web.HttpAggregator.Services
             {
                 var restaurantForRequest = _mapper.Map<Restaurant>(restaurant);
                 restaurantForRequest.Id = id.ToString();
-                var restaurantCreateResponse = await _restaurantsClient.UpdateRestaurantAsync(new UpdateRestaurantRequest()
-                {
-                    Restaurant = restaurantForRequest
-                });
+                var restaurantCreateResponse = await _restaurantsClient.UpdateRestaurantAsync(
+                    new UpdateRestaurantRequest()
+                    {
+                        Restaurant = restaurantForRequest
+                    });
 
                 return _mapper.Map<RestaurantResponse>(restaurantCreateResponse.Restaurant);
             }

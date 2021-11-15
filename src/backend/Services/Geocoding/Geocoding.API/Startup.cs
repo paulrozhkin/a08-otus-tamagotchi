@@ -3,15 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Geocoding.API.Config;
 using Geocoding.API.Services;
 using Geocoding.API.Services.Cache;
 using Geocoding.API.Services.Geocoding;
-using Geocoding.Google;
 using Infrastructure.Core.Config;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
@@ -35,16 +30,25 @@ namespace Geocoding.API
         {
             services.AddGrpc();
 
-            var googleConfig = _configuration.GetSection(GoogleMapConfigOptions.GoogleMapConfig);
-            services.Configure<GoogleMapConfigOptions>(googleConfig);
+            var geocodingConfig = _configuration.GetSection(GeocodingOptions.Geocoding);
+            services.Configure<GeocodingOptions>(geocodingConfig);
 
-            services.AddScoped<IGeocoding, GoogleGeocoding>();
+            var geocodingOption = geocodingConfig.Get<GeocodingOptions>();
+            if (geocodingOption.UseGeocoding)
+            {
+                services.AddScoped<IGeocoding, GoogleGeocoding>();
+            }
+            else
+            {
+                // Use fake object
+                services.AddScoped<IGeocoding, GeocodingFake>();
+            }
+
             services.AddScoped<IGeocodingCache, GeocodingCache>();
-
             services.Add(ServiceDescriptor.Singleton<IDistributedCache, RedisCache>());
             services.AddStackExchangeRedisCache(options =>
             {
-                options.Configuration = _configuration.GetSection("Redis")["ConnectionString"];
+                options.Configuration = geocodingOption.RedisCache;
             });
         }
 

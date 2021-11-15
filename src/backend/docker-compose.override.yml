@@ -30,6 +30,12 @@ services:
       - "15672:15672"
       - "5672:5672"
 
+  redis:
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+
   web.httpaggregator:
     container_name: web.httpaggregator
     environment:
@@ -64,6 +70,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development  
       - "Tamagotchi_ConnectionStrings__RestaurantsDb=Server=postgres;Port=5432;Database=tamagotchi_restaurants;User Id=postgres;Password=sql"    
+      - "Tamagotchi_Geocoding__GeocodingGrpc=http://geocoding.api"
     ports:
       - "5012:80"
       
@@ -74,6 +81,17 @@ services:
       - "Tamagotchi_ConnectionStrings__MenuDb=Server=postgres;Port=5432;Database=tamagotchi_menu;User Id=postgres;Password=sql"    
     ports:
       - "5013:80"
+
+  geocoding.api:
+    container_name: geocoding.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  
+      - "Tamagotchi_Geocoding__UseGeocoding=false"
+      - "Tamagotchi_Geocoding__GoogleApiKey=${Tamagotchi_Geocoding__GoogleApiKey}"
+      - "Tamagotchi_Geocoding__Language=ru"
+      - "Tamagotchi_Geocoding__RedisCache=redis"
+    ports:
+      - "5014:80"
 
   management.ui:
     container_name: management.ui
