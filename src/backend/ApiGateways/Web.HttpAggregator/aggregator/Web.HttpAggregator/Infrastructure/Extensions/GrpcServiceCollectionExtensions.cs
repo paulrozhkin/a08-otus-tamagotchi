@@ -21,6 +21,7 @@ namespace Web.HttpAggregator.Infrastructure.Extensions
             services.AddScoped<IOrdersService, OrdersService>();
             services.AddScoped<IOrderQueueService, OrderQueueService>();
             services.AddScoped<IDishesService, DishesService>();
+            services.AddScoped<IMenuService, MenuService>();
 
             services.AddGrpcClient<KitchenOrders.KitchenOrdersClient>((serviceProvider, options) =>
             {

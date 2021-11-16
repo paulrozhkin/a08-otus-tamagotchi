@@ -13,36 +13,37 @@ using Web.HttpAggregator.Services;
 namespace Web.HttpAggregator.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
-    public class DishesController : ControllerBase
+    [Route("api/v1/restaurants/{restaurantId:Guid}/menu")]
+    public class RestaurantMenuController : ControllerBase
     {
-        private readonly ILogger<DishesController> _logger;
-        private readonly IDishesService _dishesService;
+        private readonly ILogger<RestaurantMenuController> _logger;
+        private readonly IMenuService _menuService;
 
-        public DishesController(ILogger<DishesController> logger, IDishesService dishesService)
+        public RestaurantMenuController(ILogger<RestaurantMenuController> logger, IMenuService menuService)
         {
             _logger = logger;
-            _dishesService = dishesService;
+            _menuService = menuService;
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<DishResponse>))]
-        public async Task<ActionResult> GetDishesAsync(
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<MenuItemResponse>))]
+        public async Task<ActionResult> GetMenuAsync(
+            Guid restaurantId,
             [FromQuery] QueryStringParameters parameters)
         {
-            var dishes = await _dishesService.GetDishesAsync(parameters.PageNumber, parameters.PageSize);
-            return Ok(dishes);
+            var menu = await _menuService.GetMenuAsync(restaurantId, parameters.PageNumber, parameters.PageSize);
+            return Ok(menu);
         }
 
-        [HttpGet("{dishId:guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DishResponse))]
+        [HttpGet("{menuItemId:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MenuItemResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> GetDishByIdAsync(Guid dishId)
+        public async Task<ActionResult> GetMenuByIdAsync(Guid menuItemId)
         {
             try
             {
-                var dish = await _dishesService.GetDishByIdAsync(dishId);
-                return Ok(dish);
+                var menuItem = await _menuService.GetMenuByIdAsync(menuItemId);
+                return Ok(menuItem);
             }
             catch (EntityNotFoundException e)
             {
@@ -54,33 +55,33 @@ namespace Web.HttpAggregator.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DishResponse))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MenuItemResponse))]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult> CreateDishAsync(DishRequest dish)
+        public async Task<ActionResult> CreateMenuAsync(Guid restaurantId, MenuItemRequest menuItem)
         {
             try
             {
-                var createdDish = await _dishesService.CreateDishAsync(dish);
-                return CreatedAtAction("CreateDish", new {id = createdDish.Id}, createdDish);
+                var createdMenu = await _menuService.CreateMenuAsync(restaurantId, menuItem);
+                return CreatedAtAction("CreateMenu", new {id = createdMenu.Id}, createdMenu);
             }
             catch (NameAlreadyExistsException e)
             {
                 _logger.LogError(e.ToString());
                 return Problem(statusCode: (int) HttpStatusCode.Conflict, detail: e.Message,
-                    title: Errors.Dishes_Dish_already_exits);
+                    title: Errors.Entities_Entity_not_found); // TODO: поправить
             }
         }
 
-        [HttpPut("{dishId:guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DishResponse))]
+        [HttpPut("{menuItemId:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MenuItemResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult> UpdateDishAsync(Guid dishId, DishRequest dish)
+        public async Task<ActionResult> UpdateMenuAsync(Guid menuItemId, MenuItemRequest menuItem)
         {
             try
             {
-                var updatedDish = await _dishesService.UpdateDish(dishId, dish);
-                return Ok(updatedDish);
+                var updatedMenu = await _menuService.UpdateMenu(menuItemId, menuItem);
+                return Ok(updatedMenu);
             }
             catch (EntityNotFoundException e)
             {
@@ -93,18 +94,18 @@ namespace Web.HttpAggregator.Controllers
             {
                 _logger.LogError(e.ToString());
                 return Problem(statusCode: (int) HttpStatusCode.Conflict, detail: e.Message,
-                    title: Errors.Dishes_Dish_already_exits);
+                    title: Errors.Entities_Entity_not_found); // TODO: поправить
             }
         }
 
-        [HttpDelete("{dishId:guid}")]
+        [HttpDelete("{menuItemId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteDishAsync(Guid dishId)
+        public async Task<ActionResult> DeleteMenuAsync(Guid menuItemId)
         {
             try
             {
-                await _dishesService.DeleteDishAsync(dishId);
+                await _menuService.DeleteMenuAsync(menuItemId);
                 return Ok();
             }
             catch (EntityNotFoundException e)
