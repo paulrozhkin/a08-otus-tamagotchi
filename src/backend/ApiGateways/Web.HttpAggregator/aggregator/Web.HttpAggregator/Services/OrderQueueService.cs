@@ -18,7 +18,7 @@ namespace Web.HttpAggregator.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<KitchenOrderResponse>> GetKitchenOrders()
+        public async Task<IEnumerable<KitchenOrderResponse>> GetKitchenOrdersAsync()
         {
             var result = new List<KitchenOrderResponse>();
             var ordersResponse = await _kitchenOrdersClient.GetKitchenOrdersAsync(new OrderQueue.API.Protos.GetKitchenOrdersRequest());

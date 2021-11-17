@@ -17,7 +17,7 @@ namespace Web.HttpAggregator.Infrastructure.Extensions
         {
             services.AddTransient<GrpcExceptionInterceptor>();
 
-            services.AddScoped<IRestaurantService, RestaurantService>();
+            services.AddScoped<IRestaurantsService, RestaurantsService>();
             services.AddScoped<IOrdersService, OrdersService>();
             services.AddScoped<IOrderQueueService, OrderQueueService>();
             services.AddScoped<IDishesService, DishesService>();

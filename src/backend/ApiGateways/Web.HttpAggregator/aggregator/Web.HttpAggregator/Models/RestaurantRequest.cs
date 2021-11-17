@@ -1,6 +1,6 @@
 ﻿namespace Web.HttpAggregator.Models
 {
-    public class CreateRestaurantRequest
+    public class RestaurantRequest
     {
         public double Latitude { get; set; }
 

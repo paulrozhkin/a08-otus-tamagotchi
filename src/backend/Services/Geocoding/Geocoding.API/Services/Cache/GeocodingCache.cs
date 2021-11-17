@@ -14,13 +14,13 @@ namespace Geocoding.API.Services.Cache
 
         public Task<string> GetLocationFromCache(double latitude, double longitude)
         {
-            return _cache.GetStringAsync($"{latitude};{longitude}");
+            return _cache.GetStringAsync($"location:{latitude};{longitude}");
         }
 
         public async Task AddLocationToCache(double latitude, double longitude, string formattedAddress)
         {
             var options = new DistributedCacheEntryOptions();
-            await _cache.SetStringAsync($"{latitude};{longitude}", formattedAddress, options);
+            await _cache.SetStringAsync($"location:{latitude};{longitude}", formattedAddress, options);
         }
     }
 }

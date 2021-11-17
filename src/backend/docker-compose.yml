@@ -8,7 +8,10 @@ services:
     image: postgres    
 
   rabbitmq:
-    image: rabbitmq:3-management-alpine  
+    image: rabbitmq:3-management-alpine
+
+  redis:
+    image: "redis:alpine"
 
   web.httpaggregator:
     image: ${DOCKER_REGISTRY-}webhttpaggregator
@@ -42,6 +45,7 @@ services:
       dockerfile: Services/Restaurants/Restaurants.API/Dockerfile
     depends_on:
       - postgres
+      - geocoding.api
 
   menu.api:
     image: ${DOCKER_REGISTRY-}menuapi
@@ -50,6 +54,14 @@ services:
       dockerfile: Services/Menu/Menu.API/Dockerfile
     depends_on:
       - postgres
+
+  geocoding.api:
+    image: ${DOCKER_REGISTRY-}geocodingapi
+    build:
+      context: .
+      dockerfile: Services/Geocoding/Geocoding.API/Dockerfile
+    depends_on:
+      - redis
   
   management.ui:
     image: ${DOCKER_REGISTRY-}managementui
