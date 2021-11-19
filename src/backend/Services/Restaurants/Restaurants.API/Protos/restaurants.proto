@@ -1,4 +1,6 @@
 syntax = "proto3";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 package restaurants_api;
 
@@ -6,6 +8,8 @@ service Restaurants {
 	rpc GetRestaurants (GetRestaurantsRequest) returns (GetRestaurantsResponse);
 	rpc GetRestaurant (GetRestaurantRequest) returns (GetRestaurantResponse);
 	rpc AddRestaurant (AddRestaurantRequest) returns (AddRestaurantResponse);
+	rpc UpdateRestaurant (UpdateRestaurantRequest) returns (UpdateRestaurantResponse);
+	rpc DeleteRestaurant (DeleteRestaurantRequest) returns (google.protobuf.Empty);
 }
 
 message Restaurant {
@@ -17,6 +21,8 @@ message Restaurant {
 	bool is_parking_present = 6;
 	bool is_card_payment_present = 7;
 	bool is_wi_fi_present = 8;
+	google.protobuf.Timestamp updated_date = 9;
+	google.protobuf.Timestamp created_date = 10;
 
 }
 
@@ -48,4 +54,16 @@ message AddRestaurantRequest {
 
 message AddRestaurantResponse {
 	Restaurant restaurant = 1;
+}
+
+message UpdateRestaurantRequest {
+	Restaurant restaurant = 1;
+}
+
+message UpdateRestaurantResponse {
+	Restaurant restaurant = 1;
+}
+
+message DeleteRestaurantRequest {
+	string id = 1;
 }

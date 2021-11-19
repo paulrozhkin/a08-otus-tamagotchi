@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Domain.Core.Exceptions;
+using Infrastructure.Core.Localization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Web.HttpAggregator.Models;
@@ -14,42 +17,101 @@ namespace Web.HttpAggregator.Controllers
     public class RestaurantsController : ControllerBase
     {
         private readonly ILogger<RestaurantsController> _logger;
-        private readonly IRestaurantService _restaurantService;
+        private readonly IRestaurantsService _restaurantsService;
 
-        public RestaurantsController(ILogger<RestaurantsController> logger, IRestaurantService restaurantService)
+        public RestaurantsController(ILogger<RestaurantsController> logger, IRestaurantsService restaurantsService)
         {
             _logger = logger;
-            _restaurantService = restaurantService;
+            _restaurantsService = restaurantsService;
         }
 
         [HttpGet]
-        public Task<PaginationResponse<RestaurantResponse>> GetRestaurantsAsync(
+        public async Task<ActionResult> GetRestaurantsAsync(
             [FromQuery] RestaurantParameters parameters)
         {
-            return _restaurantService.GetRestaurantsAsync(parameters.PageNumber, parameters.PageSize,
-                parameters.Address);
+            var restaurants =
+                await _restaurantsService.GetRestaurantsAsync(parameters.PageNumber, parameters.PageSize,
+                    parameters.Address);
+            return Ok(restaurants);
         }
 
         [HttpGet("{restaurantId:Guid}")]
-        public async Task<ActionResult<RestaurantResponse>> GetRestaurantByIdAsync(Guid restaurantId)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RestaurantResponse))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> GetRestaurantByIdAsync(Guid restaurantId)
         {
             try
             {
-                var restaurant = await _restaurantService.GetRestaurantByIdAsync(restaurantId);
-                return restaurant;
+                var restaurant = await _restaurantsService.GetRestaurantByIdAsync(restaurantId);
+                return Ok(restaurant);
             }
             catch (EntityNotFoundException)
             {
                 _logger.LogError($"Restaurant with id {restaurantId} not found");
-                return NotFound();
+                return Problem(title: Errors.Entities_Entity_not_found, statusCode: (int)HttpStatusCode.NotFound,
+                    detail: $"Restaurant with id {restaurantId} not found");
             }
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateRestaurant(CreateRestaurantRequest restaurant)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DishResponse))]
+        public async Task<ActionResult> CreateRestaurantAsync(RestaurantRequest restaurant)
         {
-            var createdRestaurant = await _restaurantService.CreateRestaurant(restaurant);
-            return CreatedAtAction(nameof(CreateRestaurant), new {id = createdRestaurant.Id}, createdRestaurant);
+            try
+            {
+                var createdRestaurant = await _restaurantsService.CreateRestaurantAsync(restaurant);
+                return CreatedAtAction("CreateRestaurant", new {id = createdRestaurant.Id}, createdRestaurant);
+            }
+            catch (EntityAlreadyExistsException e)
+            {
+                _logger.LogError(e.ToString());
+                return Problem(statusCode: (int) HttpStatusCode.Conflict, detail: e.Message,
+                    title: Errors.Entities_Entity_already_exits);
+            }
+        }
+
+        [HttpPut("{restaurantId:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RestaurantRequest))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult> UpdateRestaurantAsync(Guid restaurantId, RestaurantRequest restaurant)
+        {
+            try
+            {
+                var updatedDish = await _restaurantsService.UpdateRestaurantAsync(restaurantId, restaurant);
+                return Ok(updatedDish);
+            }
+            catch (EntityAlreadyExistsException e)
+            {
+                _logger.LogError(e.ToString());
+                return Problem(statusCode: (int)HttpStatusCode.Conflict, detail: e.Message,
+                    title: Errors.Entities_Entity_already_exits);
+            }
+            catch (EntityNotFoundException e)
+            {
+                var message = e.ToString();
+                _logger.LogError(message);
+                return Problem(title: Errors.Entities_Entity_not_found, statusCode: (int)HttpStatusCode.NotFound,
+                    detail: message);
+            }
+        }
+
+        [HttpDelete("{restaurantId:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> DeleteRestaurantAsync(Guid restaurantId)
+        {
+            try
+            {
+                await _restaurantsService.DeleteRestaurantAsync(restaurantId);
+                return Ok();
+            }
+            catch (EntityNotFoundException)
+            {
+                _logger.LogError($"Restaurant with id {restaurantId} not found");
+                return Problem(title: Errors.Entities_Entity_not_found, statusCode: (int)HttpStatusCode.NotFound,
+                    detail: $"Restaurant with id {restaurantId} not found");
+            }
         }
     }
 }

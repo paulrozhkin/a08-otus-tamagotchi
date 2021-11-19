@@ -98,16 +98,19 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-  <data name="Dishes_Dish_already_exits" xml:space="preserve">
-    <value>Dish already exits</value>
+  <data name="Entities_Entity_already_exits" xml:space="preserve">
+    <value>Entity already exits</value>
   </data>
-  <data name="Dishes_Dish_with_id__0__not_found" xml:space="preserve">
-    <value>Dish with id {0} not found</value>
+  <data name="Entities_Entity_with_id__0__not_found" xml:space="preserve">
+    <value>Entity with id {0} not found</value>
   </data>
   <data name="Entities_Entity_not_found" xml:space="preserve">
     <value>Entity not found</value>
   </data>
   <data name="Dishes_Dish_with_name__0__already_exist" xml:space="preserve">
     <value>Dish with name {0} already exist</value>
+  </data>
+  <data name="Restaurants_Restaurant_with_location__latitude____0___longitude____1__already_exist" xml:space="preserve">
+    <value>Restaurant with location (latitude - {0}, longitude - {1} already exist</value>
   </data>
 </root>

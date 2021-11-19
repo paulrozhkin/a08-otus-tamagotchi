@@ -79,10 +79,10 @@ namespace Menu.API.Services
                     Dish = _mapper.Map<Dish>(createdDish)
                 };
             }
-            catch (NameAlreadyExistsException)
+            catch (EntityAlreadyExistsException)
             {
                 _logger.LogError(string.Format(Errors.Dishes_Dish_with_name__0__already_exist, dishModel.Name));
-                throw new RpcException(new Status(StatusCode.AlreadyExists, Errors.Dishes_Dish_already_exits));
+                throw new RpcException(new Status(StatusCode.AlreadyExists, Errors.Entities_Entity_already_exits));
             }
         }
 
@@ -99,10 +99,10 @@ namespace Menu.API.Services
                     Dish = _mapper.Map<Dish>(updateDish)
                 };
             }
-            catch (NameAlreadyExistsException)
+            catch (EntityAlreadyExistsException)
             {
                 _logger.LogError(string.Format(Errors.Dishes_Dish_with_name__0__already_exist, dishModel.Name));
-                throw new RpcException(new Status(StatusCode.AlreadyExists, Errors.Dishes_Dish_already_exits));
+                throw new RpcException(new Status(StatusCode.AlreadyExists, Errors.Entities_Entity_already_exits));
             }
             catch (EntityNotFoundException)
             {

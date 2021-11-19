@@ -34,7 +34,7 @@ namespace Web.HttpAggregatorUnitTests.Controllers.Dishes
             var dishRequest = _fixture.Create<DishRequest>();
             var dishResponse = _fixture.Create<DishResponse>();
 
-            _dishesServiceMock.Setup(x => x.UpdateDish(dishId, dishRequest))
+            _dishesServiceMock.Setup(x => x.UpdateDishAsync(dishId, dishRequest))
                 .Returns(Task.FromResult(dishResponse));
             // act
             var result = await _dishesController.UpdateDishAsync(dishId, dishRequest);

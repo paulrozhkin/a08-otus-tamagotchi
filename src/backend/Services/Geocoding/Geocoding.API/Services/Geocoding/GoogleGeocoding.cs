@@ -11,9 +11,8 @@ namespace Geocoding.API.Services.Geocoding
     public class GoogleGeocoding : IGeocoding
     {
         private readonly IGeocoder _geocoder;
-        private const string DefaultLanguage = "ru";
 
-        public GoogleGeocoding(IOptions<GoogleMapConfigOptions> googleMapConfig)
+        public GoogleGeocoding(IOptions<GeocodingOptions> googleMapConfig)
         {
             if (string.IsNullOrWhiteSpace(googleMapConfig.Value.GoogleApiKey))
             {
@@ -22,7 +21,7 @@ namespace Geocoding.API.Services.Geocoding
 
             _geocoder = new GoogleGeocoder()
             {
-                ApiKey = googleMapConfig.Value.GoogleApiKey, Language = DefaultLanguage
+                ApiKey = googleMapConfig.Value.GoogleApiKey, Language = googleMapConfig.Value.Language
             };
         }
 
@@ -49,12 +48,7 @@ namespace Geocoding.API.Services.Geocoding
             var addresses = await _geocoder.ReverseGeocodeAsync(latitude, longitude);
             var firstAddress = addresses.FirstOrDefault();
 
-            if (firstAddress == null)
-            {
-                return null;
-            }
-
-            return firstAddress.FormattedAddress;
+            return firstAddress?.FormattedAddress;
         }
     }
 }

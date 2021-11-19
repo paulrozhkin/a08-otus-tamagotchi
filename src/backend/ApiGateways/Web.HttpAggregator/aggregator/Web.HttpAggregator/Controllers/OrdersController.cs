@@ -32,7 +32,7 @@ namespace Web.HttpAggregator.Controllers
 
             try
             {
-                await _ordersService.BookRestaurant(orderRequest.RestaurantId);
+                await _ordersService.BookRestaurantAsync(orderRequest.RestaurantId);
                 return Ok();
             }
             catch (Exception)
