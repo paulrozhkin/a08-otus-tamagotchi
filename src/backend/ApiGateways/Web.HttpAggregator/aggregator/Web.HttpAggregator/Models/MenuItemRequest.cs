@@ -4,6 +4,8 @@ namespace Web.HttpAggregator.Models
 {
     public class MenuItemRequest
     {
-        public Guid Id { get; set; }
+        public Guid DishId { get; set; }
+
+        public long PriceRubles { get; set; }
     }
 }
