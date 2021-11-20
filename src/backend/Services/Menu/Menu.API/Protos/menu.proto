@@ -1,0 +1,62 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+package menu_api;
+
+service Menu {
+  rpc GetMenu (GetMenuRequest) returns (GetMenuResponse);
+  rpc GetMenuItem (GetMenuItemRequest) returns (GetMenuItemResponse);
+  rpc CrateMenuItem (CrateMenuItemRequest) returns (CrateMenuItemResponse);
+  rpc UpdateMenuItem (UpdateMenuItemRequest) returns (UpdateMenuItemResponse);
+  rpc DeleteMenuItem (DeleteMenuItemRequest) returns (google.protobuf.Empty);
+}
+
+message GetMenuRequest {
+	int32 page_number = 1;
+	int32 page_size = 2;
+}
+
+message GetMenuResponse {
+	int32 current_page = 1;
+	int32 page_size = 2;
+	int32 total_count = 3;
+	repeated MenuItem menu_items = 4;
+}
+
+message GetMenuItemRequest {
+	string id = 1;
+}
+
+message GetMenuItemResponse {
+	MenuItem menu_item = 1;
+}
+
+message CrateMenuItemRequest {
+	MenuItem menu_item = 1;
+}
+
+message CrateMenuItemResponse {
+	MenuItem menu_item = 1;
+}
+
+message UpdateMenuItemRequest {
+	MenuItem menu_item = 1;
+}
+
+message UpdateMenuItemResponse {
+	MenuItem menu_item = 1;
+}
+
+message DeleteMenuItemRequest {
+	string id = 1;
+}
+
+message MenuItem {
+	string id = 1;
+	string restaurant_id = 2;
+	string dish_id = 3;
+	int64 price_rubles = 4;
+	google.protobuf.Timestamp updated_date = 5;
+	google.protobuf.Timestamp created_date = 6;
+}

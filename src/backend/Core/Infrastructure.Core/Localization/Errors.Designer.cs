@@ -97,6 +97,15 @@ namespace Infrastructure.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Menu item for dish {0} already exist.
+        /// </summary>
+        public static string Menu_MenuItem_for_dish__0__already_exist {
+            get {
+                return ResourceManager.GetString("Menu_MenuItem_for_dish__0__already_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Restaurant with location (latitude - {0}, longitude - {1} already exist.
         /// </summary>
         public static string Restaurants_Restaurant_with_location__latitude____0___longitude____1__already_exist {

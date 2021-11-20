@@ -1,6 +1,5 @@
 ﻿using Infrastructure.Core.Repositories.Configuration;
 using Menu.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Menu.Infrastructure.Repository.Configuration

@@ -31,6 +31,7 @@ namespace Menu.API
             services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddScoped<IDishesService, DishesService>();
+            services.AddScoped<IMenuService, MenuService>();
 
             services.AddDataAccess<MenuDataContext>(_configuration.GetConnectionString("MenuDb"));
         }
@@ -50,6 +51,7 @@ namespace Menu.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<GrpcDishesService>();
+                endpoints.MapGrpcService<GrpcMenuService>();
 
                 endpoints.MapGet("/", async context =>
                 {

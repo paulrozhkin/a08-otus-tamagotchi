@@ -9,9 +9,11 @@
 
   <ItemGroup>
     <None Remove="Protos\dishes.proto" />
+    <None Remove="Protos\menu.proto" />
   </ItemGroup>
 
   <ItemGroup>
+    <Protobuf Include="Protos\menu.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\dishes.proto" GrpcServices="Server" />
   </ItemGroup>
 

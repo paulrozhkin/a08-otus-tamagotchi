@@ -110,6 +110,9 @@
   <data name="Dishes_Dish_with_name__0__already_exist" xml:space="preserve">
     <value>Dish with name {0} already exist</value>
   </data>
+  <data name="Menu_MenuItem_for_dish__0__already_exist" xml:space="preserve">
+    <value>Menu item for dish {0} already exist</value>
+  </data>
   <data name="Restaurants_Restaurant_with_location__latitude____0___longitude____1__already_exist" xml:space="preserve">
     <value>Restaurant with location (latitude - {0}, longitude - {1} already exist</value>
   </data>

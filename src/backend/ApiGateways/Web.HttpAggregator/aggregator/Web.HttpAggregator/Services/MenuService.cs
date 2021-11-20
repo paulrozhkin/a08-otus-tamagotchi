@@ -8,18 +8,18 @@ namespace Web.HttpAggregator.Services;
 
 public class MenuService : IMenuService
 {
-    private readonly IRestaurantService _restaurantService;
+    private readonly IRestaurantsService _restaurantsService;
 
-    public MenuService(IRestaurantService restaurantService)
+    public MenuService(IRestaurantsService restaurantsService)
     {
-        _restaurantService = restaurantService;
+        _restaurantsService = restaurantsService;
     }
 
     public Task<PaginationResponse<MenuItemResponse>> GetMenuAsync(Guid restaurantId, int pageNumber, int pageSize)
     {
-        if (_restaurantService.GetRestaurantByIdAsync(restaurantId) == null)
+        if (_restaurantsService.GetRestaurantByIdAsync(restaurantId) == null)
         {
-            throw new EntityNotFoundException();
+            throw new ArgumentException("");
         }
 
         return Task.FromResult(new PaginationResponse<MenuItemResponse>()
