@@ -79,6 +79,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development  
       - "Tamagotchi_ConnectionStrings__MenuDb=Server=postgres;Port=5432;Database=tamagotchi_menu;User Id=postgres;Password=sql"    
+      - "Tamagotchi_Restaurants__RestaurantsGrpc=http://restaurants.api"
     ports:
       - "5013:80"
 

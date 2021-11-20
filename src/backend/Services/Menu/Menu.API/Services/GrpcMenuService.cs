@@ -81,6 +81,10 @@ namespace Menu.API.Services
                     MenuItem = _mapper.Map<MenuItem>(createdMenuItem)
                 };
             }
+            catch (ArgumentException e)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, e.Message));
+            }
             catch (EntityAlreadyExistsException)
             {
                 _logger.LogError(string.Format(Errors.Menu_MenuItem_for_dish__0__already_exist, menuItemModel.DishId));
@@ -101,6 +105,10 @@ namespace Menu.API.Services
                 {
                     MenuItem = _mapper.Map<MenuItem>(updateMenuItem)
                 };
+            }
+            catch (ArgumentException e)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, e.Message));
             }
             catch (EntityAlreadyExistsException)
             {

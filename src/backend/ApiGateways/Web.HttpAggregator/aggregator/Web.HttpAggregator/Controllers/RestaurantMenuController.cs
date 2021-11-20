@@ -56,6 +56,7 @@ namespace Web.HttpAggregator.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MenuItemResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult> CreateMenuAsync(Guid restaurantId, MenuItemRequest menuItem)
         {
@@ -74,6 +75,7 @@ namespace Web.HttpAggregator.Controllers
 
         [HttpPut("{menuItemId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MenuItemResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult> UpdateMenuAsync(Guid menuItemId, MenuItemRequest menuItem)
