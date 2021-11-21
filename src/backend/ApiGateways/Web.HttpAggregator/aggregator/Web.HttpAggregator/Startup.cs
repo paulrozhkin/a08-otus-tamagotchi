@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,8 +15,6 @@ using Web.HttpAggregator.Consumers;
 using Web.HttpAggregator.Hubs;
 using Web.HttpAggregator.Infrastructure.Extensions;
 using Web.HttpAggregator.Mapping;
-using static Orders.API.Orders;
-using OrderQueue.API.Protos;
 using System.Reflection;
 using Infrastructure.Logging;
 

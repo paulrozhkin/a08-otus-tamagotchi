@@ -24,7 +24,6 @@ services:
     - elasticsearch
    environment:
     - ELASTICSEARCH_URL=http://elasticsearch
-    #- ELASTICSEARCH_URL=http://localhost:9200
 
   pgadmin:
     image: dpage/pgadmin4
