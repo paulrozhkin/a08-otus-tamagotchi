@@ -7,7 +7,7 @@ namespace Menu.Domain.Services
 {
     public interface IMenuService
     {
-        public Task<PagedList<MenuItem>> GetMenuAsync(int pageNumber, int pageSize);
+        public Task<PagedList<MenuItem>> GetMenuAsync(Guid restaurantId, int pageNumber, int pageSize);
 
         public Task<MenuItem> GetMenuItemByIdAsync(Guid id);
 

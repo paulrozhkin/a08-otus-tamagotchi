@@ -29,17 +29,18 @@ public class MenuService : IMenuService
         _menuRepository = _unitOfWork.Repository<MenuItem>();
     }
 
-    public async Task<PagedList<MenuItem>> GetMenuAsync(int pageNumber, int pageSize)
+    public async Task<PagedList<MenuItem>> GetMenuAsync(Guid restaurantId, int pageNumber, int pageSize)
     {
-        var pagedSpecification = new PagedSpecification<MenuItem>(pageNumber, pageSize);
+        var pagedSpecification = new PagedRestaurantMenuWithDishesSpecification(restaurantId, pageNumber, pageSize);
         var menu = await _menuRepository.FindAsync(pagedSpecification);
-        var totalCount = await _menuRepository.CountAsync();
+        var totalCount = await _menuRepository.CountAsync(x => x.RestaurantId == restaurantId);
         return new PagedList<MenuItem>(menu, totalCount, pageNumber, pageSize);
     }
 
     public async Task<MenuItem> GetMenuItemByIdAsync(Guid id)
     {
-        var menuItem = await _menuRepository.FindByIdAsync(id);
+        var specification = new MenuItemWithDishSpecification(id);
+        var menuItem = (await _menuRepository.FindAsync(specification)).FirstOrDefault();
 
         if (menuItem == null)
         {
@@ -85,7 +86,9 @@ public class MenuService : IMenuService
 
         await _menuRepository.AddAsync(menuItem);
         _unitOfWork.Complete();
-        return menuItem;
+
+        var menuItemWithDish = await GetMenuItemByIdAsync(menuItem.Id);
+        return menuItemWithDish;
     }
 
     public async Task<MenuItem> UpdateMenuItem(MenuItem menuItem)
@@ -137,7 +140,9 @@ public class MenuService : IMenuService
 
         _menuRepository.Update(menuWithSameId);
         _unitOfWork.Complete();
-        return menuWithSameId;
+
+        var menuItemWithDish = await GetMenuItemByIdAsync(menuItem.Id);
+        return menuItemWithDish;
     }
 
     public async Task DeleteMenuItemAsync(Guid id)

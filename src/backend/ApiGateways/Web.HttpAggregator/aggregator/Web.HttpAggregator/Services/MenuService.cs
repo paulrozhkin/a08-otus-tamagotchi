@@ -22,22 +22,22 @@ public class MenuService : IMenuService
         _mapper = mapper;
     }
 
-    public async Task<PaginationResponse<MenuItemResponse>> GetMenuAsync(Guid restaurantId, int pageNumber,
+    public async Task<PaginationResponse<Models.MenuItemResponse>> GetMenuAsync(Guid restaurantId, int pageNumber,
         int pageSize)
     {
         var menuResponse = await _menuClient.GetMenuAsync(new GetMenuRequest()
-            {PageNumber = pageNumber, PageSize = pageSize});
+            {PageNumber = pageNumber, PageSize = pageSize, RestaurantId = restaurantId.ToString()});
 
-        return _mapper.Map<PaginationResponse<MenuItemResponse>>(menuResponse);
+        return _mapper.Map<PaginationResponse<Models.MenuItemResponse>>(menuResponse);
     }
 
-    public async Task<MenuItemResponse> GetMenuByIdAsync(Guid menuItemId)
+    public async Task<Models.MenuItemResponse> GetMenuByIdAsync(Guid menuItemId)
     {
         try
         {
             var menuItemResponse =
                 await _menuClient.GetMenuItemAsync(new GetMenuItemRequest() {Id = menuItemId.ToString()});
-            return _mapper.Map<MenuItemResponse>(menuItemResponse.MenuItem);
+            return _mapper.Map<Models.MenuItemResponse>(menuItemResponse.MenuItem);
         }
         catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
         {
@@ -45,11 +45,11 @@ public class MenuService : IMenuService
         }
     }
 
-    public async Task<MenuItemResponse> CreateMenuAsync(Guid restaurantId, MenuItemRequest menu)
+    public async Task<Models.MenuItemResponse> CreateMenuAsync(Guid restaurantId, Models.MenuItemRequest menu)
     {
         try
         {
-            var menuItem = _mapper.Map<MenuItem>(menu);
+            var menuItem = _mapper.Map<MenuApi.MenuItemRequest>(menu);
             menuItem.RestaurantId = restaurantId.ToString();
 
             var dishResponse = await _menuClient.CreateMenuItemAsync(new CreateMenuItemRequest()
@@ -57,7 +57,7 @@ public class MenuService : IMenuService
                 MenuItem = menuItem
             });
 
-            return _mapper.Map<MenuItemResponse>(dishResponse.MenuItem);
+            return _mapper.Map<Models.MenuItemResponse>(dishResponse.MenuItem);
         }
         catch (RpcException ex) when (ex.StatusCode == StatusCode.InvalidArgument)
         {
@@ -69,11 +69,11 @@ public class MenuService : IMenuService
         }
     }
 
-    public async Task<MenuItemResponse> UpdateMenu(Guid restaurantId, Guid menuItemId, MenuItemRequest menu)
+    public async Task<Models.MenuItemResponse> UpdateMenu(Guid restaurantId, Guid menuItemId, Models.MenuItemRequest menu)
     {
         try
         {
-            var menuItemForRequest = _mapper.Map<MenuItem>(menu);
+            var menuItemForRequest = _mapper.Map<MenuApi.MenuItemRequest>(menu);
             menuItemForRequest.Id = menuItemId.ToString();
             menuItemForRequest.RestaurantId = restaurantId.ToString();
 
@@ -82,7 +82,7 @@ public class MenuService : IMenuService
                 MenuItem = menuItemForRequest
             });
 
-            return _mapper.Map<MenuItemResponse>(menuItemResponse.MenuItem);
+            return _mapper.Map<Models.MenuItemResponse>(menuItemResponse.MenuItem);
         }
         catch (RpcException ex) when (ex.StatusCode == StatusCode.InvalidArgument)
         {

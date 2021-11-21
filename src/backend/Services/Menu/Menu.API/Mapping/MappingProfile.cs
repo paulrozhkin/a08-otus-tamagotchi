@@ -31,7 +31,13 @@ namespace Menu.API.Mapping
                 .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore())
                 .ForMember(dest => dest.Menu, opt => opt.Ignore());
 
-            CreateMap<MenuItem, MenuApi.MenuItem>()
+            CreateMap<MenuItem, MenuApi.MenuItemRequest>()
+                .ForMember(dest => dest.CreatedDate,
+                    opt => opt.MapFrom(src => Timestamp.FromDateTimeOffset(src.CreatedDate)))
+                .ForMember(dest => dest.UpdatedDate,
+                    opt => opt.MapFrom(src => Timestamp.FromDateTimeOffset(src.UpdatedDate)));
+
+            CreateMap<MenuItem, MenuApi.MenuItemResponse>()
                 .ForMember(dest => dest.CreatedDate,
                     opt => opt.MapFrom(src => Timestamp.FromDateTimeOffset(src.CreatedDate)))
                 .ForMember(dest => dest.UpdatedDate,

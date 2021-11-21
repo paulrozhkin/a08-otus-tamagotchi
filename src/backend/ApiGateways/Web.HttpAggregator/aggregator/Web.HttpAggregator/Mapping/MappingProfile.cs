@@ -5,6 +5,7 @@ using MenuApi;
 using RestaurantsApi;
 using Web.HttpAggregator.Models;
 using Web.HttpAggregator.Models.OrderQueue;
+using MenuItemResponse = Web.HttpAggregator.Models.MenuItemResponse;
 
 namespace Web.HttpAggregator.Mapping
 {
@@ -32,8 +33,8 @@ namespace Web.HttpAggregator.Mapping
             CreateMap<GetRestaurantsResponse, PaginationResponse<RestaurantResponse>>()
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Restaurants));
 
-            CreateMap<MenuItem, MenuItemResponse>();
-            CreateMap<MenuItemRequest, MenuItem>()
+            CreateMap<MenuApi.MenuItemResponse, MenuItemResponse>();
+            CreateMap<Models.MenuItemRequest, MenuApi.MenuItemRequest>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.RestaurantId, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())

@@ -1,6 +1,7 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+import "dishes.proto";
 
 package menu_api;
 
@@ -15,13 +16,14 @@ service Menu {
 message GetMenuRequest {
 	int32 page_number = 1;
 	int32 page_size = 2;
+	string restaurant_id = 3;
 }
 
 message GetMenuResponse {
 	int32 current_page = 1;
 	int32 page_size = 2;
 	int32 total_count = 3;
-	repeated MenuItem menu_items = 4;
+	repeated MenuItemResponse menu_items = 4;
 }
 
 message GetMenuItemRequest {
@@ -29,30 +31,39 @@ message GetMenuItemRequest {
 }
 
 message GetMenuItemResponse {
-	MenuItem menu_item = 1;
+	MenuItemResponse menu_item = 1;
 }
 
 message CreateMenuItemRequest {
-	MenuItem menu_item = 1;
+	MenuItemRequest menu_item = 1;
 }
 
 message CreateMenuItemResponse {
-	MenuItem menu_item = 1;
+	MenuItemResponse menu_item = 1;
 }
 
 message UpdateMenuItemRequest {
-	MenuItem menu_item = 1;
+	MenuItemRequest menu_item = 1;
 }
 
 message UpdateMenuItemResponse {
-	MenuItem menu_item = 1;
+	MenuItemResponse menu_item = 1;
 }
 
 message DeleteMenuItemRequest {
 	string id = 1;
 }
 
-message MenuItem {
+message MenuItemResponse {
+	string id = 1;
+	string restaurant_id = 2;
+	dishes_api.Dish dish = 3;
+	int64 price_rubles = 4;
+	google.protobuf.Timestamp updated_date = 5;
+	google.protobuf.Timestamp created_date = 6;
+}
+
+message MenuItemRequest {
 	string id = 1;
 	string restaurant_id = 2;
 	string dish_id = 3;

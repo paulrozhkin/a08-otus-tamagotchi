@@ -29,7 +29,13 @@ namespace Menu.API.Services
 
         public override async Task<GetMenuResponse> GetMenu(GetMenuRequest request, ServerCallContext context)
         {
-            var menu = await _menuService.GetMenuAsync(request.PageNumber, request.PageSize);
+            if (!Guid.TryParse(request.RestaurantId, out var restaurantId))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument,
+                    $"Argument null or empty {nameof(request.RestaurantId)}"));
+            }
+
+            var menu = await _menuService.GetMenuAsync(restaurantId, request.PageNumber, request.PageSize);
 
             var menuResponse = new GetMenuResponse()
             {
@@ -38,7 +44,7 @@ namespace Menu.API.Services
                 TotalCount = menu.TotalCount
             };
 
-            var menuDto = _mapper.Map<List<MenuItem>>(menu);
+            var menuDto = _mapper.Map<List<MenuItemResponse>>(menu);
 
             menuResponse.MenuItems.AddRange(menuDto);
 
@@ -51,7 +57,7 @@ namespace Menu.API.Services
             try
             {
                 var menuItem = await _menuService.GetMenuItemByIdAsync(Guid.Parse(request.Id));
-                var menuItemDto = _mapper.Map<MenuItem>(menuItem);
+                var menuItemDto = _mapper.Map<MenuItemResponse>(menuItem);
 
                 var menuItemResponse = new GetMenuItemResponse()
                 {
@@ -72,12 +78,14 @@ namespace Menu.API.Services
         {
             if (string.IsNullOrEmpty(request.MenuItem.RestaurantId))
             {
-                throw new RpcException(new Status(StatusCode.InvalidArgument, $"Argument null or empty {nameof(request.MenuItem.RestaurantId)}"));
+                throw new RpcException(new Status(StatusCode.InvalidArgument,
+                    $"Argument null or empty {nameof(request.MenuItem.RestaurantId)}"));
             }
 
             if (string.IsNullOrEmpty(request.MenuItem.DishId))
             {
-                throw new RpcException(new Status(StatusCode.InvalidArgument, $"Argument null or empty {nameof(request.MenuItem.DishId)}"));
+                throw new RpcException(new Status(StatusCode.InvalidArgument,
+                    $"Argument null or empty {nameof(request.MenuItem.DishId)}"));
             }
 
             var menuItemModel = _mapper.Map<Domain.Models.MenuItem>(request);
@@ -88,7 +96,7 @@ namespace Menu.API.Services
 
                 return new CreateMenuItemResponse()
                 {
-                    MenuItem = _mapper.Map<MenuItem>(createdMenuItem)
+                    MenuItem = _mapper.Map<MenuItemResponse>(createdMenuItem)
                 };
             }
             catch (ArgumentException e)
@@ -107,12 +115,14 @@ namespace Menu.API.Services
         {
             if (string.IsNullOrEmpty(request.MenuItem.RestaurantId))
             {
-                throw new RpcException(new Status(StatusCode.InvalidArgument, $"Argument null or empty {nameof(request.MenuItem.RestaurantId)}"));
+                throw new RpcException(new Status(StatusCode.InvalidArgument,
+                    $"Argument null or empty {nameof(request.MenuItem.RestaurantId)}"));
             }
 
             if (string.IsNullOrEmpty(request.MenuItem.DishId))
             {
-                throw new RpcException(new Status(StatusCode.InvalidArgument, $"Argument null or empty {nameof(request.MenuItem.DishId)}"));
+                throw new RpcException(new Status(StatusCode.InvalidArgument,
+                    $"Argument null or empty {nameof(request.MenuItem.DishId)}"));
             }
 
             var menuItemModel = _mapper.Map<Domain.Models.MenuItem>(request);
@@ -123,7 +133,7 @@ namespace Menu.API.Services
 
                 return new UpdateMenuItemResponse()
                 {
-                    MenuItem = _mapper.Map<MenuItem>(updateMenuItem)
+                    MenuItem = _mapper.Map<MenuItemResponse>(updateMenuItem)
                 };
             }
             catch (ArgumentException e)
