@@ -34,9 +34,6 @@ namespace Web.HttpAggregator
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
 
-
-
-
             LogConfigs.ConfigureLogging(assemblyName, (IConfigurationRoot)configuration, environment);
         }
 
