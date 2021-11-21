@@ -24,7 +24,7 @@ namespace Web.HttpAggregator.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<KitchenOrderResponse>>> GetAllAsync()
         {
-            var response = await _orderQueueService.GetKitchenOrders();
+            var response = await _orderQueueService.GetKitchenOrdersAsync();
             return Ok(response);
         }
     }

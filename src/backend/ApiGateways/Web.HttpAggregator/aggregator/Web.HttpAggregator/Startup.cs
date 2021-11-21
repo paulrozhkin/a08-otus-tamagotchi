@@ -5,18 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
 using Infrastructure.Core.Config;
-using Infrastructure.Core.Grpc;
-using Microsoft.Extensions.Options;
-using RestaurantsApi;
 using Web.HttpAggregator.Config;
 using Web.HttpAggregator.Infrastructure.Exceptions;
-using Web.HttpAggregator.Services;
 using MassTransit;
 using Microsoft.AspNetCore.HttpOverrides;
 using Web.HttpAggregator.Consumers;
 using Web.HttpAggregator.Hubs;
+using Web.HttpAggregator.Infrastructure.Extensions;
 using Web.HttpAggregator.Mapping;
 using static Orders.API.Orders;
 using OrderQueue.API.Protos;
@@ -50,6 +46,7 @@ namespace Web.HttpAggregator
             services.Configure<UrlsOptions>(urlsConfig);
 
             services.AddGrpcServices();
+            services.AddFluentValidation();
 
             services.AddMassTransit(config =>
             {
@@ -57,10 +54,7 @@ namespace Web.HttpAggregator
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
                     cfg.Host(Configuration["RabbitMq:Host"]);
-                    cfg.ReceiveEndpoint("kitchen-order", c =>
-                    {
-                        c.ConfigureConsumer<KitchenOrderConsumer>(ctx);
-                    });
+                    cfg.ReceiveEndpoint("kitchen-order", c => { c.ConfigureConsumer<KitchenOrderConsumer>(ctx); });
                 });
             });
 
@@ -70,10 +64,18 @@ namespace Web.HttpAggregator
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tamagotchi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Tamagotchi", Version = "v1"});
             });
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .SetIsOriginAllowed((_) => true)
+                        .AllowCredentials());
+            });
 
             services.Configure<ForwardedHeadersOptions>(options =>
             {
@@ -89,16 +91,6 @@ namespace Web.HttpAggregator
 
             if (env.IsDevelopment())
             {
-                app.UseCors(builder =>
-                {
-                    builder.WithOrigins("http://localhost:3000")
-                        .WithOrigins("http://localhost:3001")
-                        .WithOrigins("http://localhost:3002")
-                        .AllowAnyHeader()
-                        .WithMethods("*")
-                        .AllowCredentials();
-                });
-
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tamagotchi v1"));
@@ -114,6 +106,8 @@ namespace Web.HttpAggregator
 
             app.UseRouting();
 
+            app.UseCors("CorsPolicy");
+
             app.UseAuthorization();
 
             app.UseEndpoints(
@@ -123,38 +117,6 @@ namespace Web.HttpAggregator
                     endpoints.MapHub<KitchenOrderHub>("/hubs/kitchen-order");
                 }
             );
-        }
-    }
-
-    public static class GrpcServiceCollectionExtensions
-    {
-        public static IServiceCollection AddGrpcServices(this IServiceCollection services)
-        {
-            services.AddTransient<GrpcExceptionInterceptor>();
-
-            services.AddScoped<IRestaurantService, RestaurantService>();
-            services.AddScoped<IOrdersService, OrdersService>();
-            services.AddScoped<IOrderQueueService, OrderQueueService>();
-
-            services.AddGrpcClient<KitchenOrders.KitchenOrdersClient>((serviceProvider, options) =>
-            {
-                var orderQueueApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.OrderQueueGrpc;
-                options.Address = new Uri(orderQueueApi);
-            }).AddInterceptor<GrpcExceptionInterceptor>();
-
-            services.AddGrpcClient<Restaurants.RestaurantsClient>((serviceProvider, options) =>
-            {
-                var basketApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.RestaurantsGrpc;
-                options.Address = new Uri(basketApi);
-            }).AddInterceptor<GrpcExceptionInterceptor>();
-
-            services.AddGrpcClient<OrdersClient>((serviceProvider, options) =>
-            {
-                var ordersApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.OrdersGrpc;
-                options.Address = new Uri(ordersApi);
-            }).AddInterceptor<GrpcExceptionInterceptor>();
-
-            return services;
         }
     }
 }

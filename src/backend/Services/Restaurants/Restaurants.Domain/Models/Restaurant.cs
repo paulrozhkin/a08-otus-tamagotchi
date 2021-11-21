@@ -1,9 +1,9 @@
-﻿namespace Restaurants.Domain.Models
-{
-    public class Restaurant
-    {
-        public int Id { get; set; }
+﻿using Domain.Core.Models;
 
+namespace Restaurants.Domain.Models
+{
+    public class Restaurant : BaseEntity
+    {
         public string Address { get; set; }
 
         public double Latitude { get; set; }

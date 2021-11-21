@@ -26,7 +26,7 @@ const RestaurantsList = () => {
 
 
   useEffect(() => {
-    fetch(`/api/v1/Restaurant?PageNumber=${paginationPage}&PageSize=13`)
+    fetch(`http://localhost:5000/api/v1/Restaurants?PageNumber=${paginationPage}&PageSize=13`)
       .then(res => res.json())
       .then((result) => {
           setRestaurantsResponse(result);

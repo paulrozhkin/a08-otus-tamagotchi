@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Domain.Core.Models;
 using Restaurants.Domain.Models;
 
 namespace Restaurants.Domain.Services
@@ -7,8 +9,12 @@ namespace Restaurants.Domain.Services
     {
         public Task<PagedList<Restaurant>> GetRestaurantsAsync(int pageNumber, int pageSize, string address);
 
-        public Task<Restaurant> GetRestaurantByIdAsync(int id);
+        public Task<Restaurant> GetRestaurantByIdAsync(Guid id);
 
         public Task<Restaurant> AddRestaurantAsync(Restaurant restaurant);
+
+        public Task<Restaurant> UpdateRestaurant(Restaurant restaurant);
+
+        public Task DeleteRestaurantAsync(Guid id);
     }
 }

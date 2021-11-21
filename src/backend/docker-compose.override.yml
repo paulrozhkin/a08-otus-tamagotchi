@@ -31,6 +31,12 @@ services:
       - "15672:15672"
       - "5672:5672"
 
+  redis:
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+
   web.httpaggregator:
     container_name: web.httpaggregator
     environment:
@@ -39,6 +45,7 @@ services:
       - "Tamagotchi_Urls__RestaurantsGrpc=http://restaurants.api"
       - "Tamagotchi_Urls__OrdersGrpc=http://orders.api"
       - "Tamagotchi_Urls__OrderQueueGrpc=http://orderqueue.api"
+      - "Tamagotchi_Urls__DishesGrpc=http://menu.api"
       - "Tamagotchi_ElasticConfiguration__Uri=http://elasticsearch:9200"
     ports:
       - "5000:80"      
@@ -47,23 +54,56 @@ services:
     container_name: orderqueue.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "RabbitMq:Host=amqp://guest:guest@rabbitmq:5672"
-      - "ConnectionStrings:OrderQueueDb=Server=postgres;Port=5432;Database=order_queue;User Id=postgres;Password=sql"    
+      - "Tamagotchi_RabbitMq__Host=amqp://guest:guest@rabbitmq:5672"
+      - "Tamagotchi_ConnectionStrings__OrderQueueDb=Server=postgres;Port=5432;Database=order_queue;User Id=postgres;Password=sql"    
     ports:
-      - "6005:80"
+      - "5010:80"
   
   orders.api:
     container_name: orders.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "RabbitMq:Host=amqp://guest:guest@rabbitmq:5672"
+      - "Tamagotchi_RabbitMq__Host=amqp://guest:guest@rabbitmq:5672"
     ports:
-      - "10000:80"         
+      - "5011:80"         
 
   restaurants.api:
     container_name: restaurants.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development  
-      - "ConnectionStrings:Npgsql=Server=postgres;Port=5432;Database=tamagotchi_restaurants;User Id=postgres;Password=sql"    
+      - "Tamagotchi_ConnectionStrings__RestaurantsDb=Server=postgres;Port=5432;Database=tamagotchi_restaurants;User Id=postgres;Password=sql"    
+      - "Tamagotchi_Geocoding__GeocodingGrpc=http://geocoding.api"
     ports:
-      - "6000:80"     
+      - "5012:80"
+      
+  menu.api:
+    container_name: menu.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  
+      - "Tamagotchi_ConnectionStrings__MenuDb=Server=postgres;Port=5432;Database=tamagotchi_menu;User Id=postgres;Password=sql"    
+    ports:
+      - "5013:80"
+
+  geocoding.api:
+    container_name: geocoding.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  
+      - "Tamagotchi_Geocoding__UseGeocoding=false"
+      - "Tamagotchi_Geocoding__GoogleApiKey=${Tamagotchi_Geocoding__GoogleApiKey}"
+      - "Tamagotchi_Geocoding__Language=ru"
+      - "Tamagotchi_Geocoding__RedisCache=redis"
+    ports:
+      - "5014:80"
+
+  management.ui:
+    container_name: management.ui
+    ports:
+      - "5005:80"
+  restaurant.ui:
+    container_name: restaurant.ui
+    ports:
+      - "5006:80"
+  orders.ui:
+    container_name: orders.ui
+    ports:
+      - "5007:80"

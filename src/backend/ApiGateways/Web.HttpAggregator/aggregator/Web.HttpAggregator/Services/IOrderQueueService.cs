@@ -6,6 +6,6 @@ namespace Web.HttpAggregator.Services
 {
     public interface IOrderQueueService
     {
-        Task<IEnumerable<KitchenOrderResponse>> GetKitchenOrders();
+        Task<IEnumerable<KitchenOrderResponse>> GetKitchenOrdersAsync();
     }
 }
