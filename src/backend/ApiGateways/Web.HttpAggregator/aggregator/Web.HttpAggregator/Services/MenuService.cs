@@ -69,7 +69,7 @@ public class MenuService : IMenuService
         }
     }
 
-    public async Task<Models.MenuItemResponse> UpdateMenu(Guid restaurantId, Guid menuItemId, Models.MenuItemRequest menu)
+    public async Task<Models.MenuItemResponse> UpdateMenuAsync(Guid restaurantId, Guid menuItemId, Models.MenuItemRequest menu)
     {
         try
         {

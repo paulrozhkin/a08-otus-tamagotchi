@@ -88,7 +88,7 @@ namespace Web.HttpAggregator.Controllers
         {
             try
             {
-                var updatedMenu = await _menuService.UpdateMenu(restaurantId, menuItemId, menuItem);
+                var updatedMenu = await _menuService.UpdateMenuAsync(restaurantId, menuItemId, menuItem);
                 return Ok(updatedMenu);
             }
             catch (ArgumentException e)
