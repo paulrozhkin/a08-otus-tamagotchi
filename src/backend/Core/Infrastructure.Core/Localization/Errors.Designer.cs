@@ -79,6 +79,15 @@ namespace Infrastructure.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Entity invalid arguments.
+        /// </summary>
+        public static string Entities_Entity_invalid_arguments {
+            get {
+                return ResourceManager.GetString("Entities_Entity_invalid_arguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Entity not found.
         /// </summary>
         public static string Entities_Entity_not_found {

@@ -67,16 +67,26 @@ namespace Menu.API.Services
             }
         }
 
-        public override async Task<CrateMenuItemResponse> CrateMenuItem(CrateMenuItemRequest request,
+        public override async Task<CreateMenuItemResponse> CreateMenuItem(CreateMenuItemRequest request,
             ServerCallContext context)
         {
+            if (string.IsNullOrEmpty(request.MenuItem.RestaurantId))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"Argument null or empty {nameof(request.MenuItem.RestaurantId)}"));
+            }
+
+            if (string.IsNullOrEmpty(request.MenuItem.DishId))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"Argument null or empty {nameof(request.MenuItem.DishId)}"));
+            }
+
             var menuItemModel = _mapper.Map<Domain.Models.MenuItem>(request);
 
             try
             {
                 var createdMenuItem = await _menuService.CreateMenuItemAsync(menuItemModel);
 
-                return new CrateMenuItemResponse()
+                return new CreateMenuItemResponse()
                 {
                     MenuItem = _mapper.Map<MenuItem>(createdMenuItem)
                 };
@@ -95,6 +105,16 @@ namespace Menu.API.Services
         public override async Task<UpdateMenuItemResponse> UpdateMenuItem(UpdateMenuItemRequest request,
             ServerCallContext context)
         {
+            if (string.IsNullOrEmpty(request.MenuItem.RestaurantId))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"Argument null or empty {nameof(request.MenuItem.RestaurantId)}"));
+            }
+
+            if (string.IsNullOrEmpty(request.MenuItem.DishId))
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, $"Argument null or empty {nameof(request.MenuItem.DishId)}"));
+            }
+
             var menuItemModel = _mapper.Map<Domain.Models.MenuItem>(request);
 
             try

@@ -104,16 +104,8 @@ public class MenuService : IMenuService
 
         if (menuWithSameId.RestaurantId != menuItem.RestaurantId)
         {
-            _logger.LogInformation(
-                $"User change restaurant id from {menuWithSameId.RestaurantId} to {menuItem.RestaurantId}");
-            try
-            {
-                await _restaurantsService.CheckRestaurantExistAsync(menuItem.RestaurantId);
-            }
-            catch (EntityNotFoundException)
-            {
-                throw new ArgumentException($"{nameof(menuItem.RestaurantId)} not exist");
-            }
+            _logger.LogError($"User change restaurant id from {menuWithSameId.RestaurantId} to {menuItem.RestaurantId}");
+            throw new ArgumentException($"{nameof(menuItem.RestaurantId)} cannot be changed");
         }
 
         if (menuWithSameId.DishId != menuItem.DishId)
@@ -131,7 +123,7 @@ public class MenuService : IMenuService
 
             var duplicationMenuItems =
                 await _menuRepository.FindAsync(
-                    new MenuItemDishInRestaurantSpecification(menuItem.DishId, menuItem.RestaurantId));
+                    new MenuItemDishInRestaurantSpecification(menuItem.DishId, menuWithSameId.RestaurantId));
 
             if (duplicationMenuItems.Any())
             {
@@ -142,7 +134,6 @@ public class MenuService : IMenuService
 
         menuWithSameId.PriceRubles = menuItem.PriceRubles;
         menuWithSameId.DishId = menuItem.DishId;
-        menuWithSameId.RestaurantId = menuItem.RestaurantId;
 
         _menuRepository.Update(menuWithSameId);
         _unitOfWork.Complete();

@@ -65,6 +65,12 @@ namespace Web.HttpAggregator.Controllers
                 var createdMenu = await _menuService.CreateMenuAsync(restaurantId, menuItem);
                 return CreatedAtAction("CreateMenu", new {id = createdMenu.Id}, createdMenu);
             }
+            catch (ArgumentException e)
+            {
+                _logger.LogError(e.ToString());
+                return Problem(statusCode: (int) HttpStatusCode.BadRequest, detail: e.Message,
+                    title: Errors.Entities_Entity_invalid_arguments);
+            }
             catch (EntityAlreadyExistsException e)
             {
                 _logger.LogError(e.ToString());
@@ -78,12 +84,18 @@ namespace Web.HttpAggregator.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult> UpdateMenuAsync(Guid menuItemId, MenuItemRequest menuItem)
+        public async Task<ActionResult> UpdateMenuAsync(Guid restaurantId, Guid menuItemId, MenuItemRequest menuItem)
         {
             try
             {
-                var updatedMenu = await _menuService.UpdateMenu(menuItemId, menuItem);
+                var updatedMenu = await _menuService.UpdateMenu(restaurantId, menuItemId, menuItem);
                 return Ok(updatedMenu);
+            }
+            catch (ArgumentException e)
+            {
+                _logger.LogError(e.ToString());
+                return Problem(statusCode: (int) HttpStatusCode.BadRequest, detail: e.Message,
+                    title: Errors.Entities_Entity_invalid_arguments);
             }
             catch (EntityNotFoundException e)
             {

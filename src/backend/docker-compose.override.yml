@@ -45,6 +45,7 @@ services:
       - "Tamagotchi_Urls__OrdersGrpc=http://orders.api"
       - "Tamagotchi_Urls__OrderQueueGrpc=http://orderqueue.api"
       - "Tamagotchi_Urls__DishesGrpc=http://menu.api"
+      - "Tamagotchi_Urls__MenuGrpc=http://menu.api"
     ports:
       - "5000:80"      
   

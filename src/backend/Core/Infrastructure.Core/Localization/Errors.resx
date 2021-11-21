@@ -101,6 +101,9 @@
   <data name="Entities_Entity_already_exits" xml:space="preserve">
     <value>Entity already exits</value>
   </data>
+  <data name="Entities_Entity_invalid_arguments" xml:space="preserve">
+    <value>Entity invalid arguments</value>
+  </data>
   <data name="Entities_Entity_with_id__0__not_found" xml:space="preserve">
     <value>Entity with id {0} not found</value>
   </data>

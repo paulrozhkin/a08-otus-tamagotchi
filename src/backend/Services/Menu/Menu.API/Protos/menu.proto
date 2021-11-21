@@ -7,7 +7,7 @@ package menu_api;
 service Menu {
   rpc GetMenu (GetMenuRequest) returns (GetMenuResponse);
   rpc GetMenuItem (GetMenuItemRequest) returns (GetMenuItemResponse);
-  rpc CrateMenuItem (CrateMenuItemRequest) returns (CrateMenuItemResponse);
+  rpc CreateMenuItem (CreateMenuItemRequest) returns (CreateMenuItemResponse);
   rpc UpdateMenuItem (UpdateMenuItemRequest) returns (UpdateMenuItemResponse);
   rpc DeleteMenuItem (DeleteMenuItemRequest) returns (google.protobuf.Empty);
 }
@@ -32,11 +32,11 @@ message GetMenuItemResponse {
 	MenuItem menu_item = 1;
 }
 
-message CrateMenuItemRequest {
+message CreateMenuItemRequest {
 	MenuItem menu_item = 1;
 }
 
-message CrateMenuItemResponse {
+message CreateMenuItemResponse {
 	MenuItem menu_item = 1;
 }
 

@@ -1,53 +1,112 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using DishesApi;
 using Domain.Core.Exceptions;
+using Grpc.Core;
+using Infrastructure.Core.Localization;
+using MenuApi;
 using Web.HttpAggregator.Models;
 
 namespace Web.HttpAggregator.Services;
 
 public class MenuService : IMenuService
 {
-    private readonly IRestaurantsService _restaurantsService;
+    private readonly Menu.MenuClient _menuClient;
+    private readonly IMapper _mapper;
 
-    public MenuService(IRestaurantsService restaurantsService)
+    public MenuService(Menu.MenuClient menuClient, IMapper mapper)
     {
-        _restaurantsService = restaurantsService;
+        _menuClient = menuClient;
+        _mapper = mapper;
     }
 
-    public Task<PaginationResponse<MenuItemResponse>> GetMenuAsync(Guid restaurantId, int pageNumber, int pageSize)
+    public async Task<PaginationResponse<MenuItemResponse>> GetMenuAsync(Guid restaurantId, int pageNumber,
+        int pageSize)
     {
-        if (_restaurantsService.GetRestaurantByIdAsync(restaurantId) == null)
+        var menuResponse = await _menuClient.GetMenuAsync(new GetMenuRequest()
+            {PageNumber = pageNumber, PageSize = pageSize});
+
+        return _mapper.Map<PaginationResponse<MenuItemResponse>>(menuResponse);
+    }
+
+    public async Task<MenuItemResponse> GetMenuByIdAsync(Guid menuItemId)
+    {
+        try
         {
-            throw new ArgumentException("");
+            var menuItemResponse =
+                await _menuClient.GetMenuItemAsync(new GetMenuItemRequest() {Id = menuItemId.ToString()});
+            return _mapper.Map<MenuItemResponse>(menuItemResponse.MenuItem);
         }
-
-        return Task.FromResult(new PaginationResponse<MenuItemResponse>()
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
         {
-            CurrentPage = pageNumber,
-            Items = new List<MenuItemResponse>(),
-            PageSize = pageSize,
-            TotalCount = 0
-        });
+            throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found, menuItemId));
+        }
     }
 
-    public Task<MenuItemResponse> GetMenuByIdAsync(Guid menuItemId)
+    public async Task<MenuItemResponse> CreateMenuAsync(Guid restaurantId, MenuItemRequest menu)
     {
-        return Task.FromResult(new MenuItemResponse() {Id = menuItemId});
+        try
+        {
+            var menuItem = _mapper.Map<MenuItem>(menu);
+            menuItem.RestaurantId = restaurantId.ToString();
+
+            var dishResponse = await _menuClient.CreateMenuItemAsync(new CreateMenuItemRequest()
+            {
+                MenuItem = menuItem
+            });
+
+            return _mapper.Map<MenuItemResponse>(dishResponse.MenuItem);
+        }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.InvalidArgument)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.AlreadyExists)
+        {
+            throw new EntityAlreadyExistsException(Errors.Entities_Entity_already_exits);
+        }
     }
 
-    public Task<MenuItemResponse> CreateMenuAsync(Guid restaurantId, MenuItemRequest menu)
+    public async Task<MenuItemResponse> UpdateMenu(Guid restaurantId, Guid menuItemId, MenuItemRequest menu)
     {
-        return Task.FromResult(new MenuItemResponse() {Id = Guid.NewGuid()});
+        try
+        {
+            var menuItemForRequest = _mapper.Map<MenuItem>(menu);
+            menuItemForRequest.Id = menuItemId.ToString();
+            menuItemForRequest.RestaurantId = restaurantId.ToString();
+
+            var menuItemResponse = await _menuClient.UpdateMenuItemAsync(new UpdateMenuItemRequest()
+            {
+                MenuItem = menuItemForRequest
+            });
+
+            return _mapper.Map<MenuItemResponse>(menuItemResponse.MenuItem);
+        }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.InvalidArgument)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+        {
+            throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found, menuItemId));
+        }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.AlreadyExists)
+        {
+            throw new EntityAlreadyExistsException(Errors.Entities_Entity_already_exits);
+        }
     }
 
-    public Task<MenuItemResponse> UpdateMenu(Guid menuItemId, MenuItemRequest menu)
+    public async Task DeleteMenuAsync(Guid menuItemId)
     {
-        return Task.FromResult(new MenuItemResponse() {Id = menuItemId});
-    }
-
-    public Task DeleteMenuAsync(Guid menuItemId)
-    {
-        return Task.CompletedTask;
+        try
+        {
+            await _menuClient.DeleteMenuItemAsync(new DeleteMenuItemRequest() {Id = menuItemId.ToString()});
+        }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+        {
+            throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found, menuItemId));
+        }
     }
 }

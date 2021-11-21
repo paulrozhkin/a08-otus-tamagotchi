@@ -12,7 +12,7 @@ namespace Web.HttpAggregator.Services
 
         public Task<MenuItemResponse> CreateMenuAsync(Guid restaurantId, MenuItemRequest menu);
 
-        public Task<MenuItemResponse> UpdateMenu(Guid menuItemId, MenuItemRequest menu);
+        public Task<MenuItemResponse> UpdateMenu(Guid restaurantId, Guid menuItemId, MenuItemRequest menu);
 
         public Task DeleteMenuAsync(Guid menuItemId);
     }
