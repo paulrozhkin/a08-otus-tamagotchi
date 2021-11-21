@@ -1,7 +1,11 @@
 using Infrastructure.Core.Config;
+using Infrastructure.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using System;
+using System.Reflection;
 
 namespace Web.HttpAggregator
 {
@@ -9,15 +13,24 @@ namespace Web.HttpAggregator
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            try
+            {
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (System.Exception ex)
+            {
+                Log.Fatal($"Failed to start {Assembly.GetExecutingAssembly().GetName().Name}", ex);
+                throw;
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((_, config) =>
-                {
-                    config.AddEnvironmentVariables(TamagotchiConfiguration.Prefix);
-                })
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+    Host.CreateDefaultBuilder(args)
+        .ConfigureAppConfiguration((_, config) =>
+        {
+            config.AddEnvironmentVariables(TamagotchiConfiguration.Prefix);
+        })
+        .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+        .UseSerilog();
     }
 }

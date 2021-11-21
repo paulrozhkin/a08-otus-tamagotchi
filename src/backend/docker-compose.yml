@@ -1,6 +1,30 @@
 version: '3.4'
 
 services:
+
+  elasticsearch:
+   container_name: elasticsearch
+   image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
+   ports:
+    - 9200:9200
+   volumes:
+    - elasticsearch-data:/usr/share/elasticsearch/data
+   environment:
+    - xpack.monitoring.enabled=true
+    - xpack.watcher.enabled=false
+    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    - discovery.type=single-node
+
+  kibana:
+   container_name: kibana
+   image: docker.elastic.co/kibana/kibana:7.9.2
+   ports:
+    - 5601:5601
+   depends_on:
+    - elasticsearch
+   environment:
+    - ELASTICSEARCH_URL=http://elasticsearch
+
   pgadmin:
     image: dpage/pgadmin4
     
@@ -20,6 +44,7 @@ services:
       dockerfile: ApiGateways/Web.HttpAggregator/aggregator/Web.HttpAggregator/Dockerfile
     depends_on:
       - rabbitmq
+      - elasticsearch
 
   orderqueue.api:
     image: ${DOCKER_REGISTRY-}orderqueueapi
@@ -43,7 +68,7 @@ services:
     build:
       context: .
       dockerfile: Services/Restaurants/Restaurants.API/Dockerfile
-    depends_on:
+    depends_on: 
       - postgres
       - geocoding.api
 
@@ -88,5 +113,6 @@ services:
       - web.httpaggregator
 
 volumes:
+  elasticsearch-data:
   postgres:  
   pgadmin_data:

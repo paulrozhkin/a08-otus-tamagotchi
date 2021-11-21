@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,8 @@ using Web.HttpAggregator.Consumers;
 using Web.HttpAggregator.Hubs;
 using Web.HttpAggregator.Infrastructure.Extensions;
 using Web.HttpAggregator.Mapping;
+using System.Reflection;
+using Infrastructure.Logging;
 
 namespace Web.HttpAggregator
 {
@@ -22,6 +25,11 @@ namespace Web.HttpAggregator
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+
+            LogConfigs.ConfigureLogging(assemblyName, (IConfigurationRoot)configuration, environment);
         }
 
         public IConfiguration Configuration { get; }
