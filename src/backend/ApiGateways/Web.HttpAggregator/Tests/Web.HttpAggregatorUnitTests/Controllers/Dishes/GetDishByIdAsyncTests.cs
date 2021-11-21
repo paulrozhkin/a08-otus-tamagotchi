@@ -31,13 +31,12 @@ namespace Web.HttpAggregatorUnitTests.Controllers.Dishes
         {
             // arrange
             var dishId = _fixture.Create<Guid>();
-            var dishRequest = _fixture.Create<DishRequest>();
             var dishResponse = _fixture.Create<DishResponse>();
 
-            _dishesServiceMock.Setup(x => x.UpdateDishAsync(dishId, dishRequest))
+            _dishesServiceMock.Setup(x => x.GetDishByIdAsync(dishId))
                 .Returns(Task.FromResult(dishResponse));
             // act
-            var result = await _dishesController.UpdateDishAsync(dishId, dishRequest);
+            var result = await _dishesController.GetDishByIdAsync(dishId);
 
             // assert
             result.Should().BeAssignableTo<OkObjectResult>().Which.Value.Should().Be(dishResponse);

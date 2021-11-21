@@ -29,7 +29,7 @@ namespace Web.HttpAggregatorUnitTests.Controllers.Dishes
         private async Task Dishes_GetAllWithPagination_ReturnOkResponse()
         {
             // arrange
-            var requestParameters = new RestaurantParameters()
+            var requestParameters = new QueryStringParameters()
             {
                 PageNumber = 1,
                 PageSize = 5

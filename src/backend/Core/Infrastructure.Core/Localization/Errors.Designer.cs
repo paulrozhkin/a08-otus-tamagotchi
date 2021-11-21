@@ -79,6 +79,15 @@ namespace Infrastructure.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Entity invalid arguments.
+        /// </summary>
+        public static string Entities_Entity_invalid_arguments {
+            get {
+                return ResourceManager.GetString("Entities_Entity_invalid_arguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Entity not found.
         /// </summary>
         public static string Entities_Entity_not_found {
@@ -93,6 +102,15 @@ namespace Infrastructure.Core.Localization {
         public static string Entities_Entity_with_id__0__not_found {
             get {
                 return ResourceManager.GetString("Entities_Entity_with_id__0__not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Menu item for dish {0} already exist.
+        /// </summary>
+        public static string Menu_MenuItem_for_dish__0__already_exist {
+            get {
+                return ResourceManager.GetString("Menu_MenuItem_for_dish__0__already_exist", resourceCulture);
             }
         }
         

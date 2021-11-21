@@ -1,6 +1,6 @@
 ﻿namespace Web.HttpAggregator.Models.QueryParameters
 {
-    public abstract class QueryStringParameters
+    public class QueryStringParameters
     {
         public int PageNumber { get; set; } = 1;
 

@@ -1,5 +1,8 @@
-﻿using Infrastructure.Core.Config;
+﻿using System;
+using Infrastructure.Core.Config;
 using Infrastructure.Core.Extensions;
+using Infrastructure.Core.Grpc;
+using Menu.API.Config;
 using Menu.API.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +14,8 @@ using Menu.Domain.Services;
 using Menu.Infrastructure.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using RestaurantsApi;
 
 namespace Menu.API
 {
@@ -30,7 +35,12 @@ namespace Menu.API
             services.AddGrpc();
             services.AddAutoMapper(typeof(MappingProfile));
 
+            services.Configure<RestaurantsOptions>(_configuration.GetSection(RestaurantsOptions.Restaurants));
+
             services.AddScoped<IDishesService, DishesService>();
+            services.AddScoped<IMenuService, MenuService>();
+
+            services.AddRestaurantsGrpcService();
 
             services.AddDataAccess<MenuDataContext>(_configuration.GetConnectionString("MenuDb"));
         }
@@ -50,12 +60,34 @@ namespace Menu.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<GrpcDishesService>();
+                endpoints.MapGrpcService<GrpcMenuService>();
 
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
-                });
+                endpoints.MapGet("/",
+                    async context =>
+                    {
+                        await context.Response.WriteAsync(
+                            "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+                    });
             });
+        }
+    }
+
+    public static class GrpcServiceCollectionExtensions
+    {
+        public static IServiceCollection AddRestaurantsGrpcService(this IServiceCollection services)
+        {
+            services.AddTransient<GrpcExceptionInterceptor>();
+
+            services.AddScoped<IRestaurantsService, RestaurantsService>();
+
+            services.AddGrpcClient<Restaurants.RestaurantsClient>((serviceProvider, options) =>
+            {
+                var geocodingApi = serviceProvider.GetRequiredService<IOptions<RestaurantsOptions>>().Value
+                    .RestaurantsGrpc;
+                options.Address = new Uri(geocodingApi);
+            }).AddInterceptor<GrpcExceptionInterceptor>();
+
+            return services;
         }
     }
 }

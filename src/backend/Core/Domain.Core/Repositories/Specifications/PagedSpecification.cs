@@ -6,7 +6,7 @@ namespace Domain.Core.Repositories.Specifications
     {
         public PagedSpecification(int pageNumber, int pageSize)
         {
-            ApplyOrderBy(x => x.Id);
+            ApplyOrderBy(x => x.CreatedDate);
             ApplyPaging(pageNumber, pageSize);
         }
     }

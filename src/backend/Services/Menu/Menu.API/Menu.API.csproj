@@ -9,10 +9,13 @@
 
   <ItemGroup>
     <None Remove="Protos\dishes.proto" />
+    <None Remove="Protos\menu.proto" />
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\dishes.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\menu.proto" GrpcServices="Server" ProtoRoot="Protos" />
+    <Protobuf Include="Protos\dishes.proto" GrpcServices="Server" ProtoRoot="Protos" />
+    <Protobuf Include="..\..\..\Services\Restaurants\Restaurants.API\Protos\restaurants.proto" GrpcService="Client" Link="Protos\restaurants.proto" />
   </ItemGroup>
 
   <ItemGroup>

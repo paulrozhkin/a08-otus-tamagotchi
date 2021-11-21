@@ -52,7 +52,7 @@ namespace Restaurants.Domain.Services
 
             if (restaurant == null)
             {
-                throw new EntityNotFoundException();
+                throw new EntityNotFoundException(nameof(Restaurant));
             }
 
             restaurant.Address =
@@ -86,7 +86,7 @@ namespace Restaurants.Domain.Services
 
             if (restaurantWithSameId == null)
             {
-                throw new EntityNotFoundException();
+                throw new EntityNotFoundException(nameof(Restaurant));
             }
 
             if (restaurantWithSameId.Latitude != restaurant.Latitude ||
@@ -124,7 +124,7 @@ namespace Restaurants.Domain.Services
 
             if (restaurant == null)
             {
-                throw new EntityNotFoundException();
+                throw new EntityNotFoundException(nameof(Restaurant));
             }
 
             _restaurantsRepository.Remove(restaurant);

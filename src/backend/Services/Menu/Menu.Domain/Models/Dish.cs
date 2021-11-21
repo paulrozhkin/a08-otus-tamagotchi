@@ -1,4 +1,5 @@
-﻿using Domain.Core.Models;
+﻿using System.Collections.Generic;
+using Domain.Core.Models;
 
 namespace Menu.Domain.Models
 {
@@ -7,5 +8,7 @@ namespace Menu.Domain.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        public ICollection<MenuItem> Menu { get; set; }
     }
 }

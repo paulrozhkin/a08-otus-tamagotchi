@@ -35,7 +35,7 @@ public class DishesService : IDishesService
 
         if (dish == null)
         {
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException(nameof(Dish));
         }
 
         return dish;
@@ -61,7 +61,7 @@ public class DishesService : IDishesService
 
         if (dishWithSameId == null)
         {
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException(nameof(Dish));
         }
 
         if (dishWithSameId.Name != dish.Name)
@@ -88,7 +88,7 @@ public class DishesService : IDishesService
 
         if (dish == null)
         {
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException(nameof(Dish));
         }
 
         _dishesRepository.Remove(dish);

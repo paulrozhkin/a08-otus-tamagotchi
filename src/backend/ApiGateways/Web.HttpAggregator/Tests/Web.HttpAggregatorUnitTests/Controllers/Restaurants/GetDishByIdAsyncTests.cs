@@ -31,13 +31,12 @@ namespace Web.HttpAggregatorUnitTests.Controllers.Restaurants
         {
             // arrange
             var restaurantId = _fixture.Create<Guid>();
-            var restaurantRequest = _fixture.Create<RestaurantRequest>();
             var restaurantResponse = _fixture.Create<RestaurantResponse>();
 
-            _restaurantsServiceMock.Setup(x => x.UpdateRestaurantAsync(restaurantId, restaurantRequest))
+            _restaurantsServiceMock.Setup(x => x.GetRestaurantByIdAsync(restaurantId))
                 .Returns(Task.FromResult(restaurantResponse));
             // act
-            var result = await _restaurantsController.UpdateRestaurantAsync(restaurantId, restaurantRequest);
+            var result = await _restaurantsController.GetRestaurantByIdAsync(restaurantId);
 
             // assert
             result.Should().BeAssignableTo<OkObjectResult>().Which.Value.Should().Be(restaurantResponse);

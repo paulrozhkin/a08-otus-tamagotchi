@@ -11,5 +11,7 @@
         public string OrderQueueGrpc { get; set; }
 
         public string DishesGrpc { get; set; }
+
+        public string MenuGrpc { get; set; }
     }
 }

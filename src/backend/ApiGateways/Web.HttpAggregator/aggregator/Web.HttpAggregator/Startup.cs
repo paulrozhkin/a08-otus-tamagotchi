@@ -22,17 +22,15 @@ namespace Web.HttpAggregator
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
-
+            _configuration = configuration;
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-
             LogConfigs.ConfigureLogging(assemblyName, (IConfigurationRoot)configuration, environment);
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -41,7 +39,7 @@ namespace Web.HttpAggregator
 
             services.AddAutoMapper(typeof(MappingProfile));
 
-            var urlsConfig = Configuration.GetSection(UrlsOptions.Urls);
+            var urlsConfig = _configuration.GetSection(UrlsOptions.Urls);
             services.Configure<UrlsOptions>(urlsConfig);
 
             services.AddGrpcServices();
@@ -52,7 +50,7 @@ namespace Web.HttpAggregator
                 config.AddConsumer<KitchenOrderConsumer>();
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
-                    cfg.Host(Configuration["RabbitMq:Host"]);
+                    cfg.Host(_configuration["RabbitMq:Host"]);
                     cfg.ReceiveEndpoint("kitchen-order", c => { c.ConfigureConsumer<KitchenOrderConsumer>(ctx); });
                 });
             });
@@ -86,7 +84,7 @@ namespace Web.HttpAggregator
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-            logger.LogInformation(ConfigurationSerializer.Serialize(Configuration).ToString());
+            logger.LogInformation(ConfigurationSerializer.Serialize(_configuration).ToString());
 
             if (env.IsDevelopment())
             {
