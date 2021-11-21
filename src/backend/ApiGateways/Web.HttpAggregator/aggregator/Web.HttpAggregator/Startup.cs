@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,8 @@ using Web.HttpAggregator.Consumers;
 using Web.HttpAggregator.Hubs;
 using Web.HttpAggregator.Infrastructure.Extensions;
 using Web.HttpAggregator.Mapping;
+using System.Reflection;
+using Infrastructure.Logging;
 
 namespace Web.HttpAggregator
 {
@@ -24,6 +27,9 @@ namespace Web.HttpAggregator
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+            LogConfigs.ConfigureLogging(assemblyName, (IConfigurationRoot)configuration, environment);
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
