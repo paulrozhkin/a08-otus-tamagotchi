@@ -1,0 +1,63 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+package tables_api;
+
+service Tables {
+  rpc GetTables (GetTablesRequest) returns (GetTablesResponse);
+  rpc GetTable (GetTableRequest) returns (GetTableResponse);
+  rpc CreateTable (CreateTableRequest) returns (CreateTableResponse);
+  rpc UpdateTable (UpdateTableRequest) returns (UpdateTableResponse);
+  rpc DeleteTable (DeleteTableRequest) returns (google.protobuf.Empty);
+}
+
+message GetTablesRequest {
+	int32 page_number = 1;
+	int32 page_size = 2;
+	string restaurant_id = 3;
+}
+
+message GetTablesResponse {
+	int32 current_page = 1;
+	int32 page_size = 2;
+	int32 total_count = 3;
+	repeated Table tables = 4;
+}
+
+message GetTableRequest {
+	string id = 1;
+}
+
+message GetTableResponse {
+	Table table = 1;
+}
+
+message CreateTableRequest {
+	Table table = 1;
+}
+
+message CreateTableResponse {
+	Table table = 1;
+}
+
+message UpdateTableRequest {
+	Table table = 1;
+}
+
+message UpdateTableResponse {
+	Table table = 1;
+}
+
+message DeleteTableRequest {
+	string id = 1;
+}
+
+message Table {
+	string id = 1;
+	string name = 2;
+	int32 number_of_places = 3;
+	string restaurant_id = 4;
+	google.protobuf.Timestamp updated_date = 5;
+	google.protobuf.Timestamp created_date = 6;
+}

@@ -80,6 +80,14 @@ services:
     depends_on:
       - postgres
 
+  tables.api:
+    image: ${DOCKER_REGISTRY-}tablesapi
+    build:
+      context: .
+      dockerfile: Services/Tables/Tables.API/Dockerfile
+    depends_on:
+      - postgres
+
   geocoding.api:
     image: ${DOCKER_REGISTRY-}geocodingapi
     build:

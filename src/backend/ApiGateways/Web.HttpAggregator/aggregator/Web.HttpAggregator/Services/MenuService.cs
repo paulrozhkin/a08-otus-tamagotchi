@@ -9,104 +9,109 @@ using Infrastructure.Core.Localization;
 using MenuApi;
 using Web.HttpAggregator.Models;
 
-namespace Web.HttpAggregator.Services;
-
-public class MenuService : IMenuService
+namespace Web.HttpAggregator.Services
 {
-    private readonly Menu.MenuClient _menuClient;
-    private readonly IMapper _mapper;
-
-    public MenuService(Menu.MenuClient menuClient, IMapper mapper)
+    public class MenuService : IMenuService
     {
-        _menuClient = menuClient;
-        _mapper = mapper;
-    }
+        private readonly Menu.MenuClient _menuClient;
+        private readonly IMapper _mapper;
 
-    public async Task<PaginationResponse<Models.MenuItemResponse>> GetMenuAsync(Guid restaurantId, int pageNumber,
-        int pageSize)
-    {
-        var menuResponse = await _menuClient.GetMenuAsync(new GetMenuRequest()
-            {PageNumber = pageNumber, PageSize = pageSize, RestaurantId = restaurantId.ToString()});
-
-        return _mapper.Map<PaginationResponse<Models.MenuItemResponse>>(menuResponse);
-    }
-
-    public async Task<Models.MenuItemResponse> GetMenuByIdAsync(Guid menuItemId)
-    {
-        try
+        public MenuService(Menu.MenuClient menuClient, IMapper mapper)
         {
-            var menuItemResponse =
-                await _menuClient.GetMenuItemAsync(new GetMenuItemRequest() {Id = menuItemId.ToString()});
-            return _mapper.Map<Models.MenuItemResponse>(menuItemResponse.MenuItem);
+            _menuClient = menuClient;
+            _mapper = mapper;
         }
-        catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+
+        public async Task<PaginationResponse<Models.MenuItemResponse>> GetMenuAsync(Guid restaurantId, int pageNumber,
+            int pageSize)
         {
-            throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found, menuItemId));
+            var menuResponse = await _menuClient.GetMenuAsync(new GetMenuRequest()
+                {PageNumber = pageNumber, PageSize = pageSize, RestaurantId = restaurantId.ToString()});
+
+            return _mapper.Map<PaginationResponse<Models.MenuItemResponse>>(menuResponse);
         }
-    }
 
-    public async Task<Models.MenuItemResponse> CreateMenuAsync(Guid restaurantId, Models.MenuItemRequest menu)
-    {
-        try
+        public async Task<Models.MenuItemResponse> GetMenuByIdAsync(Guid menuItemId)
         {
-            var menuItem = _mapper.Map<MenuApi.MenuItemRequest>(menu);
-            menuItem.RestaurantId = restaurantId.ToString();
-
-            var dishResponse = await _menuClient.CreateMenuItemAsync(new CreateMenuItemRequest()
+            try
             {
-                MenuItem = menuItem
-            });
-
-            return _mapper.Map<Models.MenuItemResponse>(dishResponse.MenuItem);
-        }
-        catch (RpcException ex) when (ex.StatusCode == StatusCode.InvalidArgument)
-        {
-            throw new ArgumentException(ex.Message);
-        }
-        catch (RpcException ex) when (ex.StatusCode == StatusCode.AlreadyExists)
-        {
-            throw new EntityAlreadyExistsException(Errors.Entities_Entity_already_exits);
-        }
-    }
-
-    public async Task<Models.MenuItemResponse> UpdateMenuAsync(Guid restaurantId, Guid menuItemId, Models.MenuItemRequest menu)
-    {
-        try
-        {
-            var menuItemForRequest = _mapper.Map<MenuApi.MenuItemRequest>(menu);
-            menuItemForRequest.Id = menuItemId.ToString();
-            menuItemForRequest.RestaurantId = restaurantId.ToString();
-
-            var menuItemResponse = await _menuClient.UpdateMenuItemAsync(new UpdateMenuItemRequest()
+                var menuItemResponse =
+                    await _menuClient.GetMenuItemAsync(new GetMenuItemRequest() {Id = menuItemId.ToString()});
+                return _mapper.Map<Models.MenuItemResponse>(menuItemResponse.MenuItem);
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
             {
-                MenuItem = menuItemForRequest
-            });
+                throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found,
+                    menuItemId));
+            }
+        }
 
-            return _mapper.Map<Models.MenuItemResponse>(menuItemResponse.MenuItem);
-        }
-        catch (RpcException ex) when (ex.StatusCode == StatusCode.InvalidArgument)
+        public async Task<Models.MenuItemResponse> CreateMenuAsync(Guid restaurantId, Models.MenuItemRequest menu)
         {
-            throw new ArgumentException(ex.Message);
-        }
-        catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
-        {
-            throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found, menuItemId));
-        }
-        catch (RpcException ex) when (ex.StatusCode == StatusCode.AlreadyExists)
-        {
-            throw new EntityAlreadyExistsException(Errors.Entities_Entity_already_exits);
-        }
-    }
+            try
+            {
+                var menuItem = _mapper.Map<MenuApi.MenuItemRequest>(menu);
+                menuItem.RestaurantId = restaurantId.ToString();
 
-    public async Task DeleteMenuAsync(Guid menuItemId)
-    {
-        try
-        {
-            await _menuClient.DeleteMenuItemAsync(new DeleteMenuItemRequest() {Id = menuItemId.ToString()});
+                var dishResponse = await _menuClient.CreateMenuItemAsync(new CreateMenuItemRequest()
+                {
+                    MenuItem = menuItem
+                });
+
+                return _mapper.Map<Models.MenuItemResponse>(dishResponse.MenuItem);
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.InvalidArgument)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.AlreadyExists)
+            {
+                throw new EntityAlreadyExistsException(Errors.Entities_Entity_already_exits);
+            }
         }
-        catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+
+        public async Task<Models.MenuItemResponse> UpdateMenuAsync(Guid restaurantId, Guid menuItemId,
+            Models.MenuItemRequest menu)
         {
-            throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found, menuItemId));
+            try
+            {
+                var menuItemForRequest = _mapper.Map<MenuApi.MenuItemRequest>(menu);
+                menuItemForRequest.Id = menuItemId.ToString();
+                menuItemForRequest.RestaurantId = restaurantId.ToString();
+
+                var menuItemResponse = await _menuClient.UpdateMenuItemAsync(new UpdateMenuItemRequest()
+                {
+                    MenuItem = menuItemForRequest
+                });
+
+                return _mapper.Map<Models.MenuItemResponse>(menuItemResponse.MenuItem);
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.InvalidArgument)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+            {
+                throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found,
+                    menuItemId));
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.AlreadyExists)
+            {
+                throw new EntityAlreadyExistsException(Errors.Entities_Entity_already_exits);
+            }
+        }
+
+        public async Task DeleteMenuAsync(Guid menuItemId)
+        {
+            try
+            {
+                await _menuClient.DeleteMenuItemAsync(new DeleteMenuItemRequest() {Id = menuItemId.ToString()});
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+            {
+                throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found,
+                    menuItemId));
+            }
         }
     }
 }

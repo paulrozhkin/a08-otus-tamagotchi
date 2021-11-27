@@ -2,33 +2,34 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <UserSecretsId>5db916ed-f214-42cb-95a3-0c0347223c54</UserSecretsId>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>e850daca-4f54-4d8a-ba35-68a0026cae4e</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
-    <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\kitchen_orders.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\tables.proto" GrpcServices="Server" />
+    <Protobuf Include="..\..\..\Services\Restaurants\Restaurants.API\Protos\restaurants.proto" GrpcService="Client" Link="Protos\restaurants.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
-    <PackageReference Include="MassTransit" Version="7.2.4" />
-    <PackageReference Include="MassTransit.AspNetCore" Version="7.2.4" />
-    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.2.4" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\Infrastructure.Core\Infrastructure.Core.csproj" />
-    <ProjectReference Include="..\OrderQueue.DataAccess\OrderQueue.DataAccess.csproj" />
-    <ProjectReference Include="..\OrderQueue.Domain\OrderQueue.Core.csproj" />
+    <ProjectReference Include="..\Tables.Domain\Tables.Domain.csproj" />
+    <ProjectReference Include="..\Tables.Infrastructure\Tables.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

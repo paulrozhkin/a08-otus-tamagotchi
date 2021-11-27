@@ -1,23 +1,16 @@
-﻿using System;
-using Infrastructure.Core.Config;
+﻿using Infrastructure.Core.Config;
 using Infrastructure.Core.Extensions;
 using Infrastructure.Core.Grpc;
-using Menu.API.Config;
-using Menu.API.Mapping;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Menu.API.Services;
-using Menu.Domain.Services;
-using Menu.Infrastructure.Repository;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Tables.Domain.Services;
+using Tables.Infrastructure.Repository;
 using Microsoft.Extensions.Options;
 using RestaurantsApi;
+using Tables.API.Config;
+using Tables.API.Mapping;
+using Tables.API.Services;
 
-namespace Menu.API
+
+namespace Tables.API
 {
     public class Startup
     {
@@ -35,14 +28,13 @@ namespace Menu.API
             services.AddGrpc();
             services.AddAutoMapper(typeof(MappingProfile));
 
-            services.Configure<RestaurantsOptions>(_configuration.GetSection(RestaurantsOptions.Restaurants));
+            //services.Configure<RestaurantsOptions>(_configuration.GetSection(RestaurantsOptions.Restaurants));
 
-            services.AddScoped<IDishesService, DishesService>();
-            services.AddScoped<IMenuService, MenuService>();
+            services.AddScoped<ITablesService, TablesService>();
 
             services.AddRestaurantsGrpcService();
 
-            services.AddDataAccess<MenuDataContext>(_configuration.GetConnectionString("MenuDb"));
+            services.AddDataAccess<TablesDataContext>(_configuration.GetConnectionString("TablesDb"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,8 +51,7 @@ namespace Menu.API
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<GrpcDishesService>();
-                endpoints.MapGrpcService<GrpcMenuService>();
+                //endpoints.MapGrpcService<GrpcDishesService>();
 
                 endpoints.MapGet("/",
                     async context =>
