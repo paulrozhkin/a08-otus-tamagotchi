@@ -18,6 +18,7 @@
     <Protobuf Include="..\..\..\..\Services\OrderQueue\OrderQueue.API\Protos\kitchen_orders.proto" GrpcService="Client" Link="Protos\kitchen_orders.proto" />
     <Protobuf Include="..\..\..\..\Services\Menu\Menu.API\Protos\dishes.proto" GrpcService="Client" Link="Protos\dishes.proto" />
     <Protobuf Include="..\..\..\..\Services\Menu\Menu.API\Protos\menu.proto" GrpcService="Client" Link="Protos\menu.proto" ProtoRoot="..\..\..\..\Services\Menu\Menu.API\Protos" />
+    <Protobuf Include="..\..\..\..\Services\Tables\Tables.API\Protos\tables.proto" GrpcService="Client" Link="Protos\tables.proto" ProtoRoot="..\..\..\..\Services\Tables\Tables.API\Protos" />
   </ItemGroup>
 
   <ItemGroup>

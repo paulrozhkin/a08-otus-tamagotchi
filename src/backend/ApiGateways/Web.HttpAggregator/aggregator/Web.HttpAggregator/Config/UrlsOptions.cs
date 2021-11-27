@@ -13,5 +13,8 @@
         public string DishesGrpc { get; set; }
 
         public string MenuGrpc { get; set; }
+
+        public string TablesGrpc { get; set; }
+
     }
 }

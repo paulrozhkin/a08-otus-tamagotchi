@@ -4,59 +4,59 @@ using AutoMapper;
 using Domain.Core.Exceptions;
 using Grpc.Core;
 using Infrastructure.Core.Localization;
-using MenuApi;
+using TablesApi;
 using Web.HttpAggregator.Models;
 
 namespace Web.HttpAggregator.Services
 {
-    public class MenuService : IMenuService
+    public class TablesService : ITablesService
     {
-        private readonly Menu.MenuClient _menuClient;
+        private readonly Tables.TablesClient _tablesClient;
         private readonly IMapper _mapper;
 
-        public MenuService(Menu.MenuClient menuClient, IMapper mapper)
+        public TablesService(Tables.TablesClient tablesClient, IMapper mapper)
         {
-            _menuClient = menuClient;
+            _tablesClient = tablesClient;
             _mapper = mapper;
         }
 
-        public async Task<PaginationResponse<Models.MenuItemResponse>> GetMenuAsync(Guid restaurantId, int pageNumber,
+        public async Task<PaginationResponse<TableResponse>> GetTablesAsync(Guid restaurantId, int pageNumber,
             int pageSize)
         {
-            var menuResponse = await _menuClient.GetMenuAsync(new GetMenuRequest()
+            var tableResponse = await _tablesClient.GetTablesAsync(new GetTablesRequest
                 {PageNumber = pageNumber, PageSize = pageSize, RestaurantId = restaurantId.ToString()});
 
-            return _mapper.Map<PaginationResponse<Models.MenuItemResponse>>(menuResponse);
+            return _mapper.Map<PaginationResponse<TableResponse>>(tableResponse);
         }
 
-        public async Task<Models.MenuItemResponse> GetMenuByIdAsync(Guid menuItemId)
+        public async Task<TableResponse> GetTableByIdAsync(Guid tableId)
         {
             try
             {
-                var menuItemResponse =
-                    await _menuClient.GetMenuItemAsync(new GetMenuItemRequest() {Id = menuItemId.ToString()});
-                return _mapper.Map<Models.MenuItemResponse>(menuItemResponse.MenuItem);
+                var tableResponse =
+                    await _tablesClient.GetTableAsync(new GetTableRequest {Id = tableId.ToString()});
+                return _mapper.Map<TableResponse>(tableResponse.Table);
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
             {
                 throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found,
-                    menuItemId));
+                    tableId));
             }
         }
 
-        public async Task<Models.MenuItemResponse> CreateMenuAsync(Guid restaurantId, Models.MenuItemRequest menu)
+        public async Task<TableResponse> CreateTableAsync(Guid restaurantId, TableRequest table)
         {
             try
             {
-                var menuItem = _mapper.Map<MenuApi.MenuItemRequest>(menu);
-                menuItem.RestaurantId = restaurantId.ToString();
+                var tableDto = _mapper.Map<Table>(table);
+                tableDto.RestaurantId = restaurantId.ToString();
 
-                var dishResponse = await _menuClient.CreateMenuItemAsync(new CreateMenuItemRequest()
+                var dishResponse = await _tablesClient.CreateTableAsync(new CreateTableRequest
                 {
-                    MenuItem = menuItem
+                    Table = tableDto
                 });
 
-                return _mapper.Map<Models.MenuItemResponse>(dishResponse.MenuItem);
+                return _mapper.Map<TableResponse>(dishResponse.Table);
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.InvalidArgument)
             {
@@ -68,21 +68,21 @@ namespace Web.HttpAggregator.Services
             }
         }
 
-        public async Task<Models.MenuItemResponse> UpdateMenuAsync(Guid restaurantId, Guid menuItemId,
-            Models.MenuItemRequest menu)
+        public async Task<TableResponse> UpdateTableAsync(Guid restaurantId, Guid tableId,
+            TableRequest table)
         {
             try
             {
-                var menuItemForRequest = _mapper.Map<MenuApi.MenuItemRequest>(menu);
-                menuItemForRequest.Id = menuItemId.ToString();
-                menuItemForRequest.RestaurantId = restaurantId.ToString();
+                var tableForRequest = _mapper.Map<Table>(table);
+                tableForRequest.Id = tableId.ToString();
+                tableForRequest.RestaurantId = restaurantId.ToString();
 
-                var menuItemResponse = await _menuClient.UpdateMenuItemAsync(new UpdateMenuItemRequest()
+                var tableResponse = await _tablesClient.UpdateTableAsync(new UpdateTableRequest
                 {
-                    MenuItem = menuItemForRequest
+                    Table = tableForRequest
                 });
 
-                return _mapper.Map<Models.MenuItemResponse>(menuItemResponse.MenuItem);
+                return _mapper.Map<TableResponse>(tableResponse.Table);
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.InvalidArgument)
             {
@@ -91,7 +91,7 @@ namespace Web.HttpAggregator.Services
             catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
             {
                 throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found,
-                    menuItemId));
+                    tableId));
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.AlreadyExists)
             {
@@ -99,16 +99,16 @@ namespace Web.HttpAggregator.Services
             }
         }
 
-        public async Task DeleteMenuAsync(Guid menuItemId)
+        public async Task DeleteTableAsync(Guid tableId)
         {
             try
             {
-                await _menuClient.DeleteMenuItemAsync(new DeleteMenuItemRequest() {Id = menuItemId.ToString()});
+                await _tablesClient.DeleteTableAsync(new DeleteTableRequest {Id = tableId.ToString()});
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
             {
                 throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found,
-                    menuItemId));
+                    tableId));
             }
         }
     }

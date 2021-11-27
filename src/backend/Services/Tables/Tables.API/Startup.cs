@@ -28,7 +28,7 @@ namespace Tables.API
             services.AddGrpc();
             services.AddAutoMapper(typeof(MappingProfile));
 
-            //services.Configure<RestaurantsOptions>(_configuration.GetSection(RestaurantsOptions.Restaurants));
+            services.Configure<RestaurantsOptions>(_configuration.GetSection(RestaurantsOptions.Restaurants));
 
             services.AddScoped<ITablesService, TablesService>();
 
@@ -51,7 +51,7 @@ namespace Tables.API
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapGrpcService<GrpcDishesService>();
+                endpoints.MapGrpcService<GrpcTablesService>();
 
                 endpoints.MapGet("/",
                     async context =>

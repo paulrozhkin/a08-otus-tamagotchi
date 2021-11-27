@@ -8,13 +8,13 @@ using TablesApi;
 
 namespace Tables.API.Services
 {
-    public class GrpcTableService : TablesApi.Tables.TablesBase
+    public class GrpcTablesService : TablesApi.Tables.TablesBase
     {
-        private readonly ILogger<GrpcTableService> _logger;
+        private readonly ILogger<GrpcTablesService> _logger;
         private readonly ITablesService _tablesService;
         private readonly IMapper _mapper;
 
-        public GrpcTableService(ILogger<GrpcTableService> logger,
+        public GrpcTablesService(ILogger<GrpcTablesService> logger,
             ITablesService tablesService,
             IMapper mapper)
         {
