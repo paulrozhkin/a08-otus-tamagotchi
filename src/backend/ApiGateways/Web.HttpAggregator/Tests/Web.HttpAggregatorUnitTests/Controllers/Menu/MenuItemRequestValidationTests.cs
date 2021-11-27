@@ -31,7 +31,7 @@ namespace Web.HttpAggregatorUnitTests.Controllers.Menu
         }
 
         [Fact]
-        public void MenuWithZeroNegativePrice_Validate_Invalid()
+        public void MenuWithNegativePrice_Validate_Invalid()
         {
             // arrange
             var dish = _fixture.Build<MenuItemRequest>().With(x => x.PriceRubles, -1).Create();
