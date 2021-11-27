@@ -65,21 +65,33 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Menu.UnitTests", "Services\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4B78D554-81ED-4C25-A939-EB071150005B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderQueue.UnitTests", "Services\OrderQueue\Tests\OrderQueue.UnitTests\OrderQueue.UnitTests.csproj", "{CBCA6D0F-5080-4A16-A76B-652BDD4A4D60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderQueue.UnitTests", "Services\OrderQueue\Tests\OrderQueue.UnitTests\OrderQueue.UnitTests.csproj", "{CBCA6D0F-5080-4A16-A76B-652BDD4A4D60}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D878B303-A152-4A26-A885-5599A9D40A62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.UnitTests", "Services\Orders\Tests\Orders.UnitTests\Orders.UnitTests.csproj", "{3567C69D-2509-435D-A9FB-9A015521E91B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders.UnitTests", "Services\Orders\Tests\Orders.UnitTests\Orders.UnitTests.csproj", "{3567C69D-2509-435D-A9FB-9A015521E91B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restaurants.UnitTests", "Services\Restaurants\Tests\Restaurants.UnitTests\Restaurants.UnitTests.csproj", "{11A25218-5BE6-45AF-876A-CDEF617C3211}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurants.UnitTests", "Services\Restaurants\Tests\Restaurants.UnitTests\Restaurants.UnitTests.csproj", "{11A25218-5BE6-45AF-876A-CDEF617C3211}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A3979440-7052-4C37-A7FF-BC23987D8181}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geocoding.UnitTests", "Services\Geocoding\Tests\Geocoding.UnitTests\Geocoding.UnitTests.csproj", "{0C9A5D97-9CDD-4876-A961-46819E93DAC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geocoding.UnitTests", "Services\Geocoding\Tests\Geocoding.UnitTests\Geocoding.UnitTests.csproj", "{0C9A5D97-9CDD-4876-A961-46819E93DAC1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D812FC26-4FAD-422A-8802-0ED0F61E134C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.UnitTests", "Core\Tests\Core.UnitTests\Core.UnitTests.csproj", "{DE6328E5-B485-4CD0-90FC-454E2BB5385C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.UnitTests", "Core\Tests\Core.UnitTests\Core.UnitTests.csproj", "{DE6328E5-B485-4CD0-90FC-454E2BB5385C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{8FC5AA48-56EF-4913-B131-18D23F145A76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tables.API", "Services\Tables\Tables.API\Tables.API.csproj", "{62CF9182-CF99-486E-AB48-765320C742B2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9FAED1E7-DE00-44D5-B558-16DE2C55C718}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tables.UnitTests", "Services\Tables\Tests\Tables.UnitTests\Tables.UnitTests.csproj", "{3DDB671A-EC8E-41F8-8596-4E53F614780A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tables.Domain", "Services\Tables\Tables.Domain\Tables.Domain.csproj", "{D2B1C544-A5BC-4865-8D08-9E172309D5DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tables.Infrastructure", "Services\Tables\Tables.Infrastructure\Tables.Infrastructure.csproj", "{65CE0F45-3F42-4668-B80E-5B103344DAA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -175,6 +187,22 @@ Global
 		{DE6328E5-B485-4CD0-90FC-454E2BB5385C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE6328E5-B485-4CD0-90FC-454E2BB5385C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE6328E5-B485-4CD0-90FC-454E2BB5385C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62CF9182-CF99-486E-AB48-765320C742B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62CF9182-CF99-486E-AB48-765320C742B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62CF9182-CF99-486E-AB48-765320C742B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62CF9182-CF99-486E-AB48-765320C742B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DDB671A-EC8E-41F8-8596-4E53F614780A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DDB671A-EC8E-41F8-8596-4E53F614780A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DDB671A-EC8E-41F8-8596-4E53F614780A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DDB671A-EC8E-41F8-8596-4E53F614780A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2B1C544-A5BC-4865-8D08-9E172309D5DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2B1C544-A5BC-4865-8D08-9E172309D5DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2B1C544-A5BC-4865-8D08-9E172309D5DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2B1C544-A5BC-4865-8D08-9E172309D5DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65CE0F45-3F42-4668-B80E-5B103344DAA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65CE0F45-3F42-4668-B80E-5B103344DAA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65CE0F45-3F42-4668-B80E-5B103344DAA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65CE0F45-3F42-4668-B80E-5B103344DAA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -216,6 +244,12 @@ Global
 		{0C9A5D97-9CDD-4876-A961-46819E93DAC1} = {A3979440-7052-4C37-A7FF-BC23987D8181}
 		{D812FC26-4FAD-422A-8802-0ED0F61E134C} = {49A67FDD-A8E3-49EF-A34C-865A4292239F}
 		{DE6328E5-B485-4CD0-90FC-454E2BB5385C} = {D812FC26-4FAD-422A-8802-0ED0F61E134C}
+		{8FC5AA48-56EF-4913-B131-18D23F145A76} = {4EBFFBA7-190F-424E-AABA-4E755133FC52}
+		{62CF9182-CF99-486E-AB48-765320C742B2} = {8FC5AA48-56EF-4913-B131-18D23F145A76}
+		{9FAED1E7-DE00-44D5-B558-16DE2C55C718} = {8FC5AA48-56EF-4913-B131-18D23F145A76}
+		{3DDB671A-EC8E-41F8-8596-4E53F614780A} = {9FAED1E7-DE00-44D5-B558-16DE2C55C718}
+		{D2B1C544-A5BC-4865-8D08-9E172309D5DD} = {8FC5AA48-56EF-4913-B131-18D23F145A76}
+		{65CE0F45-3F42-4668-B80E-5B103344DAA3} = {8FC5AA48-56EF-4913-B131-18D23F145A76}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E6920DB2-90AF-40B7-BB52-EEA169E4CD74}

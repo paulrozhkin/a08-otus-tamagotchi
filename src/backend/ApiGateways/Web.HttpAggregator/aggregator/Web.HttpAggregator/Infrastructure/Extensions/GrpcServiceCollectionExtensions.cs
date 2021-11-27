@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OrderQueue.API.Protos;
 using RestaurantsApi;
+using TablesApi;
 using Web.HttpAggregator.Config;
 using Web.HttpAggregator.Services;
 using static Orders.API.Orders;
@@ -23,6 +24,7 @@ namespace Web.HttpAggregator.Infrastructure.Extensions
             services.AddScoped<IOrderQueueService, OrderQueueService>();
             services.AddScoped<IDishesService, DishesService>();
             services.AddScoped<IMenuService, MenuService>();
+            services.AddScoped<ITablesService, TablesService>();
 
             services.AddGrpcClient<KitchenOrders.KitchenOrdersClient>((serviceProvider, options) =>
             {
@@ -52,6 +54,12 @@ namespace Web.HttpAggregator.Infrastructure.Extensions
             {
                 var menuApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.MenuGrpc;
                 options.Address = new Uri(menuApi);
+            }).AddInterceptor<GrpcExceptionInterceptor>();
+
+            services.AddGrpcClient<Tables.TablesClient>((serviceProvider, options) =>
+            {
+                var tablesApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.TablesGrpc;
+                options.Address = new Uri(tablesApi);
             }).AddInterceptor<GrpcExceptionInterceptor>();
 
             return services;

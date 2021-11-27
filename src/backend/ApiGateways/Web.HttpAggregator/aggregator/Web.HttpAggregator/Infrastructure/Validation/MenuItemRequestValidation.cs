@@ -1,13 +1,14 @@
 ﻿using FluentValidation;
 using Web.HttpAggregator.Models;
 
-namespace Web.HttpAggregator.Infrastructure.Validation;
-
-public class MenuItemRequestValidation : AbstractValidator<MenuItemRequest>
+namespace Web.HttpAggregator.Infrastructure.Validation
 {
-    public MenuItemRequestValidation()
+    public class MenuItemRequestValidation : AbstractValidator<MenuItemRequest>
     {
-        RuleFor(x => x.DishId).NotEmpty();
-        RuleFor(x => x.PriceRubles).GreaterThan(0);
+        public MenuItemRequestValidation()
+        {
+            RuleFor(x => x.DishId).NotEmpty();
+            RuleFor(x => x.PriceRubles).GreaterThan(0);
+        }
     }
 }

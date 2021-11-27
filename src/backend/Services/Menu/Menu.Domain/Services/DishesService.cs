@@ -8,90 +8,91 @@ using Domain.Core.Repositories.Specifications;
 using Menu.Domain.Models;
 using Menu.Domain.Repositories.Specifications;
 
-namespace Menu.Domain.Services;
-
-public class DishesService : IDishesService
+namespace Menu.Domain.Services
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IRepository<Dish> _dishesRepository;
-
-    public DishesService(IUnitOfWork unitOfWork)
+    public class DishesService : IDishesService
     {
-        _unitOfWork = unitOfWork;
-        _dishesRepository = _unitOfWork.Repository<Dish>();
-    }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Dish> _dishesRepository;
 
-    public async Task<PagedList<Dish>> GetDishesAsync(int pageNumber, int pageSize)
-    {
-        var pagedSpecification = new PagedSpecification<Dish>(pageNumber, pageSize);
-        var dishes = await _dishesRepository.FindAsync(pagedSpecification);
-        var totalCount = await _dishesRepository.CountAsync();
-        return new PagedList<Dish>(dishes, totalCount, pageNumber, pageSize);
-    }
-
-    public async Task<Dish> GetDishByIdAsync(Guid id)
-    {
-        var dish = await _dishesRepository.FindByIdAsync(id);
-
-        if (dish == null)
+        public DishesService(IUnitOfWork unitOfWork)
         {
-            throw new EntityNotFoundException(nameof(Dish));
+            _unitOfWork = unitOfWork;
+            _dishesRepository = _unitOfWork.Repository<Dish>();
         }
 
-        return dish;
-    }
-
-    public async Task<Dish> CreateDishAsync(Dish dish)
-    {
-        var dishWithSameNames = await _dishesRepository.FindAsync(new DishNameSpecification(dish.Name));
-
-        if (dishWithSameNames.Any())
+        public async Task<PagedList<Dish>> GetDishesAsync(int pageNumber, int pageSize)
         {
-            throw new EntityAlreadyExistsException();
+            var pagedSpecification = new PagedSpecification<Dish>(pageNumber, pageSize);
+            var dishes = await _dishesRepository.FindAsync(pagedSpecification);
+            var totalCount = await _dishesRepository.CountAsync();
+            return new PagedList<Dish>(dishes, totalCount, pageNumber, pageSize);
         }
 
-        await _dishesRepository.AddAsync(dish);
-        _unitOfWork.Complete();
-        return dish;
-    }
-
-    public async Task<Dish> UpdateDish(Dish dish)
-    {
-        var dishWithSameId = await _dishesRepository.FindByIdAsync(dish.Id);
-
-        if (dishWithSameId == null)
+        public async Task<Dish> GetDishByIdAsync(Guid id)
         {
-            throw new EntityNotFoundException(nameof(Dish));
+            var dish = await _dishesRepository.FindByIdAsync(id);
+
+            if (dish == null)
+            {
+                throw new EntityNotFoundException(nameof(Dish));
+            }
+
+            return dish;
         }
 
-        if (dishWithSameId.Name != dish.Name)
+        public async Task<Dish> CreateDishAsync(Dish dish)
         {
             var dishWithSameNames = await _dishesRepository.FindAsync(new DishNameSpecification(dish.Name));
 
-            if (dishWithSameNames.Any(x => x.Id != dish.Id))
+            if (dishWithSameNames.Any())
             {
                 throw new EntityAlreadyExistsException();
             }
+
+            await _dishesRepository.AddAsync(dish);
+            _unitOfWork.Complete();
+            return dish;
         }
 
-        dishWithSameId.Description = dish.Description;
-        dishWithSameId.Name = dish.Name;
-
-        _dishesRepository.Update(dishWithSameId);
-        _unitOfWork.Complete();
-        return dishWithSameId;
-    }
-
-    public async Task DeleteDishAsync(Guid id)
-    {
-        var dish = await _dishesRepository.FindByIdAsync(id);
-
-        if (dish == null)
+        public async Task<Dish> UpdateDish(Dish dish)
         {
-            throw new EntityNotFoundException(nameof(Dish));
+            var dishWithSameId = await _dishesRepository.FindByIdAsync(dish.Id);
+
+            if (dishWithSameId == null)
+            {
+                throw new EntityNotFoundException(nameof(Dish));
+            }
+
+            if (dishWithSameId.Name != dish.Name)
+            {
+                var dishWithSameNames = await _dishesRepository.FindAsync(new DishNameSpecification(dish.Name));
+
+                if (dishWithSameNames.Any(x => x.Id != dish.Id))
+                {
+                    throw new EntityAlreadyExistsException();
+                }
+            }
+
+            dishWithSameId.Description = dish.Description;
+            dishWithSameId.Name = dish.Name;
+
+            _dishesRepository.Update(dishWithSameId);
+            _unitOfWork.Complete();
+            return dishWithSameId;
         }
 
-        _dishesRepository.Remove(dish);
-        _unitOfWork.Complete();
+        public async Task DeleteDishAsync(Guid id)
+        {
+            var dish = await _dishesRepository.FindByIdAsync(id);
+
+            if (dish == null)
+            {
+                throw new EntityNotFoundException(nameof(Dish));
+            }
+
+            _dishesRepository.Remove(dish);
+            _unitOfWork.Complete();
+        }
     }
 }

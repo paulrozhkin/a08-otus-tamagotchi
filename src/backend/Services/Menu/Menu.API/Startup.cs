@@ -82,9 +82,9 @@ namespace Menu.API
 
             services.AddGrpcClient<Restaurants.RestaurantsClient>((serviceProvider, options) =>
             {
-                var geocodingApi = serviceProvider.GetRequiredService<IOptions<RestaurantsOptions>>().Value
+                var restaurantsGrpc = serviceProvider.GetRequiredService<IOptions<RestaurantsOptions>>().Value
                     .RestaurantsGrpc;
-                options.Address = new Uri(geocodingApi);
+                options.Address = new Uri(restaurantsGrpc);
             }).AddInterceptor<GrpcExceptionInterceptor>();
 
             return services;

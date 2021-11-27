@@ -47,6 +47,7 @@ services:
       - "Tamagotchi_Urls__OrderQueueGrpc=http://orderqueue.api"
       - "Tamagotchi_Urls__DishesGrpc=http://menu.api"
       - "Tamagotchi_Urls__MenuGrpc=http://menu.api"
+      - "Tamagotchi_Urls__TablesGrpc=http://tables.api"
       - "Tamagotchi_ElasticConfiguration__Uri=http://elasticsearch:9200"
     ports:
       - "5000:80"      
@@ -96,6 +97,15 @@ services:
       - "Tamagotchi_Geocoding__RedisCache=redis"
     ports:
       - "5014:80"
+
+  tables.api:
+    container_name: tables.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  
+      - "Tamagotchi_ConnectionStrings__TablesDb=Server=postgres;Port=5432;Database=tamagotchi_tables;User Id=postgres;Password=sql"    
+      - "Tamagotchi_Restaurants__RestaurantsGrpc=http://restaurants.api"
+    ports:
+      - "5015:80"
 
   management.ui:
     container_name: management.ui
