@@ -107,6 +107,11 @@ services:
     ports:
       - "5015:80"
 
+  minio:
+    container_name: minio
+    volumes:
+      - minio_data:/data
+
   management.ui:
     container_name: management.ui
     ports:
