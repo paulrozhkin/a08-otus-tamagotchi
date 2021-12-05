@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
+using Domain.Core.Exceptions;
 using Infrastructure.Core.Localization;
+using Infrastructure.Core.Minio;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Minio;
-using Minio.DataModel;
 using Web.HttpAggregator.Models;
 using Web.HttpAggregator.Models.QueryParameters;
+using Web.HttpAggregator.Services;
 
 namespace Web.HttpAggregator.Controllers
 {
@@ -23,87 +21,96 @@ namespace Web.HttpAggregator.Controllers
     {
         private readonly MinioClient _minioClient;
         private readonly ILogger<ResourcesController> _logger;
-        private readonly string _bucketName = "files";
+        private readonly IResourcesMetadataService _resourcesMetadataService;
 
-        public ResourcesController(MinioClient minioClient, ILogger<ResourcesController> logger)
+        public ResourcesController(MinioClient minioClient,
+            ILogger<ResourcesController> logger,
+            IResourcesMetadataService resourcesMetadataService)
         {
             _minioClient = minioClient;
             _logger = logger;
+            _resourcesMetadataService = resourcesMetadataService;
         }
 
         [HttpGet]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<DishResponse>))]
-        public async Task<ActionResult> GetBucketsAsync()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<ResourceMetadataResponse>))]
+        public async Task<ActionResult> GetResourcesMetadataAsync(
+            [FromQuery] RestaurantParameters parameters)
         {
-            var objectsObservable = _minioClient.ListObjectsAsync(_bucketName);
-            var objects = new List<Item>();
-            objectsObservable.Subscribe(x => objects.Add(x));
-            await objectsObservable.ToTask();
-            
-            var bucketsDto = objects.Select(x => new
-            {
-                x.Key,
-                x.LastModified,
-                x.Size
-            });
-
-            return Ok(bucketsDto);
+            var restaurants =
+                await _resourcesMetadataService.GetResourcesMetadataAsync(parameters.PageNumber, parameters.PageSize);
+            return Ok(restaurants);
         }
 
         [HttpGet("{resourceId:guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DishResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IFormFile))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> GetDishByIdAsync(Guid resourceId)
+        public async Task<ActionResult> GetResourceByIdAsync(Guid resourceId)
         {
             try
             {
-                Stream steamFile = new MemoryStream();
-                await _minioClient.GetObjectAsync(_bucketName, resourceId.ToString(), async stream =>
+                var resourcesMetadata = await _resourcesMetadataService.GetResourceMetadataAsync(resourceId);
+                var objectName = resourcesMetadata.Id.ToString();
+                try
                 {
-                    await stream.CopyToAsync(steamFile);
-                });
+                    await _minioClient.StatObjectAsync(MinioBuckets.ResourcesBucketName, objectName);
+                }
+                catch
+                {
+                    _logger.LogError($"Resource {resourcesMetadata.Id} found metadata, but object not exist");
+                    return Problem(title: Errors.Entities_Entity_not_found, statusCode: (int) HttpStatusCode.NotFound,
+                        detail: "Object not exist");
+                }
+
+                var steamFile = new MemoryStream();
+                await _minioClient.GetObjectAsync(MinioBuckets.ResourcesBucketName, resourceId.ToString(),
+                    async stream => { await stream.CopyToAsync(steamFile); });
                 steamFile.Position = 0;
 
-                // Объект Stream
-                var fileInfo = new FileInfo(resourceId.ToString());
-
-                var fileType = "image/jpeg";
-                var fileName = fileInfo.Name;
+                var fileType = resourcesMetadata.ResourceType;
+                var fileName = resourcesMetadata.ResourceName;
                 return File(steamFile, fileType, fileName);
             }
-            catch (Exception e)
+            catch (EntityNotFoundException e)
             {
                 _logger.LogError(e.ToString());
-                return Problem(title: Errors.Entities_Entity_not_found, statusCode: (int)HttpStatusCode.NotFound,
+                return Problem(title: Errors.Entities_Entity_not_found, statusCode: (int) HttpStatusCode.NotFound,
                     detail: e.ToString());
             }
         }
 
         [HttpPost]
-        public async Task<ActionResult> UploadFiles(List<IFormFile> files)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResourceMetadataRequest))]
+        public async Task<ActionResult> UploadResource(IFormFile file)
         {
             try
             {
-                var file = files.First();
+                var fileName = file.FileName;
+                var fileType = file.ContentType;
+                var fileObjectId = Guid.NewGuid();
+                var fileMetadata = new ResourceMetadataRequest()
+                {
+                    Id = fileObjectId,
+                    ResourceName = fileName,
+                    ResourceType = fileType
+                };
+
                 var inputStream = file.OpenReadStream();
-                
-                var found = await _minioClient.BucketExistsAsync(_bucketName);
+
+                var found = await _minioClient.BucketExistsAsync(MinioBuckets.ResourcesBucketName);
 
                 if (!found)
                 {
-                    await _minioClient.MakeBucketAsync(_bucketName);
+                    await _minioClient.MakeBucketAsync(MinioBuckets.ResourcesBucketName);
                 }
 
-                var fileObjectName = Guid.NewGuid();
-                var name = file.Name;
-                var contentType = file.ContentType;
-                var objectName = "";
-
                 // Upload a file to bucket.
-                await _minioClient.PutObjectAsync(_bucketName, fileObjectName.ToString(), inputStream,
+                await _minioClient.PutObjectAsync(MinioBuckets.ResourcesBucketName, fileObjectId.ToString(), inputStream,
                     inputStream.Length, file.ContentType);
 
-                return Ok(fileObjectName);
+                await _resourcesMetadataService.CreateResourceMetadataAsync(fileMetadata);
+
+                return CreatedAtAction("UploadResource", new {id = fileMetadata.Id}, fileMetadata);
             }
             catch (Exception ex)
             {

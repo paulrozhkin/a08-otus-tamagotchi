@@ -1,7 +1,11 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using DishesApi;
+using Google.Protobuf.WellKnownTypes;
 using Infrastructure.Core.Messages.OrderQueueMessages;
+using Infrastructure.Core.Messages.ResourcesMessages;
 using MenuApi;
+using ResourcesApi;
 using TablesApi;
 using RestaurantsApi;
 using Web.HttpAggregator.Models;
@@ -51,6 +55,13 @@ namespace Web.HttpAggregator.Mapping
                 .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
             CreateMap<GetTablesResponse, PaginationResponse<TableResponse>>()
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Tables));
+
+            CreateMap<ResourceMetadata, ResourceMetadataResponse>()
+                .ForMember(dest => dest.CreatedDate,
+                    opt => opt.MapFrom(src => src.CreatedDate.ToDateTime()));
+            CreateMap<GetResourcesMetadataResponse, PaginationResponse<ResourceMetadataResponse>>()
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.ResourcesMetadata));
+            CreateMap<ResourceMetadataRequest, ResourceMetadataMessage>();
         }
     }
 }

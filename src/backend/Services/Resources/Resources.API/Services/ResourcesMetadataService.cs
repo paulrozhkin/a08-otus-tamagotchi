@@ -1,6 +1,10 @@
-﻿using Domain.Core.Exceptions;
+﻿using System.Net;
+using Domain.Core.Exceptions;
 using Domain.Core.Models;
+using Infrastructure.Core.Localization;
+using Infrastructure.Core.Minio;
 using Microsoft.Extensions.Options;
+using Minio;
 using MongoDB.Driver;
 using Resources.API.Config;
 using Resources.API.Models;
@@ -9,10 +13,13 @@ namespace Resources.API.Services
 {
     public class ResourcesMetadataMetadataService : IResourcesMetadataService
     {
+        private readonly MinioClient _minioClient;
         private readonly IMongoCollection<ResourceMetadata> _resourcesCollection;
 
-        public ResourcesMetadataMetadataService(IOptions<ResourcesDatabaseOptions> resourcesDatabaseOptions)
+        public ResourcesMetadataMetadataService(IOptions<ResourcesDatabaseOptions> resourcesDatabaseOptions,
+            MinioClient minioClient)
         {
+            _minioClient = minioClient;
             var mongoClient = new MongoClient(
                 resourcesDatabaseOptions.Value.ConnectionString);
 
@@ -44,8 +51,19 @@ namespace Resources.API.Services
 
         public async Task<ResourceMetadata> AddResourceAsync(ResourceMetadata resource)
         {
+            try
+            {
+                var objectName = resource.Id.ToString();
+                await _minioClient.StatObjectAsync(MinioBuckets.ResourcesBucketName, objectName);
+            }
+            catch
+            {
+                throw new EntityNotFoundException("Can't find object in s3 storage");
+            }
+
             resource.CreatedDate = DateTimeOffset.Now;
             resource.UpdatedDate = resource.CreatedDate;
+
             await _resourcesCollection.InsertOneAsync(resource);
             return resource;
         }

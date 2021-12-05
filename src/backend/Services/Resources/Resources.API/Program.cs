@@ -1,7 +1,10 @@
 using Domain.Core.Models;
 using Infrastructure.Core.Config;
+using MassTransit;
+using Minio.AspNetCore;
 using MongoDB.Bson.Serialization;
 using Resources.API.Config;
+using Resources.API.Consumers;
 using Resources.API.Mapping;
 using Resources.API.Models;
 using Resources.API.Services;
@@ -17,6 +20,7 @@ builder.Services.AddGrpc();
 builder.Services.Configure<ResourcesDatabaseOptions>(builder.Configuration.GetSection(ResourcesDatabaseOptions.ResourcesDatabase));
 builder.Services.AddSingleton<IResourcesMetadataService, ResourcesMetadataMetadataService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddMinio(new Uri(builder.Configuration["MinIO:ConnectionString"]));
 
 BsonClassMap.RegisterClassMap<BaseEntity>(cm =>
 {
@@ -32,6 +36,18 @@ BsonClassMap.RegisterClassMap<ResourceMetadata>(cm =>
     cm.MapProperty(c => c.ResourceName).SetIsRequired(true);
     cm.MapProperty(c => c.ResourceType).SetIsRequired(true);
 });
+
+builder.Services.AddMassTransit(config =>
+{
+    config.AddConsumer<ResourcesMetadataConsumer>();
+    config.UsingRabbitMq((ctx, cfg) =>
+    {
+        cfg.Host(builder.Configuration["RabbitMq:Host"]);
+        cfg.ReceiveEndpoint("resources", c => { c.ConfigureConsumer<ResourcesMetadataConsumer>(ctx); });
+    });
+});
+
+builder.Services.AddMassTransitHostedService();
 
 var app = builder.Build();
 app.Logger.LogInformation(ConfigurationSerializer.Serialize(app.Configuration).ToString());

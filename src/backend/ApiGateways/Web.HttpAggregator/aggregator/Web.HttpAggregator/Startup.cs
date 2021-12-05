@@ -45,7 +45,7 @@ namespace Web.HttpAggregator
 
             services.AddGrpcServices();
             services.AddFluentValidation();
-            services.AddMinio(new Uri("s3://minio:minio_password@minio:9000"));
+            services.AddMinio(new Uri(_configuration["MinIO:ConnectionString"]));
 
             services.AddMassTransit(config =>
             {
