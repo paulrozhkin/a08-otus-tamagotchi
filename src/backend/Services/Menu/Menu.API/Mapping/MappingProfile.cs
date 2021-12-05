@@ -9,7 +9,6 @@ namespace Menu.API.Mapping
         public MappingProfile()
         {
             CreateMap<Dish, DishesApi.Dish>()
-                .ForMember(dest => dest.Photos, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate,
                     opt => opt.MapFrom(src => Timestamp.FromDateTimeOffset(src.CreatedDate)))
                 .ForMember(dest => dest.UpdatedDate,
@@ -18,6 +17,7 @@ namespace Menu.API.Mapping
             CreateMap<DishesApi.CrateDishRequest, Dish>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Dish.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Dish.Description))
+                .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Dish.Photos))
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore())
@@ -27,6 +27,7 @@ namespace Menu.API.Mapping
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Dish.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Dish.Description))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Dish.Id))
+                .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Dish.Photos))
                 .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore())
                 .ForMember(dest => dest.Menu, opt => opt.Ignore());
