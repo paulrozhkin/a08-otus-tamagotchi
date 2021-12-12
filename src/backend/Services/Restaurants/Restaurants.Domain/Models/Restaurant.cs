@@ -1,4 +1,6 @@
-﻿using Domain.Core.Models;
+﻿using System;
+using System.Collections.Generic;
+using Domain.Core.Models;
 
 namespace Restaurants.Domain.Models
 {
@@ -17,5 +19,7 @@ namespace Restaurants.Domain.Models
         public bool IsCardPaymentPresent { get; set; }
 
         public bool IsWiFiPresent { get; set; }
+
+        public List<Guid> Photos { get; set; }
     }
 }

@@ -76,6 +76,7 @@ namespace Menu.Domain.Services
 
             dishWithSameId.Description = dish.Description;
             dishWithSameId.Name = dish.Name;
+            dishWithSameId.Photos = dish.Photos;
 
             _dishesRepository.Update(dishWithSameId);
             _unitOfWork.Complete();

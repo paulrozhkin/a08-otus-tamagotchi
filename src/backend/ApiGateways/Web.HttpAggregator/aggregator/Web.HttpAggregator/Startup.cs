@@ -17,6 +17,7 @@ using Web.HttpAggregator.Infrastructure.Extensions;
 using Web.HttpAggregator.Mapping;
 using System.Reflection;
 using Infrastructure.Logging;
+using Minio.AspNetCore;
 
 namespace Web.HttpAggregator
 {
@@ -44,6 +45,7 @@ namespace Web.HttpAggregator
 
             services.AddGrpcServices();
             services.AddFluentValidation();
+            services.AddMinio(new Uri(_configuration["MinIO:ConnectionString"]));
 
             services.AddMassTransit(config =>
             {
@@ -56,7 +58,6 @@ namespace Web.HttpAggregator
             });
 
             services.AddMassTransitHostedService();
-
             services.AddSignalR();
 
             services.AddSwaggerGen(c =>

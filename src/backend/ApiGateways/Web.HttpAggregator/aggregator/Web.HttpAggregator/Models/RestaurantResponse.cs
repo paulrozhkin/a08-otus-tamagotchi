@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Web.HttpAggregator.Models
 {
@@ -19,5 +20,7 @@ namespace Web.HttpAggregator.Models
         public bool IsCardPaymentPresent { get; set; }
 
         public bool IsWiFiPresent { get; set; }
+
+        public List<Guid> Photos { get; set; }
     }
 }

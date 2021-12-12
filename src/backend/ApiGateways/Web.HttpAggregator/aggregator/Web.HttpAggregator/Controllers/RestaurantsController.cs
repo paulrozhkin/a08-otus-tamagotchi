@@ -26,6 +26,7 @@ namespace Web.HttpAggregator.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<RestaurantResponse>))]
         public async Task<ActionResult> GetRestaurantsAsync(
             [FromQuery] RestaurantParameters parameters)
         {

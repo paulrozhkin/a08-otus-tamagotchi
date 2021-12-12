@@ -23,10 +23,10 @@ namespace Restaurants.API.Mapping
                 .ForMember(dest => dest.IsParkingPresent, opt => opt.MapFrom(src => src.Restaurant.IsParkingPresent))
                 .ForMember(dest => dest.IsWiFiPresent, opt => opt.MapFrom(src => src.Restaurant.IsWiFiPresent))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Restaurant.PhoneNumber))
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Address, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
+                .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Restaurant.Photos));
 
             CreateMap<RestaurantsApi.UpdateRestaurantRequest, Restaurant>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Restaurant.Id))
@@ -39,7 +39,8 @@ namespace Restaurants.API.Mapping
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Restaurant.PhoneNumber))
                 .ForMember(dest => dest.Address, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
+                .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => src.Restaurant.Photos));
         }
     }
 }

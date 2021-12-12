@@ -83,15 +83,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.UnitTests", "Core\Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tables", "Tables", "{8FC5AA48-56EF-4913-B131-18D23F145A76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tables.API", "Services\Tables\Tables.API\Tables.API.csproj", "{62CF9182-CF99-486E-AB48-765320C742B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tables.API", "Services\Tables\Tables.API\Tables.API.csproj", "{62CF9182-CF99-486E-AB48-765320C742B2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9FAED1E7-DE00-44D5-B558-16DE2C55C718}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tables.UnitTests", "Services\Tables\Tests\Tables.UnitTests\Tables.UnitTests.csproj", "{3DDB671A-EC8E-41F8-8596-4E53F614780A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tables.UnitTests", "Services\Tables\Tests\Tables.UnitTests\Tables.UnitTests.csproj", "{3DDB671A-EC8E-41F8-8596-4E53F614780A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tables.Domain", "Services\Tables\Tables.Domain\Tables.Domain.csproj", "{D2B1C544-A5BC-4865-8D08-9E172309D5DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tables.Domain", "Services\Tables\Tables.Domain\Tables.Domain.csproj", "{D2B1C544-A5BC-4865-8D08-9E172309D5DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tables.Infrastructure", "Services\Tables\Tables.Infrastructure\Tables.Infrastructure.csproj", "{65CE0F45-3F42-4668-B80E-5B103344DAA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tables.Infrastructure", "Services\Tables\Tables.Infrastructure\Tables.Infrastructure.csproj", "{65CE0F45-3F42-4668-B80E-5B103344DAA3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{DE242753-0023-42F1-B8B3-6BFB81D3597A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resources.API", "Services\Resources\Resources.API\Resources.API.csproj", "{AF3AE432-16C1-4199-9A2B-B55BED729A82}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{78C84FB2-388F-4252-8E5A-FB7A7D696144}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resources.UnitTests", "Services\Resources\Tests\Resources.UnitTests\Resources.UnitTests.csproj", "{CA7424A9-A0FB-403E-9B17-FFAE2980DEAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -203,6 +211,14 @@ Global
 		{65CE0F45-3F42-4668-B80E-5B103344DAA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65CE0F45-3F42-4668-B80E-5B103344DAA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65CE0F45-3F42-4668-B80E-5B103344DAA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF3AE432-16C1-4199-9A2B-B55BED729A82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF3AE432-16C1-4199-9A2B-B55BED729A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF3AE432-16C1-4199-9A2B-B55BED729A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF3AE432-16C1-4199-9A2B-B55BED729A82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA7424A9-A0FB-403E-9B17-FFAE2980DEAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA7424A9-A0FB-403E-9B17-FFAE2980DEAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA7424A9-A0FB-403E-9B17-FFAE2980DEAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA7424A9-A0FB-403E-9B17-FFAE2980DEAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -250,6 +266,10 @@ Global
 		{3DDB671A-EC8E-41F8-8596-4E53F614780A} = {9FAED1E7-DE00-44D5-B558-16DE2C55C718}
 		{D2B1C544-A5BC-4865-8D08-9E172309D5DD} = {8FC5AA48-56EF-4913-B131-18D23F145A76}
 		{65CE0F45-3F42-4668-B80E-5B103344DAA3} = {8FC5AA48-56EF-4913-B131-18D23F145A76}
+		{DE242753-0023-42F1-B8B3-6BFB81D3597A} = {4EBFFBA7-190F-424E-AABA-4E755133FC52}
+		{AF3AE432-16C1-4199-9A2B-B55BED729A82} = {DE242753-0023-42F1-B8B3-6BFB81D3597A}
+		{78C84FB2-388F-4252-8E5A-FB7A7D696144} = {DE242753-0023-42F1-B8B3-6BFB81D3597A}
+		{CA7424A9-A0FB-403E-9B17-FFAE2980DEAD} = {78C84FB2-388F-4252-8E5A-FB7A7D696144}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E6920DB2-90AF-40B7-BB52-EEA169E4CD74}

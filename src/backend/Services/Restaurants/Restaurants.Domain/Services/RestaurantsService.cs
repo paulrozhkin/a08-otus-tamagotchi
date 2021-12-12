@@ -109,6 +109,7 @@ namespace Restaurants.Domain.Services
             restaurantWithSameId.IsParkingPresent = restaurant.IsParkingPresent;
             restaurantWithSameId.IsWiFiPresent = restaurant.IsWiFiPresent;
             restaurantWithSameId.IsCardPaymentPresent = restaurant.IsCardPaymentPresent;
+            restaurantWithSameId.Photos = restaurant.Photos;
 
             _restaurantsRepository.Update(restaurantWithSameId);
             _unitOfWork.Complete();

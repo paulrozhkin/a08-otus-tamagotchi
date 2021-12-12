@@ -23,7 +23,7 @@ message Restaurant {
 	bool is_wi_fi_present = 8;
 	google.protobuf.Timestamp updated_date = 9;
 	google.protobuf.Timestamp created_date = 10;
-
+	repeated string photos = 11;
 }
 
 message GetRestaurantsRequest {

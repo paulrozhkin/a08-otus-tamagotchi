@@ -1,4 +1,7 @@
-﻿namespace Web.HttpAggregator.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace Web.HttpAggregator.Models
 {
     public class RestaurantRequest
     {
@@ -13,5 +16,7 @@
         public bool IsCardPaymentPresent { get; set; }
 
         public bool IsWiFiPresent { get; set; }
+
+        public List<Guid> Photos { get; set; }
     }
 }

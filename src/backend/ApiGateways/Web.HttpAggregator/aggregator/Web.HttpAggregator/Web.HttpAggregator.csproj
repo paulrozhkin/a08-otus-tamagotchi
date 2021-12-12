@@ -19,6 +19,7 @@
     <Protobuf Include="..\..\..\..\Services\Menu\Menu.API\Protos\dishes.proto" GrpcService="Client" Link="Protos\dishes.proto" />
     <Protobuf Include="..\..\..\..\Services\Menu\Menu.API\Protos\menu.proto" GrpcService="Client" Link="Protos\menu.proto" ProtoRoot="..\..\..\..\Services\Menu\Menu.API\Protos" />
     <Protobuf Include="..\..\..\..\Services\Tables\Tables.API\Protos\tables.proto" GrpcService="Client" Link="Protos\tables.proto" ProtoRoot="..\..\..\..\Services\Tables\Tables.API\Protos" />
+    <Protobuf Include="..\..\..\..\Services\Resources\Resources.API\Protos\resources.proto" GrpcService="Client" Link="Protos\resources.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +33,7 @@
     <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.2.4" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.4" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Minio.AspNetCore" Version="3.1.21" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
     <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
