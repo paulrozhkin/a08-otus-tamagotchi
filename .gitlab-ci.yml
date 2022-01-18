@@ -1,0 +1,188 @@
+image: mcr.microsoft.com/dotnet/sdk:6.0
+
+stages:
+    - build
+    - test
+    - deploy
+
+variables:
+    BACKEND_PATH: ./src/backend
+    BACKEND_SOLUTION: $BACKEND_PATH/Tamagotchi.sln
+    FRONTEND_PATH: ./src/web
+    
+build_backendsolution_job:
+    stage: build
+    only:
+        - main
+    script:
+        - dotnet build $BACKEND_SOLUTION -c Release -o content
+    artifacts:
+        paths:
+        - content
+
+test_backendsolution_job:
+    stage: test
+    only:
+        - main
+    script:
+        - dotnet test $BACKEND_SOLUTION
+
+deploy_webhttpaggregator_dimg_job:
+    stage: deploy
+    image: docker:stable
+    services:
+        - docker:dind
+    only:
+        - main
+    before_script:
+        - docker info
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/web.httpaggregator:latest -f $BACKEND_PATH/ApiGateways/Web.HttpAggregator/aggregator/Web.HttpAggregator/Dockerfile $BACKEND_PATH
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/web.httpaggregator:latest    
+    after_script:
+        - docker logout ${CI_REGISTRY}
+
+deploy_orderqueueapi_dimg_job:
+    stage: deploy
+    image: docker:stable
+    services:
+        - docker:dind
+    only:
+        - main
+    before_script:
+        - docker info
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/orderqueue.api:latest -f $BACKEND_PATH/Services/OrderQueue/OrderQueue.API/Dockerfile $BACKEND_PATH
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/orderqueue.api:latest    
+    after_script:
+        - docker logout ${CI_REGISTRY}
+
+deploy_restaurantsapi_dimg_job:
+    stage: deploy
+    image: docker:stable
+    services:
+        - docker:dind
+    only:
+        - main
+    before_script:
+        - docker info
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/restaurants.api:latest -f $BACKEND_PATH/Services/Restaurants/Restaurants.API/Dockerfile $BACKEND_PATH
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/restaurants.api:latest    
+    after_script:
+        - docker logout ${CI_REGISTRY}
+
+deploy_menuapi_dimg_job:
+    stage: deploy
+    image: docker:stable
+    services:
+        - docker:dind
+    only:
+        - main
+    before_script:
+        - docker info
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/menu.api:latest -f $BACKEND_PATH/Services/Menu/Menu.API/Dockerfile $BACKEND_PATH
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/menu.api:latest    
+    after_script:
+        - docker logout ${CI_REGISTRY}
+
+deploy_tablesapi_dimg_job:
+    stage: deploy
+    image: docker:stable
+    services:
+        - docker:dind
+    only:
+        - main
+    before_script:
+        - docker info
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/tables.api:latest -f $BACKEND_PATH/Services/Tables/Tables.API/Dockerfile $BACKEND_PATH
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/tables.api:latest    
+    after_script:
+        - docker logout ${CI_REGISTRY}
+
+deploy_geocodingapi_dimg_job:
+    stage: deploy
+    image: docker:stable
+    services:
+        - docker:dind
+    only:
+        - main
+    before_script:
+        - docker info
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/geocoding.api:latest -f $BACKEND_PATH/Services/Geocoding/Geocoding.API/Dockerfile $BACKEND_PATH
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/geocoding.api:latest    
+    after_script:
+        - docker logout ${CI_REGISTRY}
+
+deploy_managementui_dimg_job:
+    stage: deploy
+    image: docker:stable
+    services:
+        - docker:dind
+    only:
+        - main
+    before_script:
+        - docker info
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/management.ui:latest -f $FRONTEND_PATH/restaurant-management/Dockerfile $FRONTEND_PATH/restaurant-management
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/management.ui:latest    
+    after_script:
+        - docker logout ${CI_REGISTRY}
+
+deploy_ordersui_dimg_job:
+    stage: deploy
+    image: docker:stable
+    services:
+        - docker:dind
+    only:
+        - main
+    before_script:
+        - docker info
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/orders.ui:latest -f $FRONTEND_PATH/orders-app/Dockerfile $FRONTEND_PATH/orders-app
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/orders.ui:latest    
+    after_script:
+        - docker logout ${CI_REGISTRY}
+
+deploy_restaurantui_dimg_job:
+    stage: deploy
+    image: docker:stable
+    services:
+        - docker:dind
+    only:
+        - main
+    before_script:
+        - docker info
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/restaurant.ui:latest -f $FRONTEND_PATH/restaurant-service/Dockerfile $FRONTEND_PATH/restaurant-service
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/restaurant.ui:latest    
+    after_script:
+        - docker logout ${CI_REGISTRY}
+
+deploy_resourcesapi_dimg_job:
+    stage: deploy
+    image: docker:stable
+    services:
+        - docker:dind
+    only:
+        - main
+    before_script:
+        - docker info
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/resources.api:latest -f $BACKEND_PATH/Services/Resources/Resources.API/Dockerfile $BACKEND_PATH
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/resources.api:latest    
+    after_script:
+        - docker logout ${CI_REGISTRY}
