@@ -42,7 +42,7 @@ namespace Web.HttpAggregatorUnitTests.Controllers.Tables
                     x.GetTablesAsync(restaurantId, requestParameters.PageNumber, requestParameters.PageSize))
                 .Returns(Task.FromResult(table));
             // act
-            var result = await _tablesController.GetTableAsync(restaurantId, requestParameters);
+            var result = await _tablesController.GetTablesAsync(restaurantId, requestParameters);
 
             // assert
             result.Should().BeAssignableTo<OkObjectResult>().Which.Value.Should().Be(table);

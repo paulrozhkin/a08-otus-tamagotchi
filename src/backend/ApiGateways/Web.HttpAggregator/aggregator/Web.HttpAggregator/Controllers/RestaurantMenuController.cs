@@ -2,7 +2,9 @@
 using System.Net;
 using System.Threading.Tasks;
 using Domain.Core.Exceptions;
+using Domain.Core.Models;
 using Infrastructure.Core.Localization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,6 +16,7 @@ namespace Web.HttpAggregator.Controllers
 {
     [ApiController]
     [Route("api/v1/restaurants/{restaurantId:Guid}/menu")]
+    [Authorize]
     public class RestaurantMenuController : ControllerBase
     {
         private readonly ILogger<RestaurantMenuController> _logger;
@@ -55,6 +58,7 @@ namespace Web.HttpAggregator.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.Administrator)]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MenuItemResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -80,6 +84,7 @@ namespace Web.HttpAggregator.Controllers
         }
 
         [HttpPut("{menuItemId:guid}")]
+        [Authorize(Roles = Roles.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MenuItemResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -113,6 +118,7 @@ namespace Web.HttpAggregator.Controllers
         }
 
         [HttpDelete("{menuItemId:guid}")]
+        [Authorize(Roles = Roles.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteMenuAsync(Guid menuItemId)

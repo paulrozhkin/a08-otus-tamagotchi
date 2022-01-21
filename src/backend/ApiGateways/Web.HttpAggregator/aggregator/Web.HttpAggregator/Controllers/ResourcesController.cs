@@ -3,8 +3,10 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Domain.Core.Exceptions;
+using Domain.Core.Models;
 using Infrastructure.Core.Localization;
 using Infrastructure.Core.Minio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,6 +19,7 @@ namespace Web.HttpAggregator.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    [Authorize]
     public class ResourcesController : ControllerBase
     {
         private readonly MinioClient _minioClient;
@@ -33,18 +36,20 @@ namespace Web.HttpAggregator.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Roles.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<ResourceMetadataResponse>))]
         public async Task<ActionResult> GetResourcesMetadataAsync(
             [FromQuery] RestaurantParameters parameters)
         {
-            var restaurants =
+            var resourcesMetadata =
                 await _resourcesMetadataService.GetResourcesMetadataAsync(parameters.PageNumber, parameters.PageSize);
-            return Ok(restaurants);
+            return Ok(resourcesMetadata);
         }
 
         [HttpGet("{resourceId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IFormFile))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<ActionResult> GetResourceByIdAsync(Guid resourceId)
         {
             try
@@ -80,6 +85,7 @@ namespace Web.HttpAggregator.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.Administrator)]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResourceMetadataRequest))]
         public async Task<ActionResult> UploadResource(IFormFile file)
         {

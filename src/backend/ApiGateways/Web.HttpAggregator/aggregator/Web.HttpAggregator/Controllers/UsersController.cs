@@ -17,55 +17,55 @@ namespace Web.HttpAggregator.Controllers
     [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize]
-    public class RestaurantsController : ControllerBase
+    public class UsersController : ControllerBase
     {
-        private readonly ILogger<RestaurantsController> _logger;
-        private readonly IRestaurantsService _restaurantsService;
+        private readonly ILogger<UsersController> _logger;
+        private readonly IUserService _userService;
 
-        public RestaurantsController(ILogger<RestaurantsController> logger, IRestaurantsService restaurantsService)
+        public UsersController(ILogger<UsersController> logger, IUserService userService)
         {
             _logger = logger;
-            _restaurantsService = restaurantsService;
+            _userService = userService;
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<RestaurantResponse>))]
-        public async Task<ActionResult> GetRestaurantsAsync(
-            [FromQuery] RestaurantParameters parameters)
+        [Authorize(Roles = Roles.Administrator)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<UserResponse>))]
+        public async Task<ActionResult> GetUsersAsync(
+            [FromQuery] QueryStringParameters parameters)
         {
-            var restaurants =
-                await _restaurantsService.GetRestaurantsAsync(parameters.PageNumber, parameters.PageSize,
-                    parameters.Address);
-            return Ok(restaurants);
+            var users =
+                await _userService.GetUsersAsync(parameters.PageNumber, parameters.PageSize);
+            return Ok(users);
         }
 
-        [HttpGet("{restaurantId:Guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RestaurantResponse))]
+        [HttpGet("{userId:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> GetRestaurantByIdAsync(Guid restaurantId)
+        public async Task<ActionResult> GetUsersByIdAsync(Guid userId)
         {
             try
             {
-                var restaurant = await _restaurantsService.GetRestaurantByIdAsync(restaurantId);
-                return Ok(restaurant);
+                var user = await _userService.GetUserByIdAsync(userId);
+                return Ok(user);
             }
             catch (EntityNotFoundException)
             {
-                _logger.LogError($"Restaurant with id {restaurantId} not found");
+                _logger.LogError($"User with id {userId} not found");
                 return Problem(title: Errors.Entities_Entity_not_found, statusCode: (int)HttpStatusCode.NotFound,
-                    detail: $"Restaurant with id {restaurantId} not found");
+                    detail: $"User with id {userId} not found");
             }
         }
 
         [HttpPost]
         [Authorize(Roles = Roles.Administrator)]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RestaurantResponse))]
-        public async Task<ActionResult> CreateRestaurantAsync(RestaurantRequest restaurant)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserResponse))]
+        public async Task<ActionResult> CreateUserAsync(CreateUserRequest user)
         {
             try
             {
-                var createdRestaurant = await _restaurantsService.CreateRestaurantAsync(restaurant);
-                return CreatedAtAction("CreateRestaurant", new {id = createdRestaurant.Id}, createdRestaurant);
+                var createdUser = await _userService.CreateUserAsync(user);
+                return CreatedAtAction("CreateUser", new {id = createdUser.Id}, createdUser);
             }
             catch (EntityAlreadyExistsException e)
             {
@@ -75,17 +75,17 @@ namespace Web.HttpAggregator.Controllers
             }
         }
 
-        [HttpPut("{restaurantId:guid}")]
+        [HttpPut("{userId:guid}")]
         [Authorize(Roles = Roles.Administrator)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RestaurantResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult> UpdateRestaurantAsync(Guid restaurantId, RestaurantRequest restaurant)
+        public async Task<ActionResult> UpdateUserAsync(Guid userId, UpdateUserRequest user)
         {
             try
             {
-                var updatedRestaurant = await _restaurantsService.UpdateRestaurantAsync(restaurantId, restaurant);
-                return Ok(updatedRestaurant);
+                var updatedUser = await _userService.UpdateUserAsync(userId, user);
+                return Ok(updatedUser);
             }
             catch (EntityAlreadyExistsException e)
             {
@@ -102,22 +102,22 @@ namespace Web.HttpAggregator.Controllers
             }
         }
 
-        [HttpDelete("{restaurantId:guid}")]
+        [HttpDelete("{userId:guid}")]
         [Authorize(Roles = Roles.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteRestaurantAsync(Guid restaurantId)
+        public async Task<ActionResult> DeleteUserAsync(Guid userId)
         {
             try
             {
-                await _restaurantsService.DeleteRestaurantAsync(restaurantId);
+                await _userService.DeleteUserAsync(userId);
                 return Ok();
             }
             catch (EntityNotFoundException)
             {
-                _logger.LogError($"Restaurant with id {restaurantId} not found");
+                _logger.LogError($"User with id {userId} not found");
                 return Problem(title: Errors.Entities_Entity_not_found, statusCode: (int)HttpStatusCode.NotFound,
-                    detail: $"Restaurant with id {restaurantId} not found");
+                    detail: $"User with id {userId} not found");
             }
         }
     }

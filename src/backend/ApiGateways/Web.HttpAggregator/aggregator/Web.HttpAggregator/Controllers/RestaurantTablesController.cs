@@ -2,7 +2,9 @@
 using System.Net;
 using System.Threading.Tasks;
 using Domain.Core.Exceptions;
+using Domain.Core.Models;
 using Infrastructure.Core.Localization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,6 +16,7 @@ namespace Web.HttpAggregator.Controllers
 {
     [ApiController]
     [Route("api/v1/restaurants/{restaurantId:Guid}/tables")]
+    [Authorize(Roles = Roles.Administrator)]
     public class RestaurantTablesController : ControllerBase
     {
         private readonly ILogger<RestaurantTablesController> _logger;
@@ -27,7 +30,7 @@ namespace Web.HttpAggregator.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<TableResponse>))]
-        public async Task<ActionResult> GetTableAsync(
+        public async Task<ActionResult> GetTablesAsync(
             Guid restaurantId,
             [FromQuery] QueryStringParameters parameters)
         {

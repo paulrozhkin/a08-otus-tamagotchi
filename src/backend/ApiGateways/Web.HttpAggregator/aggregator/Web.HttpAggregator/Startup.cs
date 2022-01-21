@@ -18,6 +18,7 @@ using Web.HttpAggregator.Mapping;
 using System.Reflection;
 using Infrastructure.Logging;
 using Minio.AspNetCore;
+using Web.HttpAggregator.Services;
 
 namespace Web.HttpAggregator
 {
@@ -39,6 +40,8 @@ namespace Web.HttpAggregator
             services.AddControllers();
 
             services.AddAutoMapper(typeof(MappingProfile));
+
+            services.AddAuthenticationServices(_configuration);
 
             var urlsConfig = _configuration.GetSection(UrlsOptions.Urls);
             services.Configure<UrlsOptions>(urlsConfig);
@@ -106,6 +109,7 @@ namespace Web.HttpAggregator
 
             app.UseCors("CorsPolicy");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(
