@@ -49,6 +49,7 @@ services:
       - "Tamagotchi_Urls__MenuGrpc=http://menu.api"
       - "Tamagotchi_Urls__TablesGrpc=http://tables.api"
       - "Tamagotchi_Urls__ResourcesGrpc=http://resources.api"
+      - "Tamagotchi_Urls__UsersGrpc=http://users.api"
       - "Tamagotchi_ElasticConfiguration__Uri=http://elasticsearch:9200"
       - "Tamagotchi_MinIO__ConnectionString=s3://minio:minio_password@minio:9000"
       - "Tamagotchi_Authenticate__Secret=S5yasF5y3S5aQjJKkUf0ElrTcdmpPrp6KNC64eYkQUtSayhqTXhKnCVrgIhsNakwPKa0GecTHRGDRFtjC-Mf3upA2o4t0BmlIiN_Zb01n-835OLASgqKrq6by3lVhYuu-e5O4N8oqVEMgaUmfHmFcC6YIigNl__g5IG4jgg1b9g"
@@ -109,6 +110,14 @@ services:
       - "Tamagotchi_Restaurants__RestaurantsGrpc=http://restaurants.api"
     ports:
       - "5015:80"
+
+  users.api:
+    container_name: users.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  
+      - "Tamagotchi_ConnectionStrings__UsersDb=Server=postgres;Port=5432;Database=tamagotchi_users;User Id=postgres;Password=sql"    
+    ports:
+      - "5017:80"
 
   management.ui:
     container_name: management.ui
