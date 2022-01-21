@@ -1,48 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Core.Models;
+using AutoMapper;
+using Domain.Core.Exceptions;
+using Grpc.Core;
+using Infrastructure.Core.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using UsersApi;
 using Web.HttpAggregator.Config;
 using Web.HttpAggregator.Models;
+using CreateUserRequest = Web.HttpAggregator.Models.CreateUserRequest;
+using UpdateUserRequest = Web.HttpAggregator.Models.UpdateUserRequest;
 
 namespace Web.HttpAggregator.Services;
 
 public class UserService : IUserService
 {
-    // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-    private readonly List<UserResponse> _users = new()
-    {
-        new UserResponse
-        {
-            Id = Guid.NewGuid(), UserName = "admin@gmail.com",
-            Roles = new[] {Roles.Administrator, Roles.Client, Roles.Stuff}
-        },
-        new UserResponse {Id = Guid.NewGuid(), UserName = "client@gmail.com", Roles = new[] {Roles.Client}},
-        new UserResponse {Id = Guid.NewGuid(), UserName = "stuff@gmail.com", Roles = new[] {Roles.Stuff}}
-    };
-
+    private readonly ILogger<UserService> _logger;
+    private readonly IMapper _mapper;
+    private readonly Users.UsersClient _usersClient;
     private readonly AuthenticateOptions _authenticateOptions;
 
-    public UserService(IOptions<AuthenticateOptions> authenticateOptions)
+    public UserService(ILogger<UserService> logger, 
+        IOptions<AuthenticateOptions> authenticateOptions,
+        IMapper mapper,
+        Users.UsersClient usersClient)
     {
+        _logger = logger;
+        _mapper = mapper;
+        _usersClient = usersClient;
         _authenticateOptions = authenticateOptions.Value;
     }
 
-    public AuthenticateResponse Authenticate(AuthenticateRequest model)
+    public async Task<AuthenticateResponse> AuthenticateAsync(AuthenticateRequest model)
     {
-        var user = _users.SingleOrDefault(x => x.UserName == model.Username);
+        var checkResponse = await _usersClient.CheckUserCredentialsAsync(new CredentialsRequest()
+        {
+            UserName = model.Username,
+            Password = model.Password
+        });
 
-        // return null if user not found
-        if (user == null) return null;
+        if (!checkResponse.IsValid)
+        {
+            return null;
+        }
 
         // authentication successful so generate jwt token
-        var token = GenerateJwtToken(user);
+        var token = GenerateJwtToken(checkResponse.User);
 
         return new AuthenticateResponse()
         {
@@ -50,56 +59,86 @@ public class UserService : IUserService
         };
     }
 
-    public Task<PaginationResponse<UserResponse>> GetUsersAsync(int pageNumber, int pageSize)
+    public async Task<PaginationResponse<UserResponse>> GetUsersAsync(int pageNumber, int pageSize)
     {
-        var result = new PaginationResponse<UserResponse>()
+        var request = new GetUsersRequest()
         {
-            CurrentPage = 1,
-            Items = _users,
-            PageSize = pageSize,
-            TotalCount = 1
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
 
-        return Task.FromResult(result);
+        var usersResponse = await _usersClient.GetUsersAsync(request);
+
+        return _mapper.Map<PaginationResponse<UserResponse>>(usersResponse);
     }
 
-    public Task<UserResponse> GetUserByIdAsync(Guid id)
+    public async Task<UserResponse> GetUserByIdAsync(Guid id)
     {
-        var user = _users.FirstOrDefault(x => x.Id == id);
-        return Task.FromResult(user);
-    }
-
-    public Task<UserResponse> CreateUserAsync(CreateUserRequest user)
-    {
-        var newUser = new UserResponse()
+        try
         {
-            Id = Guid.NewGuid(),
-            UserName = user.Username,
-            Name = user.Name,
-            Roles = user.Roles
-        };
-
-        _users.Add(newUser);
-
-        return Task.FromResult(newUser);
+            var userResponse =
+                await _usersClient.GetUserAsync(new GetUserRequest() { Id = id.ToString() });
+            return _mapper.Map<UserResponse>(userResponse.User);
+        }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+        {
+            throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found, id));
+        }
     }
 
-    public Task<UserResponse> UpdateUserAsync(Guid id, UpdateUserRequest user)
+    public async Task<UserResponse> CreateUserAsync(CreateUserRequest user)
     {
-        var userFromCollection = _users.Find(x => x.Id == id);
-        userFromCollection.Roles = user.Roles;
-        userFromCollection.Name = user.Name;
-        return Task.FromResult(userFromCollection);
+        try
+        {
+            var userCreateResponse = await _usersClient.CreateUserAsync(new UsersApi.CreateUserRequest()
+            {
+                User = _mapper.Map<User>(user)
+            });
+
+            return _mapper.Map<UserResponse>(userCreateResponse.User);
+        }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.AlreadyExists)
+        {
+            throw new EntityAlreadyExistsException(Errors.Entities_Entity_already_exits);
+        }
     }
 
-    public Task DeleteUserAsync(Guid id)
+    public async Task<UserResponse> UpdateUserAsync(Guid id, UpdateUserRequest user)
     {
-        var userFromCollection = _users.Find(x => x.Id == id);
-        _users.Remove(userFromCollection);
-        return Task.CompletedTask;
+        try
+        {
+            var userForRequest = _mapper.Map<User>(user);
+            userForRequest.Id = id.ToString();
+            var userCreateResponse = await _usersClient.UpdateUserAsync(
+                new UsersApi.UpdateUserRequest()
+                {
+                    User = userForRequest
+                });
+
+            return _mapper.Map<UserResponse>(userCreateResponse.User);
+        }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+        {
+            throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found, id));
+        }
     }
 
-    private string GenerateJwtToken(UserResponse user)
+    public async Task DeleteUserAsync(Guid id)
+    {
+        try
+        {
+            await _usersClient.DeleteUserAsync(new DeleteUserRequest()
+            {
+                Id = id.ToString()
+            });
+        }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.NotFound)
+        {
+            throw new EntityNotFoundException(string.Format(Errors.Entities_Entity_with_id__0__not_found, id));
+        }
+    }
+
+    private string GenerateJwtToken(User user)
     {
         // generate token that is valid for 7 days
         var tokenHandler = new JwtSecurityTokenHandler();

@@ -5,7 +5,7 @@ namespace Users.Domain.Services
 {
     public interface IUsersService
     {
-        public Task<bool> CheckUserCredentials(string username, string password);
+        public Task<User> CheckUserCredentials(string username, string password);
 
         public Task<PagedList<User>> GetUsersAsync(int pageNumber, int pageSize);
 

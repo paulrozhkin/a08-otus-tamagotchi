@@ -23,10 +23,32 @@ namespace Users.API.Services
             _mapper = mapper;
         }
 
-        public override Task<CredentialsResponse> CheckUserCredentials(CredentialsRequest request, ServerCallContext context)
+        public override async Task<CredentialsResponse> CheckUserCredentials(CredentialsRequest request,
+            ServerCallContext context)
         {
-            return base.CheckUserCredentials(request, context);
+            try
+            {
+                var user = await _usersService.CheckUserCredentials(request.UserName, request.Password);
+                var userDto = _mapper.Map<User>(user);
+                userDto.Roles.Add(user.Roles.Select(x => x.Name));
+
+                return new CredentialsResponse()
+                {
+                    IsValid = true,
+                    User = userDto
+                };
+            }
+            catch (EntityNotFoundException)
+            {
+                _logger.LogError($"{Errors.Entities_Entity_not_found}, User {request.UserName}");
+
+                return new CredentialsResponse()
+                {
+                    IsValid = false
+                };
+            }
         }
+    
 
         public override async Task<GetUsersResponse> GetUsers(GetUsersRequest request, ServerCallContext context)
         {

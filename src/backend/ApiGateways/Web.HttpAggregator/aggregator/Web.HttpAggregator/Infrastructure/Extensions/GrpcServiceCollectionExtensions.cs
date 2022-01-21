@@ -8,6 +8,7 @@ using OrderQueue.API.Protos;
 using ResourcesApi;
 using RestaurantsApi;
 using TablesApi;
+using UsersApi;
 using Web.HttpAggregator.Config;
 using Web.HttpAggregator.Services;
 using static Orders.API.Orders;
@@ -68,6 +69,12 @@ namespace Web.HttpAggregator.Infrastructure.Extensions
             {
                 var resourcesApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.ResourcesGrpc;
                 options.Address = new Uri(resourcesApi);
+            }).AddInterceptor<GrpcExceptionInterceptor>();
+
+            services.AddGrpcClient<Users.UsersClient>((serviceProvider, options) =>
+            {
+                var usersApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.UsersGrpc;
+                options.Address = new Uri(usersApi);
             }).AddInterceptor<GrpcExceptionInterceptor>();
 
             return services;

@@ -30,9 +30,9 @@ namespace Web.HttpAggregator.Controllers
         [HttpPost]
         [Route("authenticate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthenticateResponse))]
-        public IActionResult Authenticate(AuthenticateRequest model)
+        public async Task<IActionResult> Authenticate(AuthenticateRequest model)
         {
-            var response = _userService.Authenticate(model);
+            var response = await _userService.AuthenticateAsync(model);
 
             if (response == null)
                 return BadRequest(new { message = "Username or password is incorrect" });

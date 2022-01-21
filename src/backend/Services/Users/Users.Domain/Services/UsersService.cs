@@ -4,6 +4,7 @@ using Domain.Core.Repositories;
 using Domain.Core.Repositories.Specifications;
 using Microsoft.Extensions.Logging;
 using Users.Domain.Models;
+using Users.Domain.Repository.Specifications;
 
 namespace Users.Domain.Services
 {
@@ -20,9 +21,26 @@ namespace Users.Domain.Services
             _usersRepository = _unitOfWork.Repository<User>();
         }
 
-        public Task<bool> CheckUserCredentials(string username, string password)
+        public async Task<User> CheckUserCredentials(string username, string password)
         {
-            throw new NotImplementedException();
+            var nameSpecification = new UsersNameSpecification(username);
+            var users = (await _usersRepository.FindAsync(nameSpecification)).ToList();
+
+            if (!users.Any())
+            {
+                throw new EntityNotFoundException(nameof(User));
+            }
+
+            var user = users.First();
+
+            var verified = BCrypt.Net.BCrypt.Verify(password, user.Password);
+
+            if (!verified)
+            {
+                throw new EntityNotFoundException(nameof(User));
+            }
+
+            return user;
         }
 
         public async Task<PagedList<User>> GetUsersAsync(int pageNumber, int pageSize)

@@ -18,6 +18,8 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddDataAccess<UsersDataContext>(builder.Configuration.GetConnectionString("UsersDb"));
 
 var app = builder.Build();
+app.MigrateDatabase<UsersDataContext>();
+
 app.Logger.LogInformation(ConfigurationSerializer.Serialize(app.Configuration).ToString());
 
 // Configure the HTTP request pipeline.

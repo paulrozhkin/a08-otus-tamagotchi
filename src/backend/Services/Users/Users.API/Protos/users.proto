@@ -16,7 +16,6 @@ service Users {
 message GetUsersRequest {
 	int32 page_number = 1;
 	int32 page_size = 2;
-	string restaurant_id = 3;
 }
 
 message GetUsersResponse {
@@ -62,6 +61,7 @@ message CredentialsRequest {
 
 message CredentialsResponse {
 	bool is_valid = 1;
+	User user = 2;
 }
 
 message User {

@@ -6,7 +6,7 @@ namespace Web.HttpAggregator.Services
 {
     public interface IUserService
     {
-        AuthenticateResponse Authenticate(AuthenticateRequest model);
+        Task<AuthenticateResponse> AuthenticateAsync(AuthenticateRequest model);
 
         Task<PaginationResponse<UserResponse>> GetUsersAsync(int pageNumber, int pageSize);
 
