@@ -64,6 +64,7 @@ namespace Web.HttpAggregator.Mapping
 
             CreateMap<User, UserResponse>();
             CreateMap<Models.UpdateUserRequest, User>()
+                .ForMember(dest => dest.UserName, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
