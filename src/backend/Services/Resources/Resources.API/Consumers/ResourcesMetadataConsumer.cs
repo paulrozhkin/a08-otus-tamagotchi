@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Design;
-using AutoMapper;
+﻿using AutoMapper;
 using Infrastructure.Core.Messages.ResourcesMessages;
 using MassTransit;
 using Resources.API.Models;

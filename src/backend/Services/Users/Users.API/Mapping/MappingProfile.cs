@@ -9,7 +9,7 @@ namespace Users.API.Mapping
         public MappingProfile()
         {
             CreateMap<User, UsersApi.User>()
-                .ForMember(dest => dest.Roles, opt => opt.Ignore())
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles.Select(x => x.Name)))
                 .ForMember(dest => dest.CreatedDate,
                     opt => opt.MapFrom(src => Timestamp.FromDateTimeOffset(src.CreatedDate)))
                 .ForMember(dest => dest.UpdatedDate,

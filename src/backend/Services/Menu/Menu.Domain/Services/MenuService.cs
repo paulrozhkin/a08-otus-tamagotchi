@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Domain.Core.Exceptions;
 using Domain.Core.Models;
 using Domain.Core.Repositories;
-using Domain.Core.Repositories.Specifications;
 using Menu.Domain.Models;
 using Menu.Domain.Repositories.Specifications;
 using Microsoft.Extensions.Logging;

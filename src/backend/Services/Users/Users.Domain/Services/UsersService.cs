@@ -1,7 +1,6 @@
 ﻿using Domain.Core.Exceptions;
 using Domain.Core.Models;
 using Domain.Core.Repositories;
-using Domain.Core.Repositories.Specifications;
 using Microsoft.Extensions.Logging;
 using Users.Domain.Models;
 using Users.Domain.Repository.Specifications;
@@ -13,17 +12,19 @@ namespace Users.Domain.Services
         private readonly ILogger<UsersService> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepository<User> _usersRepository;
+        private readonly IRepository<Role> _rolesRepository;
 
         public UsersService(ILogger<UsersService> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _usersRepository = _unitOfWork.Repository<User>();
+            _rolesRepository = _unitOfWork.Repository<Role>();
         }
 
         public async Task<User> CheckUserCredentials(string username, string password)
         {
-            var nameSpecification = new UsersNameSpecification(username);
+            var nameSpecification = new UsersNameWithRolesSpecification(username);
             var users = (await _usersRepository.FindAsync(nameSpecification)).ToList();
 
             if (!users.Any())
@@ -45,7 +46,7 @@ namespace Users.Domain.Services
 
         public async Task<PagedList<User>> GetUsersAsync(int pageNumber, int pageSize)
         {
-            var paginationSpecification = new PagedSpecification<User>(pageNumber, pageSize);
+            var paginationSpecification = new PagedUsersWithRolesSpecification(pageNumber, pageSize);
             var users = (await _usersRepository.FindAsync(paginationSpecification)).ToList();
             var totalCount = await _usersRepository.CountAsync();
 
@@ -54,7 +55,8 @@ namespace Users.Domain.Services
 
         public async Task<User> GetUserByIdAsync(Guid id)
         {
-            var user = await _usersRepository.FindByIdAsync(id);
+            var byIdWithRolesSpecification = new UsersByIdWithRolesSpecification(id);
+            var user = (await _usersRepository.FindAsync(byIdWithRolesSpecification)).FirstOrDefault();
 
             if (user == null)
             {
@@ -64,17 +66,20 @@ namespace Users.Domain.Services
             return user;
         }
 
-        public async Task<User> AddUserAsync(User user)
+        public async Task<User> AddUserAsync(User user, IEnumerable<string> roleNames)
         {
-            //var specification = new UserLocationSpecification(user.Latitude, user.Longitude);
-            //var usersWithSameLocation = await _usersRepository.FindAsync(specification);
+            var specification = new UsersNameWithRolesSpecification(user.Username);
+            var usersWithSameName = await _usersRepository.FindAsync(specification);
 
-            //if (usersWithSameLocation.Any())
-            //{
-            //    _logger.LogError(
-            //        $"Can't create user. Users with same location already exist (Lat - {user.Latitude}; Lon - {user.Longitude})");
-            //    throw new EntityAlreadyExistsException();
-            //}
+            if (usersWithSameName.Any())
+            {
+                _logger.LogError(
+                    $"Can't create user. Users with same name already exist (Name - {user.Username})");
+                throw new EntityAlreadyExistsException();
+            }
+
+            var roles = await GetRolesAsync(roleNames);
+            user.Roles = roles;
 
             await _usersRepository.AddAsync(user);
             _unitOfWork.Complete();
@@ -82,17 +87,20 @@ namespace Users.Domain.Services
             return user;
         }
 
-        public async Task<User> UpdateUser(User user)
+        public async Task<User> UpdateUser(User user, IEnumerable<string> roleNames)
         {
-            var userWithSameId = await _usersRepository.FindByIdAsync(user.Id);
-
+            var byIdWithRolesSpecification = new UsersByIdWithRolesSpecification(user.Id);
+            var userWithSameId = (await _usersRepository.FindAsync(byIdWithRolesSpecification)).FirstOrDefault();
+            
             if (userWithSameId == null)
             {
                 throw new EntityNotFoundException(nameof(User));
             }
 
             userWithSameId.Name = user.Name;
-            userWithSameId.Roles = user.Roles;
+
+            var roles = await GetRolesAsync(roleNames);
+            userWithSameId.Roles = roles;
 
             _usersRepository.Update(userWithSameId);
             _unitOfWork.Complete();
@@ -111,6 +119,25 @@ namespace Users.Domain.Services
 
             _usersRepository.Remove(user);
             _unitOfWork.Complete();
+        }
+
+        private async Task<ICollection<Role>> GetRolesAsync(IEnumerable<string> roleNames)
+        {
+            var roleNamesList = roleNames.ToList();
+            if (roleNamesList == null || !roleNamesList.Any())
+            {
+                throw new ArgumentException("Roles can't be null or empty");
+            }
+
+            var rolesSpecification = new RolesByNameSpecification(roleNamesList);
+            var rolesEntities = (await _rolesRepository.FindAsync(rolesSpecification)).ToList();
+
+            if (rolesEntities.Count() != roleNamesList.Count)
+            {
+                throw new ArgumentException("Roles invalid");
+            }
+
+            return rolesEntities;
         }
     }
 }

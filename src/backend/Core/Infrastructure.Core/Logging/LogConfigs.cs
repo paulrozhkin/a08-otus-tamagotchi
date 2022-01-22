@@ -2,8 +2,6 @@
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System;
-using System.Diagnostics;
-using System.Reflection;
 
 namespace Infrastructure.Logging
 {

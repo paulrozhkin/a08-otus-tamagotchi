@@ -52,35 +52,35 @@ namespace Users.API.Services
 
         public override async Task<GetUsersResponse> GetUsers(GetUsersRequest request, ServerCallContext context)
         {
-            var dishes = await _usersService.GetUsersAsync(request.PageNumber, request.PageSize);
+            var users = await _usersService.GetUsersAsync(request.PageNumber, request.PageSize);
 
-            var dishesResponse = new GetUsersResponse()
+            var usersResponse = new GetUsersResponse()
             {
-                CurrentPage = dishes.CurrentPage,
-                PageSize = dishes.PageSize,
-                TotalCount = dishes.TotalCount
+                CurrentPage = users.CurrentPage,
+                PageSize = users.PageSize,
+                TotalCount = users.TotalCount
             };
 
-            var dishesDto = _mapper.Map<List<User>>(dishes);
+            var usersDto = _mapper.Map<List<User>>(users);
 
-            dishesResponse.Users.AddRange(dishesDto);
+            usersResponse.Users.AddRange(usersDto);
 
-            return dishesResponse;
+            return usersResponse;
         }
 
         public override async Task<GetUserResponse> GetUser(GetUserRequest request, ServerCallContext context)
         {
             try
             {
-                var dish = await _usersService.GetUserByIdAsync(Guid.Parse(request.Id));
-                var dishDto = _mapper.Map<User>(dish);
+                var user = await _usersService.GetUserByIdAsync(Guid.Parse(request.Id));
+                var userDto = _mapper.Map<User>(user);
 
-                var dishResponse = new GetUserResponse()
+                var userResponse = new GetUserResponse()
                 {
-                    User = dishDto
+                    User = userDto
                 };
 
-                return dishResponse;
+                return userResponse;
             }
             catch (EntityNotFoundException)
             {
@@ -91,11 +91,11 @@ namespace Users.API.Services
 
         public override async Task<CreateUserResponse> CreateUser(CreateUserRequest request, ServerCallContext context)
         {
-            var dishModel = _mapper.Map<Domain.Models.User>(request);
+            var userModel = _mapper.Map<Domain.Models.User>(request);
 
             try
             {
-                var createdUser = await _usersService.AddUserAsync(dishModel);
+                var createdUser = await _usersService.AddUserAsync(userModel, request.User.Roles);
 
                 return new CreateUserResponse()
                 {
@@ -111,11 +111,11 @@ namespace Users.API.Services
 
         public override async Task<UpdateUserResponse> UpdateUser(UpdateUserRequest request, ServerCallContext context)
         {
-            var dishModel = _mapper.Map<Domain.Models.User>(request);
+            var userModel = _mapper.Map<Domain.Models.User>(request);
 
             try
             {
-                var updateUser = await _usersService.UpdateUser(dishModel);
+                var updateUser = await _usersService.UpdateUser(userModel, request.User.Roles);
 
                 return new UpdateUserResponse()
                 {
@@ -129,7 +129,7 @@ namespace Users.API.Services
             }
             catch (EntityNotFoundException)
             {
-                _logger.LogError($"{Errors.Entities_Entity_not_found}, User {dishModel.Id}");
+                _logger.LogError($"{Errors.Entities_Entity_not_found}, User {userModel.Id}");
                 throw new RpcException(new Status(StatusCode.NotFound, Errors.Entities_Entity_not_found));
             }
         }

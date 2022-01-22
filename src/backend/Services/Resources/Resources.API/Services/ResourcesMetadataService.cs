@@ -1,7 +1,5 @@
-﻿using System.Net;
-using Domain.Core.Exceptions;
+﻿using Domain.Core.Exceptions;
 using Domain.Core.Models;
-using Infrastructure.Core.Localization;
 using Infrastructure.Core.Minio;
 using Microsoft.Extensions.Options;
 using Minio;

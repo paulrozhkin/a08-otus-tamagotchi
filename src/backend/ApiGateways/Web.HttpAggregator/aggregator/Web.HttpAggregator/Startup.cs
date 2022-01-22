@@ -18,7 +18,6 @@ using Web.HttpAggregator.Mapping;
 using System.Reflection;
 using Infrastructure.Logging;
 using Minio.AspNetCore;
-using Web.HttpAggregator.Services;
 
 namespace Web.HttpAggregator
 {

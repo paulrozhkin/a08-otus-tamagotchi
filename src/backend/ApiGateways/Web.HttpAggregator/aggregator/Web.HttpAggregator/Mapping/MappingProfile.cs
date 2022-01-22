@@ -1,7 +1,5 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using DishesApi;
-using Google.Protobuf.WellKnownTypes;
 using Infrastructure.Core.Messages.OrderQueueMessages;
 using Infrastructure.Core.Messages.ResourcesMessages;
 using MenuApi;
@@ -74,8 +72,8 @@ namespace Web.HttpAggregator.Mapping
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
-            CreateMap<GetUserResponse, PaginationResponse<UserResponse>>()
-                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.User));
+            CreateMap<GetUsersResponse, PaginationResponse<UserResponse>>()
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Users));
 
         }
     }
