@@ -2,7 +2,9 @@
 using System.Net;
 using System.Threading.Tasks;
 using Domain.Core.Exceptions;
+using Domain.Core.Models;
 using Infrastructure.Core.Localization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,6 +16,7 @@ namespace Web.HttpAggregator.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    [Authorize]
     public class RestaurantsController : ControllerBase
     {
         private readonly ILogger<RestaurantsController> _logger;
@@ -55,7 +58,8 @@ namespace Web.HttpAggregator.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DishResponse))]
+        [Authorize(Roles = Roles.Administrator)]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RestaurantResponse))]
         public async Task<ActionResult> CreateRestaurantAsync(RestaurantRequest restaurant)
         {
             try
@@ -72,15 +76,16 @@ namespace Web.HttpAggregator.Controllers
         }
 
         [HttpPut("{restaurantId:guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RestaurantRequest))]
+        [Authorize(Roles = Roles.Administrator)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RestaurantResponse))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult> UpdateRestaurantAsync(Guid restaurantId, RestaurantRequest restaurant)
         {
             try
             {
-                var updatedDish = await _restaurantsService.UpdateRestaurantAsync(restaurantId, restaurant);
-                return Ok(updatedDish);
+                var updatedRestaurant = await _restaurantsService.UpdateRestaurantAsync(restaurantId, restaurant);
+                return Ok(updatedRestaurant);
             }
             catch (EntityAlreadyExistsException e)
             {
@@ -98,6 +103,7 @@ namespace Web.HttpAggregator.Controllers
         }
 
         [HttpDelete("{restaurantId:guid}")]
+        [Authorize(Roles = Roles.Administrator)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteRestaurantAsync(Guid restaurantId)

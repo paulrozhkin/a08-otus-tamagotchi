@@ -4,7 +4,6 @@ using AutoMapper;
 using Domain.Core.Exceptions;
 using Grpc.Core;
 using Infrastructure.Core.Localization;
-using Infrastructure.Core.Messages.OrderQueueMessages;
 using Infrastructure.Core.Messages.ResourcesMessages;
 using MassTransit;
 using Microsoft.Extensions.Logging;

@@ -1,13 +1,12 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using DishesApi;
-using Google.Protobuf.WellKnownTypes;
 using Infrastructure.Core.Messages.OrderQueueMessages;
 using Infrastructure.Core.Messages.ResourcesMessages;
 using MenuApi;
 using ResourcesApi;
 using TablesApi;
 using RestaurantsApi;
+using UsersApi;
 using Web.HttpAggregator.Models;
 using Web.HttpAggregator.Models.OrderQueue;
 using MenuItemResponse = Web.HttpAggregator.Models.MenuItemResponse;
@@ -62,6 +61,21 @@ namespace Web.HttpAggregator.Mapping
             CreateMap<GetResourcesMetadataResponse, PaginationResponse<ResourceMetadataResponse>>()
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.ResourcesMetadata));
             CreateMap<ResourceMetadataRequest, ResourceMetadataMessage>();
+
+            CreateMap<User, UserResponse>();
+            CreateMap<Models.UpdateUserRequest, User>()
+                .ForMember(dest => dest.UserName, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
+
+            CreateMap<Models.CreateUserRequest, User>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
+            CreateMap<GetUsersResponse, PaginationResponse<UserResponse>>()
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Users));
+
         }
     }
 }

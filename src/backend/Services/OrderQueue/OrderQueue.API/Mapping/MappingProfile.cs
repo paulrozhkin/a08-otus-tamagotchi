@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using System;
 using Infrastructure.Core.Messages.OrderQueueMessages;
 using OrderQueue.Core.Models;
 

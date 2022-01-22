@@ -40,6 +40,8 @@ namespace Web.HttpAggregator
 
             services.AddAutoMapper(typeof(MappingProfile));
 
+            services.AddAuthenticationServices(_configuration);
+
             var urlsConfig = _configuration.GetSection(UrlsOptions.Urls);
             services.Configure<UrlsOptions>(urlsConfig);
 
@@ -106,6 +108,7 @@ namespace Web.HttpAggregator
 
             app.UseCors("CorsPolicy");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(

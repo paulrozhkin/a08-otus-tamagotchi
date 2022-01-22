@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Web.HttpAggregator.Models;
 using Web.HttpAggregator.Services;
 
@@ -11,6 +12,7 @@ namespace Web.HttpAggregator.Controllers
     /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class OrdersController : Controller
     {
         private readonly IOrdersService _ordersService;

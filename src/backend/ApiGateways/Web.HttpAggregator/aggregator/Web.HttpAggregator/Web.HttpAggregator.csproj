@@ -20,6 +20,7 @@
     <Protobuf Include="..\..\..\..\Services\Menu\Menu.API\Protos\menu.proto" GrpcService="Client" Link="Protos\menu.proto" ProtoRoot="..\..\..\..\Services\Menu\Menu.API\Protos" />
     <Protobuf Include="..\..\..\..\Services\Tables\Tables.API\Protos\tables.proto" GrpcService="Client" Link="Protos\tables.proto" ProtoRoot="..\..\..\..\Services\Tables\Tables.API\Protos" />
     <Protobuf Include="..\..\..\..\Services\Resources\Resources.API\Protos\resources.proto" GrpcService="Client" Link="Protos\resources.proto" />
+    <Protobuf Include="..\..\..\..\Services\Users\Users.API\Protos\users.proto" GrpcService="Client" Link="Protos\users.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +33,7 @@
     <PackageReference Include="MassTransit.AspNetCore" Version="7.2.4" />
     <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.2.4" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="Minio.AspNetCore" Version="3.1.21" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
@@ -41,6 +43,7 @@
 	<PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
 	<PackageReference Include="Grpc.Net.ClientFactory" Version="2.40.0" />
 	<PackageReference Include="Grpc.Tools" Version="2.41.1" PrivateAssets="All" />
+	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.1" />
   </ItemGroup>
 
   <ItemGroup>

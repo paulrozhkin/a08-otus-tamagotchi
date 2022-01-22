@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Domain.Core.Models;
+using Microsoft.AspNetCore.Authorization;
 using Web.HttpAggregator.Models.OrderQueue;
 using Web.HttpAggregator.Services;
 
@@ -9,6 +11,8 @@ namespace Web.HttpAggregator.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize(Roles = Roles.Administrator)]
+    [Authorize(Roles = Roles.Stuff)]
     public class OrderQueueController
         : ControllerBase
     {

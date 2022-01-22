@@ -89,6 +89,14 @@ services:
     depends_on:
       - postgres
 
+  users.api:
+    image: ${DOCKER_REGISTRY-}usersapi
+    build:
+      context: .
+      dockerfile: Services/Users/Users.API/Dockerfile
+    depends_on:
+      - postgres
+
   geocoding.api:
     image: ${DOCKER_REGISTRY-}geocodingapi
     build:

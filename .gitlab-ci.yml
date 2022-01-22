@@ -186,3 +186,19 @@ deploy_resourcesapi_dimg_job:
         - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/resources.api:latest    
     after_script:
         - docker logout ${CI_REGISTRY}
+
+deploy_usersapi_dimg_job:
+    stage: deploy
+    image: docker:stable
+    services:
+        - docker:dind
+    only:
+        - main
+    before_script:
+        - docker info
+        - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    script:
+        - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/users.api:latest -f $BACKEND_PATH/Services/Users/Users.API/Dockerfile $BACKEND_PATH
+        - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}/users.api:latest    
+    after_script:
+        - docker logout ${CI_REGISTRY}

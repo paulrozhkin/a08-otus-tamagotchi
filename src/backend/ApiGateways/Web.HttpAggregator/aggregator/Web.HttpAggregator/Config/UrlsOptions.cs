@@ -17,5 +17,7 @@
         public string TablesGrpc { get; set; }
 
         public string ResourcesGrpc { get; set; }
+
+        public string UsersGrpc { get; set; }
     }
 }
