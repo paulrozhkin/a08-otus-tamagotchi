@@ -1,11 +1,9 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, {useState} from 'react'
 import {
   CButton,
   CCard,
   CCardBody,
-  CCardGroup,
-  CCol,
+  CCardGroup, CCol,
   CContainer,
   CForm,
   CFormInput,
@@ -15,8 +13,69 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import { useHistory } from 'react-router-dom';
+import {userService} from "../../../services/user-service";
+import {connect} from "react-redux";
+import mapDispatchToProps from "react-redux/lib/connect/mapDispatchToProps";
+import {bindActionCreators} from "redux";
+import {login} from "../../../actions/login";
 
-const Login = () => {
+const Login = (props) => {
+
+  const [form, setForm] = useState({})
+  const [errors, setErrors] = useState({})
+  const history = useHistory();
+
+  const setField = (field, value) => {
+    setForm({
+      ...form,
+      [field]: value
+    })
+
+    // Check and see if errors exist, and remove them from the error object:
+    if ( !!errors[field] ) setErrors({
+      ...errors,
+      [field]: null
+    })
+  }
+
+  const findFormErrors = () => {
+    const {login, password} = form
+    const newErrors = {}
+    // email errors
+    if (!login || login === '') newErrors.login = 'cannot be blank!'
+    else if (login.length > 50) newErrors.login = 'login is too long!'
+    // password errors
+    if (!password || password === '') newErrors.password = 'cannot be blank!'
+    else if (password.length < 4) newErrors.password = 'password is too short!'
+
+    return newErrors
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    // get our new errors
+    const newErrors = findFormErrors()
+
+    // Conditional logic:
+    if (Object.keys(newErrors).length > 0) {
+      // We got errors!
+      setErrors(newErrors)
+    } else {
+      userService.login(form['login'], form['password'])
+        .then(jwt => {
+          //props.login(jwt)
+          history.push('/')
+        }, e => alert(e));
+
+      // props.login({
+      //   login: form['login'],
+      //   password: form['password']
+      // })
+    }
+  }
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -32,7 +91,7 @@ const Login = () => {
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput placeholder="Username" autoComplete="username" onChange={e => setField('login', e.target.value)} invalid={!!errors.login} />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -42,11 +101,13 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        onChange={e => setField('password', e.target.value)}
+                        invalid={!!errors.password}
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton color="primary" className="px-4" onClick={handleSubmit}>
                           Login
                         </CButton>
                       </CCol>
@@ -62,16 +123,7 @@ const Login = () => {
               <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
-                    <h2>Sign up</h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
-                    <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
-                      </CButton>
-                    </Link>
+                    <h2>Sign in</h2>
                   </div>
                 </CCardBody>
               </CCard>
@@ -83,4 +135,8 @@ const Login = () => {
   )
 }
 
-export default Login
+function matchDispatchToProps(dispatch) {
+  return bindActionCreators({login: login}, dispatch)
+}
+
+export default connect(null, matchDispatchToProps)(Login)

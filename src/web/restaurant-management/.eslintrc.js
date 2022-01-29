@@ -24,6 +24,7 @@ module.exports = {
 
     "prettier/prettier": "off",
     "arrow-body-style": "off",
-    "prefer-arrow-callback": "off"
+    "prefer-arrow-callback": "off",
+    "react/prop-types": "off"
   },
 }
