@@ -15,6 +15,7 @@ import {
   CTableRow,
 } from '@coreui/react'
 import {useHistory} from "react-router-dom";
+import axios from "axios";
 
 const RestaurantsList = () => {
   const history = useHistory();
@@ -24,18 +25,22 @@ const RestaurantsList = () => {
   const [restaurantsResponse, setRestaurantsResponse] = useState([]);
   const [paginationPage, setPaginationPage] = useState(1);
 
+  function editRestaurant(event, id) {
+    event.preventDefault()
+    history.push(`/restaurants/${id}/update`)
+  }
+
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/v1/Restaurants?PageNumber=${paginationPage}&PageSize=13`)
-      .then(res => res.json())
+    axios.get(`/Restaurants?PageNumber=${paginationPage}&PageSize=13`)
       .then((result) => {
-          setRestaurantsResponse(result);
-          setIsLoaded(true);
-        },
-        (error) => {
-          setError(error);
-          setIsLoaded(true);
-        })
+        setRestaurantsResponse(result.data);
+        setIsLoaded(true);
+      })
+      .catch((error) => {
+        setError(error);
+        setIsLoaded(true);
+      })
   }, [paginationPage])
 
   let content;
@@ -45,7 +50,7 @@ const RestaurantsList = () => {
     content = (<div>Loading...</div>)
   } else {
     const restaurantsDom = restaurantsResponse.items.map((restaurant) => {
-      return <CTableRow key={restaurant.id}>
+      return <CTableRow key={restaurant.id} onClick={(event) => editRestaurant(event, restaurant.id)}>
         <CTableHeaderCell scope="row">{restaurant.id}</CTableHeaderCell>
         <CTableDataCell>{restaurant.address}</CTableDataCell>
         <CTableDataCell>{restaurant.phoneNumber}</CTableDataCell>
@@ -113,14 +118,14 @@ const RestaurantsList = () => {
         </CButton>
       </CCol>
 
-      <CCol sm={12}>
-        <CForm className="d-flex">
-          <CFormInput type="search" className="me-2" placeholder="Search"/>
-          <CButton type="submit" color="success" variant="outline">
-            Search
-          </CButton>
-        </CForm>
-      </CCol>
+      {/*<CCol sm={12}>*/}
+      {/*  <CForm className="d-flex">*/}
+      {/*    <CFormInput type="search" className="me-2" placeholder="Search"/>*/}
+      {/*    <CButton type="submit" color="success" variant="outline">*/}
+      {/*      Search*/}
+      {/*    </CButton>*/}
+      {/*  </CForm>*/}
+      {/*</CCol>*/}
 
       {content}
     </CRow>

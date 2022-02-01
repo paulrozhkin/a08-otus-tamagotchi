@@ -20,8 +20,7 @@ const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 
 function App(props) {
-    const isLogin = props.jwt.token != null;
-    console.log(props.jwt)
+    const isLogin = props.jwt.token != null
 
     return (
       <HashRouter>

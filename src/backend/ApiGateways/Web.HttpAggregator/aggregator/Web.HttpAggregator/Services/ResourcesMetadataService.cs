@@ -63,6 +63,7 @@ namespace Web.HttpAggregator.Services
             var message = _mapper.Map<ResourceMetadataMessage>(resourceMetadata);
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:resources"));
             await endpoint.Send(message);
+            await Task.Delay(500);
         }
     }
 }
