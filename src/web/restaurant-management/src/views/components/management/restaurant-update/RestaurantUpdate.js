@@ -71,6 +71,15 @@ const RestaurantUpdate = (props) => {
     })
   }
 
+  function handleDelete() {
+    axios.delete(`restaurants/${id}`)
+      .then(res => {
+        history.push('/restaurants')
+      }).catch((error) => {
+      alert(error)
+    })
+  }
+
   const imagesContent = []
 
   function selectImage(event) {
@@ -170,8 +179,12 @@ const RestaurantUpdate = (props) => {
             onChange={(e) => setIsWiFiPresent(e.target.checked)}
           />
 
-          <CButton type="submit" color="primary" onClick={handleSubmit}>
+          <CButton type="submit" color="primary" onClick={handleSubmit} style={{width: 130}}>
             Update
+          </CButton>
+
+          <CButton type="submit" color="danger" onClick={handleDelete} className="mx-2" style={{width: 130}}>
+            Delete
           </CButton>
         </CForm>}
 
