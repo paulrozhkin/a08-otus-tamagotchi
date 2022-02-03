@@ -21,6 +21,15 @@ const UserCreate = React.lazy(() =>
 const UserUpdate = React.lazy(() =>
   import('./views/components/management/user-update/UserUpdate'),
 )
+const DishesManagement = React.lazy(() =>
+  import('./views/components/management/dishes-management/DishesManagement'),
+)
+const DishesCreate = React.lazy(() =>
+  import('./views/components/management/dishes-create/DishesCreate'),
+)
+const DishesUpdate = React.lazy(() =>
+  import('./views/components/management/dishes-update/DishesUpdate'),
+)
 
 const routes = [
   {path: '/', exact: true, name: 'Home'},
@@ -30,7 +39,10 @@ const routes = [
   {path: '/restaurants/:id/update', name: 'Update restaurant', component: RestaurantUpdate},
   {path: '/users', name: 'Users', component: UsersManagement},
   {path: '/users/create', name: 'Create user', component: UserCreate},
-  {path: '/users/:id/update', name: 'Update user', component: UserUpdate}
+  {path: '/users/:id/update', name: 'Update user', component: UserUpdate},
+  {path: '/dishes', name: 'Dishes', component: DishesManagement},
+  {path: '/dishes/create', name: 'Create dish', component: DishesCreate},
+  {path: '/dishes/:id/update', name: 'Update dish', component: DishesUpdate}
 ]
 
 export default routes

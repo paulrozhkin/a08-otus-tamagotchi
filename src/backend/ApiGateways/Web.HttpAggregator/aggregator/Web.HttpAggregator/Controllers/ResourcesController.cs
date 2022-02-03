@@ -72,8 +72,7 @@ namespace Web.HttpAggregator.Controllers
                 try
                 {
                     await _minioClient.GetObjectAsync(MinioBuckets.ResourcesBucketName, resourceId.ToString(),
-                        async stream => { await stream.CopyToAsync(steamFile); });
-
+                        stream => { stream.CopyTo(steamFile); });
                 }
                 catch (Exception exception)
                 {
@@ -121,7 +120,8 @@ namespace Web.HttpAggregator.Controllers
                 }
 
                 // Upload a file to bucket.
-                await _minioClient.PutObjectAsync(MinioBuckets.ResourcesBucketName, fileObjectId.ToString(), inputStream,
+                await _minioClient.PutObjectAsync(MinioBuckets.ResourcesBucketName, fileObjectId.ToString(),
+                    inputStream,
                     inputStream.Length, file.ContentType);
 
                 await _resourcesMetadataService.CreateResourceMetadataAsync(fileMetadata);

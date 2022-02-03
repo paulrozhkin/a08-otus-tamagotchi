@@ -17,24 +17,24 @@ import {
 import {useHistory} from "react-router-dom";
 import axios from "axios";
 
-const RestaurantsList = () => {
+const DishesList = () => {
   const history = useHistory();
 
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [restaurantsResponse, setRestaurantsResponse] = useState([]);
+  const [dishesResponse, setDishesResponse] = useState([]);
   const [paginationPage, setPaginationPage] = useState(1);
 
-  function editRestaurant(event, id) {
+  function editDish(event, id) {
     event.preventDefault()
-    history.push(`/restaurants/${id}/update`)
+    history.push(`/dishes/${id}/update`)
   }
 
 
   useEffect(() => {
-    axios.get(`/Restaurants?PageNumber=${paginationPage}&PageSize=13`)
+    axios.get(`/Dishes?PageNumber=${paginationPage}&PageSize=13`)
       .then((result) => {
-        setRestaurantsResponse(result.data);
+        setDishesResponse(result.data);
         setIsLoaded(true);
       })
       .catch((error) => {
@@ -49,16 +49,16 @@ const RestaurantsList = () => {
   } else if (!isLoaded) {
     content = (<div>Loading...</div>)
   } else {
-    const restaurantsDom = restaurantsResponse.items.map((restaurant) => {
-      return <CTableRow key={restaurant.id} onClick={(event) => editRestaurant(event, restaurant.id)}>
-        <CTableHeaderCell scope="row">{restaurant.id}</CTableHeaderCell>
-        <CTableDataCell>{restaurant.address}</CTableDataCell>
-        <CTableDataCell>{restaurant.phoneNumber}</CTableDataCell>
+    const dishesDom = dishesResponse.items.map((dish) => {
+      return <CTableRow key={dish.id} onClick={(event) => editDish(event, dish.id)}>
+        <CTableHeaderCell scope="row">{dish.id}</CTableHeaderCell>
+        <CTableDataCell>{dish.name}</CTableDataCell>
+        <CTableDataCell>{dish.description}</CTableDataCell>
       </CTableRow>
     })
 
-    const totalPages = restaurantsResponse.totalPages
-    const currentPage = restaurantsResponse.currentPage
+    const totalPages = dishesResponse.totalPages
+    const currentPage = dishesResponse.currentPage
     const pagesNumbers = Array.from({length: totalPages}, (_, i) => i + 1)
 
     const isNextPageDisabled = totalPages === currentPage
@@ -71,12 +71,12 @@ const RestaurantsList = () => {
             <CTableHead>
               <CTableRow>
                 <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Address</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Phone number</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Description</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
-              {restaurantsDom}
+              {dishesDom}
             </CTableBody>
           </CTable>
         </CCol>
@@ -108,19 +108,18 @@ const RestaurantsList = () => {
   return (
     <CRow>
       <CCol sm={10}>
-        <h2 className="display-6">Restaurants</h2>
+        <h2 className="display-6">Dishes</h2>
       </CCol>
       <CCol sm={2} className="d-flex my-auto justify-content-end">
         <CButton onClick={() => {
-          history.push('/restaurants/create')
+          history.push('/dishes/create')
         }} color="success">
           Create
         </CButton>
       </CCol>
-
       {content}
     </CRow>
   )
 }
 
-export default RestaurantsList
+export default DishesList
