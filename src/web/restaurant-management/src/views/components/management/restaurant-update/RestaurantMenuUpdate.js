@@ -1,120 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {
-  CButton, CCard, CCardBody, CCardFooter, CCardImage, CCardText, CCardTitle, CCol, CCollapse, CRow, CFormInput
-} from "@coreui/react";
+import {CCol, CCollapse, CRow} from "@coreui/react";
 import axios from "axios";
 import MAX_INT32 from "const-max-int32";
 import {useParams} from "react-router-dom";
 import './ResturantMenuUpdate.css'
-
-function RestaurantMenuItem(props) {
-  const {id} = useParams()
-  const menu = props.menu
-  const firstPhoto = menu.dish.photos[0]
-  const [price, setPrice] = useState(menu.priceRubles)
-  const [priceValid, setPriceValid] = useState(true)
-  const [isEdit, setIsEdit] = useState(false)
-
-  function enableEdit(event) {
-    event.preventDefault()
-    setIsEdit(true)
-  }
-
-  function disableEdit(event) {
-    event.preventDefault()
-    setIsEdit(false)
-  }
-
-  function handleUpdate(event) {
-    event.preventDefault()
-
-    const priceValue = parseInt(price)
-    if (!!!priceValue) {
-      setPriceValid(false)
-      return
-    }
-
-    setPriceValid(true)
-
-    const updateMenuDto = {
-      DishId: menu.dish.id,
-      PriceRubles: price
-    }
-
-    axios.put(`restaurants/${id}/menu/${menu.id}`, updateMenuDto)
-      .then(res => {
-        setIsEdit(false)
-      }).catch((error) => {
-      alert(error)
-    })
-  }
-
-  let content
-  if (isEdit) {
-    content = (
-      <>
-        <CCardText>
-          <b>Цена ₽:</b>
-          <CFormInput type="number" value={price}
-                      onChange={(event) => setPrice(event.target.value)}
-                      invalid={!priceValid}/>
-        </CCardText>
-        <CButton onClick={event => handleUpdate(event, menu, price)} style={{width: 130}}>
-          Update
-        </CButton>
-        <CButton color="danger" onClick={event => disableEdit(event)} className="mx-2"
-                 style={{width: 130}}>
-          Cancel
-        </CButton>
-      </>
-    )
-  } else {
-    content = (
-      <>
-        <CCardText>
-          <b>Цена:</b> {price}₽
-        </CCardText>
-        <CButton onClick={event => enableEdit(event)} style={{width: 130}}>
-          Edit
-        </CButton>
-        <CButton color="danger" onClick={event => props.handleDelete(event, menu)} className="mx-2"
-                 style={{width: 130}}>
-          Delete
-        </CButton>
-      </>
-    )
-  }
-
-  return (<CCol xl>
-    <CCard>
-      <CCardImage orientation="top" src={`${axios.defaults.baseURL}/resources/${firstPhoto}`}/>
-      <CCardBody>
-        <CCardTitle>{menu.dish.name}</CCardTitle>
-        <CCardText>
-          {menu.dish.description}
-        </CCardText>
-        {content}
-      </CCardBody>
-    </CCard>
-  </CCol>)
-}
-
-function DishItem(props) {
-  const dish = props.dish
-  const firstPhoto = dish.photos[0]
-
-  return (<CCol xl>
-    <CCard>
-      <CCardImage orientation="top" src={`${axios.defaults.baseURL}/resources/${firstPhoto}`}/>
-      <CCardBody>
-        <CCardTitle>{dish.name}</CCardTitle>
-        <CCardText>
-          {dish.description}
-        </CCardText>
-      </CCardBody>
-    </CCard>
-  </CCol>)
-}
+import {RestaurantMenuItem} from "./RestaurantMenuItem";
+import {DishItem} from "./DishItem";
 
 function RestaurantMenuUpdate() {
   const {id} = useParams()
@@ -135,6 +26,25 @@ function RestaurantMenuUpdate() {
         const menuWithoutDeleted = menu.filter(menuItem => menuItem !== menuItemForDelete)
         setMenu(menuWithoutDeleted)
         setDishes([...dishes, menuItemForDelete.dish])
+      }).catch((error) => {
+      alert(error)
+    })
+  }
+
+  function handleAddDishToMenu(event, dishForAdd, price) {
+    event.preventDefault()
+
+    const menuDto = {
+      DishId: dishForAdd.id,
+      PriceRubles: price
+    }
+
+    axios.post(`restaurants/${id}/menu`, menuDto)
+      .then(res => {
+        const newMenuItem = res.data
+        const dishesWithoutAdded = dishes.filter(dishItem => dishItem !== dishForAdd)
+        setMenu([...menu, newMenuItem])
+        setDishes(dishesWithoutAdded)
       }).catch((error) => {
       alert(error)
     })
@@ -170,7 +80,8 @@ function RestaurantMenuUpdate() {
 
   const menuComponents = menu.map(menuItem => <RestaurantMenuItem key={menuItem.id} menu={menuItem}
                                                                   handleDelete={handleDelete}/>)
-  const dishesComponents = dishes.map(dish => <DishItem key={dish.id} dish={dish}/>)
+  const dishesComponents = dishes.map(dish => <DishItem key={dish.id} dish={dish}
+                                                        handleAdd={handleAddDishToMenu}/>)
 
   return (<CRow>
     <CRow>
