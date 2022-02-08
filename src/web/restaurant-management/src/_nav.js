@@ -3,6 +3,8 @@ import CIcon from '@coreui/icons-react'
 import {
   cilRestaurant,
   cilSpeedometer,
+  cilUser,
+  cilFastfood
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -18,6 +20,18 @@ const _nav = [
     name: 'Restaurants',
     to: '/restaurants',
     icon: <CIcon icon={cilRestaurant} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Users',
+    to: '/users',
+    icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Dishes',
+    to: '/dishes',
+    icon: <CIcon icon={cilFastfood} customClassName="nav-icon" />,
   }
 ]
 

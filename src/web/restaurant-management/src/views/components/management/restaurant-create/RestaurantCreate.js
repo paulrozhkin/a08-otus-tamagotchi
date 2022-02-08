@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {CButton, CCol, CForm, CFormCheck, CFormInput, CFormLabel, CFormText, CRow} from "@coreui/react";
 import {useHistory} from "react-router-dom";
+import axios from "axios";
 
 const RestaurantCreate = (props) => {
   const history = useHistory();
@@ -24,20 +25,12 @@ const RestaurantCreate = (props) => {
       isWiFiPresent
     }
 
-    console.log(newRestaurantDto)
-
-    fetch('http://localhost:5000/api/v1/Restaurants', {
-      method: 'POST',
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(newRestaurantDto)
-    }).then(res => res.json())
-      .then((response) => {
-          history.goBack()
-        },
-        (error) => {
-          console.log(error)
-        })
-
+    axios.post('restaurants', newRestaurantDto)
+      .then(res => {
+        history.goBack()
+      }).catch((error) => {
+      alert(error)
+    })
   }
 
   return (

@@ -68,8 +68,17 @@ namespace Web.HttpAggregator.Controllers
                 }
 
                 var steamFile = new MemoryStream();
-                await _minioClient.GetObjectAsync(MinioBuckets.ResourcesBucketName, resourceId.ToString(),
-                    async stream => { await stream.CopyToAsync(steamFile); });
+
+                try
+                {
+                    await _minioClient.GetObjectAsync(MinioBuckets.ResourcesBucketName, resourceId.ToString(),
+                        stream => { stream.CopyTo(steamFile); });
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError($"Resource {resourcesMetadata.Id} can't extract cause: {exception}");
+                }
+
                 steamFile.Position = 0;
 
                 var fileType = resourcesMetadata.ResourceType;
@@ -111,7 +120,8 @@ namespace Web.HttpAggregator.Controllers
                 }
 
                 // Upload a file to bucket.
-                await _minioClient.PutObjectAsync(MinioBuckets.ResourcesBucketName, fileObjectId.ToString(), inputStream,
+                await _minioClient.PutObjectAsync(MinioBuckets.ResourcesBucketName, fileObjectId.ToString(),
+                    inputStream,
                     inputStream.Length, file.ContentType);
 
                 await _resourcesMetadataService.CreateResourceMetadataAsync(fileMetadata);
