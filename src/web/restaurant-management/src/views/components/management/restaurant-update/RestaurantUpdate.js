@@ -2,7 +2,7 @@ import React from 'react';
 import {matchPath, Redirect, Route, Switch, useHistory, useLocation, useParams} from "react-router-dom";
 import RestaurantMainInfoUpdate from "./RestaurantMainInfoUpdate";
 import RestaurantTablesUpdate from "./RestaurantTablesUpdate";
-import RestaurantMenuUpdate from "./ResturantMenuUpdate";
+import RestaurantMenuUpdate from "./RestaurantMenuUpdate";
 import {CDropdown, CNav, CNavItem, CNavLink, CRow} from "@coreui/react";
 
 const RestaurantUpdate = (props) => {

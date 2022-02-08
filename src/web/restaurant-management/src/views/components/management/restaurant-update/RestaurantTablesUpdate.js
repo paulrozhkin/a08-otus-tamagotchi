@@ -106,8 +106,7 @@ function RestaurantTablesUpdate() {
 
     let newIsNewTableNumberOfPlaceValid = true
     const numberOfPlaces = parseInt(newTableNumberOfPlace)
-    if (!!!numberOfPlaces)
-    {
+    if (!!!numberOfPlaces) {
       newIsNewTableNumberOfPlaceValid = false
     }
 
@@ -151,7 +150,8 @@ function RestaurantTablesUpdate() {
           <CTableDataCell>{table.name}</CTableDataCell>
           <CTableDataCell>{table.numberOfPlaces}</CTableDataCell>
           <CTableDataCell>
-            <CIcon className="mt-1 action-button" width={25} height={25} icon={cilXCircle} onClick={event => deleteTable(event, table.id)}/>
+            <CIcon className="mt-1 action-button" width={25} height={25} icon={cilXCircle}
+                   onClick={event => deleteTable(event, table.id)}/>
           </CTableDataCell>
         </CTableRow>
       } else {
@@ -167,10 +167,12 @@ function RestaurantTablesUpdate() {
           <CTableDataCell width={90}>
             <CRow>
               <CCol>
-                <CIcon className="action-button" width={25} height={25} icon={cilCheckCircle} onClick={event => saveTable(event, table)}/>
+                <CIcon className="action-button" width={25} height={25} icon={cilCheckCircle}
+                       onClick={event => saveTable(event, table)}/>
               </CCol>
               <CCol>
-                <CIcon className="action-button" width={25} height={25} icon={cilXCircle} onClick={event => deleteTable(event, table.id)}/>
+                <CIcon className="action-button" width={25} height={25} icon={cilXCircle}
+                       onClick={event => deleteTable(event, table.id)}/>
               </CCol>
             </CRow>
           </CTableDataCell>
