@@ -111,7 +111,7 @@ img{
     min-height: 100vh;
 }
 .bg-image {
-    background-image: url('/img/login-bg.png');
+    background-image: url('/img/login-bg.jpg');
     background-size: cover;
     background-position: center;
 }
@@ -394,8 +394,9 @@ img{
 .btn-outline-primary {
     color: #ff3008 !important;
     border-color: #ff3008 !important;
+    background-color: transparent !important;
 }
-.btn-outline-primary:hover,
+.btn-outline-primary:not(:disabled):hover,
 .btn-outline-primary:not(:disabled):not(.disabled).active,
 .btn-outline-primary:not(:disabled):not(.disabled):active,
 .show>.btn-outline-primary.dropdown-toggle {

@@ -66,8 +66,13 @@ namespace Users.Domain.Services
             return user;
         }
 
-        public async Task<User> AddUserAsync(User user, IEnumerable<string> roleNames)
+        public async Task<User> AddUserAsync(User user, string password, IEnumerable<string> roleNames)
         {
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                throw new ArgumentException("Password can't be null or empty");
+            }
+
             var specification = new UsersNameWithRolesSpecification(user.Username);
             var usersWithSameName = await _usersRepository.FindAsync(specification);
 
@@ -80,6 +85,7 @@ namespace Users.Domain.Services
 
             var roles = await GetRolesAsync(roleNames);
             user.Roles = roles;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(password);
 
             await _usersRepository.AddAsync(user);
             _unitOfWork.Complete();

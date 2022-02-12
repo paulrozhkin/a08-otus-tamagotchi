@@ -19,6 +19,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 import 'react-select2-wrapper/css/select2.css';
 import './App.css';
+import PrivateRoute from "./components/PrivateRoute";
+import PublicRoute from "./components/PublicRoute";
 
 class App extends React.Component  {
   render() {
@@ -28,19 +30,19 @@ class App extends React.Component  {
             (this.props.location.pathname!=='/login' && this.props.location.pathname!=='/register') ? <Header/>:''
           }
           <Switch>
-            <Route path="/" exact component={Index} />
-            <Route path="/offers" exact component={Offers} />
-            <Route path="/listing" exact component={List} />
-            <Route path="/myaccount" component={MyAccount} />
-            <Route path="/404" exact component={NotFound} />
-            <Route path="/extra" exact component={Extra} />
-            <Route path="/login" exact component={Login} />
-            <Route path="/register" exact component={Register} />
-            <Route path="/track-order" exact component={TrackOrder} />
-            <Route path="/invoice" exact component={Invoice} />
-            <Route path="/checkout" exact component={Checkout} />
-            <Route path="/thanks" exact component={Thanks} />
-            <Route path="/detail" exact component={Detail} />
+            <PrivateRoute path="/" exact component={Index} />
+            <PrivateRoute path="/offers" exact component={Offers} />
+            <PrivateRoute path="/listing" exact component={List} />
+            <PrivateRoute path="/myaccount" component={MyAccount} />
+            <PrivateRoute path="/404" exact component={NotFound} />
+            <PrivateRoute path="/extra" exact component={Extra} />
+            <PublicRoute path="/login" exact component={Login} />
+            <PublicRoute path="/register" exact component={Register} />
+            <PrivateRoute path="/track-order" exact component={TrackOrder} />
+            <PrivateRoute path="/invoice" exact component={Invoice} />
+            <PrivateRoute path="/checkout" exact component={Checkout} />
+            <PrivateRoute path="/thanks" exact component={Thanks} />
+            <PrivateRoute path="/detail" exact component={Detail} />
             <Route exact component={NotFound} />
           </Switch>
           {

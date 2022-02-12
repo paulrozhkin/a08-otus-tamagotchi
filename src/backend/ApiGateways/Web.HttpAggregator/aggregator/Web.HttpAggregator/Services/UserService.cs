@@ -92,7 +92,8 @@ public class UserService : IUserService
         {
             var userCreateResponse = await _usersClient.CreateUserAsync(new UsersApi.CreateUserRequest()
             {
-                User = _mapper.Map<User>(user)
+                User = _mapper.Map<User>(user),
+                Password = user.Password
             });
 
             return _mapper.Map<UserResponse>(userCreateResponse.User);
@@ -147,7 +148,8 @@ public class UserService : IUserService
         var userClaims = new List<Claim>()
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Name, user.UserName)
+            new(ClaimTypes.Name, user.UserName),
+            new(ClaimTypes.Surname, user.Name)
         };
 
         foreach (var item in user.Roles)
