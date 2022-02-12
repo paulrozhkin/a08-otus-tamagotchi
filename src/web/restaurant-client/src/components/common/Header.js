@@ -5,6 +5,9 @@ import DropDownTitle from '../common/DropDownTitle';
 import CartDropdownHeader from '../cart/CartDropdownHeader';
 import CartDropdownItem from '../cart/CartDropdownItem';
 import Icofont from 'react-icofont';
+import {connect} from "react-redux";
+import {logout as logoutAction} from "../../actions/logout";
+
 
 class Header extends React.Component {
 	constructor(props) {
@@ -12,6 +15,8 @@ class Header extends React.Component {
 	    this.state = {
 	      isNavExpanded: false
 	    };
+
+		this.handleLogout = this.handleLogout.bind(this);
 	}
     setIsNavExpanded = (isNavExpanded) => {
       this.setState({ isNavExpanded: isNavExpanded });
@@ -28,14 +33,20 @@ class Header extends React.Component {
         this.setState({ isNavExpanded: false });
       }
     }
-  
+
 	componentDidMount() {
-	    document.addEventListener('click', this.handleClick, false);      
+	    document.addEventListener('click', this.handleClick, false);
 	}
 
 	componentWillUnmount() {
 	    document.removeEventListener('click', this.handleClick, false);
 	}
+
+	handleLogout(event) {
+		event.preventDefault()
+		this.props.logout();
+	}
+
 	render() {
     	return (
     		<div ref={node => this.node = node}>
@@ -68,8 +79,8 @@ class Header extends React.Component {
 			            </NavDropdown>
 			            <NavDropdown alignRight
 			            	title={
-			            		<DropDownTitle 
-			            			className='d-inline-block' 
+			            		<DropDownTitle
+			            			className='d-inline-block'
 			            			image="img/user/4.png"
 			            			imageAlt='user'
 			            			imageClass="nav-osahan-pic rounded-pill"
@@ -78,15 +89,12 @@ class Header extends React.Component {
 			            	}
 			            >
 							<NavDropdown.Item eventKey={4.1} as={NavLink} activeclassname="active" to="/myaccount/orders"><Icofont icon='food-cart'/> Orders</NavDropdown.Item>
-							<NavDropdown.Item eventKey={4.2} as={NavLink} activeclassname="active" to="/myaccount/offers"><Icofont icon='sale-discount'/> Offers</NavDropdown.Item>
-							<NavDropdown.Item eventKey={4.3} as={NavLink} activeclassname="active" to="/myaccount/favourites"><Icofont icon='heart'/> Favourites</NavDropdown.Item>
-							<NavDropdown.Item eventKey={4.4} as={NavLink} activeclassname="active" to="/myaccount/payments"><Icofont icon='credit-card'/> Payments</NavDropdown.Item>
-							<NavDropdown.Item eventKey={4.5} as={NavLink} activeclassname="active" to="/myaccount/addresses"><Icofont icon='location-pin'/> Addresses</NavDropdown.Item>
+							<NavDropdown.Item eventKey={4.2} activeclassname="active" onClick={this.handleLogout}><Icofont icon='icofont-logout'/> Logout</NavDropdown.Item>
 			            </NavDropdown>
-			            <NavDropdown activeclassname="active" alignRight className="dropdown-cart" 
+			            <NavDropdown activeclassname="active" alignRight className="dropdown-cart"
 			            	title={
-			            		<DropDownTitle 
-			            			className='d-inline-block' 
+			            		<DropDownTitle
+			            			className='d-inline-block'
 			            			faIcon='shopping-basket'
 			            			iconClass='mr-1'
 			            			title='Cart'
@@ -99,8 +107,8 @@ class Header extends React.Component {
 
 			                <div className="dropdown-cart-top shadow-sm">
 			               	  {
-			               	  	<CartDropdownHeader 
-			               	  		className="dropdown-cart-top-header p-4" 
+			               	  	<CartDropdownHeader
+			               	  		className="dropdown-cart-top-header p-4"
 			               	  		title="Gus's World Famous Chicken"
 			               	  		subTitle="310 S Front St, Memphis, USA"
 			               	  		image="img/cart.jpg"
@@ -109,30 +117,30 @@ class Header extends React.Component {
 			               	  		NavLinkUrl="#"
 			               	  		NavLinkText="View Full Menu"
 			               	    />
-			               	  } 
+			               	  }
 			                  <div className="dropdown-cart-top-body border-top p-4">
-			                     <CartDropdownItem 
+			                     <CartDropdownItem
 			                     	icoIcon='ui-press'
 			                     	iconClass='text-success food-item'
 			                     	title='Corn & Peas Salad x 1'
 			                     	price='$209'
 			                     />
 
-			                     <CartDropdownItem 
+			                     <CartDropdownItem
 			                     	icoIcon='ui-press'
 			                     	iconClass='text-success food-item'
 			                     	title='Veg Seekh Sub 6" (15 cm) x 1'
 			                     	price='$133'
 			                     />
 
-			                     <CartDropdownItem 
+			                     <CartDropdownItem
 			                     	icoIcon='ui-press'
 			                     	iconClass='text-danger food-item'
 			                     	title='Chicken Tikka Sub 12" (30 cm) x 1'
 			                     	price='$314'
 			                     />
 
-			                     <CartDropdownItem 
+			                     <CartDropdownItem
 			                     	icoIcon='ui-press'
 			                     	iconClass='text-success food-item'
 			                     	title='Corn & Peas Salad x 1 '
@@ -141,7 +149,7 @@ class Header extends React.Component {
 			                  </div>
 			                  <div className="dropdown-cart-top-footer border-top p-4">
 			                     <p className="mb-0 font-weight-bold text-secondary">Sub Total <span className="float-right text-dark">$499</span></p>
-			                     <small className="text-info">Extra charges may apply</small>  
+			                     <small className="text-info">Extra charges may apply</small>
 			                  </div>
 			                  <div className="dropdown-cart-top-footer border-top p-2">
 			                     <NavDropdown.Item eventKey={5.1} as={Link} className="btn btn-success btn-block py-3 text-white text-center dropdown-item" to="/checkout"> Checkout</NavDropdown.Item>
@@ -157,4 +165,16 @@ class Header extends React.Component {
 	}
 }
 
-export default Header;
+
+function mapStateToProps(state) {
+	return {
+	}
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		logout: () => dispatch(logoutAction())
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

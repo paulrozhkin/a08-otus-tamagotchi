@@ -1,6 +1,6 @@
 const jwtToken = localStorage.getItem('jwt');
 const token = jwtToken && JSON.parse(jwtToken).token
-const initialAccount = token ? createAccountFromJwtToken(token) : {}
+const initialAccount = token ? createAccountFromJwtToken(token) : null
 
 
 const accountReducer = (state = initialAccount, {type, ...rest}) => {
@@ -11,7 +11,7 @@ const accountReducer = (state = initialAccount, {type, ...rest}) => {
             return createAccountFromJwtToken(jwtToken.token)
         case 'LOGOUT':
             localStorage.removeItem('jwt');
-            return {}
+            return null
         default:
             return state
     }
