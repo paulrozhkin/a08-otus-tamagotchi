@@ -4,7 +4,8 @@ import axios from "axios";
 const {REACT_APP_API_URL} = process.env;
 
 export const restaurantsService = {
-    getRestaurants
+    getRestaurants,
+    getRestaurant
 }
 
 function getRestaurants() {
@@ -14,3 +15,10 @@ function getRestaurants() {
         })
 }
 
+
+function getRestaurant(id) {
+    return axios.get(`${REACT_APP_API_URL}/restaurants/${id}`)
+        .then(response => {
+            return response.data
+        })
+}

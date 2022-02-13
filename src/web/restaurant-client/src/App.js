@@ -42,7 +42,7 @@ class App extends React.Component  {
             <PrivateRoute path="/invoice" exact component={Invoice} />
             <PrivateRoute path="/checkout" exact component={Checkout} />
             <PrivateRoute path="/thanks" exact component={Thanks} />
-            <PrivateRoute path="/detail" exact component={Detail} />
+            <PrivateRoute path="/detail/:id" exact component={Detail} />
             <Route exact component={NotFound} />
           </Switch>
           {
