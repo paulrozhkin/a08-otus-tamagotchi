@@ -46,12 +46,6 @@ class MyAccount extends React.Component {
                              <NavLink className="nav-link" activeClassName="active" exact to="/myaccount/orders"><i className="icofont-food-cart"></i> Orders</NavLink>
                           </li>
                           <li className="nav-item">
-                             <NavLink className="nav-link" activeClassName="active" exact to="/myaccount/offers"><i className="icofont-sale-discount"></i> Offers</NavLink>
-                          </li>
-                          <li className="nav-item">
-                             <NavLink className="nav-link" activeClassName="active" exact to="/myaccount/favourites"><i className="icofont-heart"></i> Favourites</NavLink>
-                          </li>
-                          <li className="nav-item">
                              <NavLink className="nav-link" activeClassName="active" exact to="/myaccount/payments"><i className="icofont-credit-card"></i> Payments</NavLink>
                           </li>
                           <li className="nav-item">
@@ -63,8 +57,6 @@ class MyAccount extends React.Component {
                  <Col md={9}>
                   <Switch>
                     <Route path="/myaccount/orders" exact component={Orders} />
-                    <Route path="/myaccount/offers" exact component={Offers} />
-                    <Route path="/myaccount/favourites" exact component={Favourites} />
                     <Route path="/myaccount/payments" exact component={Payments} />
                     <Route path="/myaccount/addresses" exact component={Addresses} />
                   </Switch>

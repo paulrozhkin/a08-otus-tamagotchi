@@ -60,9 +60,6 @@ class Header extends React.Component {
 						<Nav.Link eventKey={0} as={NavLink} activeclassname="active" exact to="/">
 			               Home <span className="sr-only">(current)</span>
 			            </Nav.Link>
-			            <Nav.Link eventKey={1} as={NavLink} activeclassname="active" to="/offers">
-             				<Icofont icon='sale-discount'/> Offers <Badge variant="danger">New</Badge>
-			            </Nav.Link>
 			            <NavDropdown title="Restaurants" alignRight className="border-0">
 			            	<NavDropdown.Item eventKey={2.1} as={NavLink} activeclassname="active" to="/listing">Listing</NavDropdown.Item>
 			            	<NavDropdown.Item eventKey={2.2} as={NavLink} activeclassname="active" to="/detail">Detail + Cart</NavDropdown.Item>
@@ -71,11 +68,6 @@ class Header extends React.Component {
 			            <NavDropdown title="Pages" alignRight>
 			            	<NavDropdown.Item eventKey={3.1} as={NavLink} activeclassname="active" to="/track-order">Track Order</NavDropdown.Item>
 			            	<NavDropdown.Item eventKey={3.2} as={NavLink} activeclassname="active" to="/invoice">Invoice</NavDropdown.Item>
-			            	<NavDropdown.Item eventKey={3.3} as={NavLink} activeclassname="active" to="/login">Login</NavDropdown.Item>
-			            	<NavDropdown.Item eventKey={3.4} as={NavLink} activeclassname="active" to="/register">Register</NavDropdown.Item>
-			            	<NavDropdown.Item eventKey={3.5} as={NavLink} activeclassname="active" to="/404">404</NavDropdown.Item>
-			            	<NavDropdown.Item eventKey={3.6} as={NavLink} activeclassname="active" to="/extra">Extra</NavDropdown.Item>
-
 			            </NavDropdown>
 			            <NavDropdown alignRight
 			            	title={
