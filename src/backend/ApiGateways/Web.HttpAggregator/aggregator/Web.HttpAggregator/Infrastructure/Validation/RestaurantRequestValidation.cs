@@ -9,6 +9,7 @@ namespace Web.HttpAggregator.Infrastructure.Validation
         {
             RuleFor(x => x.Latitude).NotEmpty();
             RuleFor(x => x.Longitude).NotEmpty();
+            RuleFor(x => x.Title).NotEmpty();
         }
     }
 }

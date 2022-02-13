@@ -22,7 +22,9 @@ const RestaurantMainInfoUpdate = (props) => {
 
   const [restaurant, setRestaurant] = useState()
   const [isLoading, setIsLoading] = useState(true)
+
   const [address, setAddress] = useState('')
+  const [title, setTitle] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [isParkingPresent, setIsParkingPresent] = useState(false)
   const [isCardPaymentPresent, setIsCardPaymentPresent] = useState(false)
@@ -36,6 +38,7 @@ const RestaurantMainInfoUpdate = (props) => {
 
         const restaurant = response.data
         setRestaurant(restaurant)
+        setTitle(restaurant.title)
         setAddress(restaurant.address)
         setPhoneNumber(restaurant.phoneNumber)
         setIsParkingPresent(restaurant.isParkingPresent)
@@ -54,6 +57,7 @@ const RestaurantMainInfoUpdate = (props) => {
     e.preventDefault()
 
     const updateRestaurantDto = {
+      title,
       latitude: restaurant.latitude,
       longitude: restaurant.longitude,
       phoneNumber,
@@ -153,6 +157,12 @@ const RestaurantMainInfoUpdate = (props) => {
           </div>
 
           <div className="mb-3">
+            <CFormLabel htmlFor="titleInput">Title</CFormLabel>
+            <CFormInput type="text" id="titleInput" value={title}
+                        onChange={(e) => setTitle(e.target.value)}/>
+          </div>
+
+          <div className="mb-3">
             <CFormLabel htmlFor="phoneNumberInput">Phone number</CFormLabel>
             <CFormInput type="tel" id="phoneNumberInput" value={phoneNumber} placeholder="+7910 120 54 54"
                         onChange={(e) => setPhoneNumber(e.target.value)}/>
@@ -191,7 +201,7 @@ const RestaurantMainInfoUpdate = (props) => {
       <input
         ref={imageRef}
         type="file"
-        style={{ display: 'none' }}
+        style={{display: 'none'}}
         accept="image/*"
         onChange={onInputImageChange}
       />

@@ -16,6 +16,7 @@ namespace Restaurants.API.Mapping
 
             CreateMap<RestaurantsApi.AddRestaurantRequest, Restaurant>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Restaurant.Title))
                 .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Restaurant.Latitude))
                 .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Restaurant.Longitude))
                 .ForMember(dest => dest.IsCardPaymentPresent,
@@ -30,6 +31,7 @@ namespace Restaurants.API.Mapping
 
             CreateMap<RestaurantsApi.UpdateRestaurantRequest, Restaurant>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Restaurant.Id))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Restaurant.Title))
                 .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Restaurant.Latitude))
                 .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Restaurant.Longitude))
                 .ForMember(dest => dest.IsCardPaymentPresent,

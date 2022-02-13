@@ -103,6 +103,7 @@ namespace Restaurants.Domain.Services
                 }
             }
 
+            restaurantWithSameId.Title = restaurant.Title;
             restaurantWithSameId.Latitude = restaurant.Latitude;
             restaurantWithSameId.Longitude = restaurant.Longitude;
             restaurantWithSameId.PhoneNumber = restaurant.PhoneNumber;

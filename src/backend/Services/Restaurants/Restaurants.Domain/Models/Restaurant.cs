@@ -6,6 +6,8 @@ namespace Restaurants.Domain.Models
 {
     public class Restaurant : BaseEntity
     {
+        public string Title { get; set; }
+
         public string Address { get; set; }
 
         public double Latitude { get; set; }

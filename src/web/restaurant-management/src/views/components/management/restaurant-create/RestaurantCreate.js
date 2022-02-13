@@ -6,6 +6,7 @@ import axios from "axios";
 const RestaurantCreate = (props) => {
   const history = useHistory();
 
+  const [title, setTitle] = useState('')
   const [latitude, setLatitude] = useState(0)
   const [longitude, setLongitude] = useState(0)
   const [phoneNumber, setPhoneNumber] = useState('')
@@ -17,6 +18,7 @@ const RestaurantCreate = (props) => {
     e.preventDefault()
 
     const newRestaurantDto = {
+      title,
       latitude,
       longitude,
       phoneNumber,
@@ -57,6 +59,12 @@ const RestaurantCreate = (props) => {
             </div>
           </CCol>
         </CRow>
+
+        <div className="mb-3">
+          <CFormLabel htmlFor="titleInput">Title</CFormLabel>
+          <CFormInput type="text" id="titleInput" value={title}
+                      onChange={(e) => setTitle(e.target.value)}/>
+        </div>
 
         <div className="mb-3">
           <CFormLabel htmlFor="phoneNumberInput">Phone number</CFormLabel>

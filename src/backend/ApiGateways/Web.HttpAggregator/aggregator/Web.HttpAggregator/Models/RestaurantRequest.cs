@@ -5,6 +5,8 @@ namespace Web.HttpAggregator.Models
 {
     public class RestaurantRequest
     {
+        public string Title { get; set; }
+
         public double Latitude { get; set; }
 
         public double Longitude { get; set; }

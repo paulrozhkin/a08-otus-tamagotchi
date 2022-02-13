@@ -52,7 +52,7 @@ const RestaurantsList = () => {
     const restaurantsDom = restaurantsResponse.items.map((restaurant) => {
       return <CTableRow key={restaurant.id} onClick={(event) => editRestaurant(event, restaurant.id)}>
         <CTableHeaderCell scope="row">{restaurant.id}</CTableHeaderCell>
-        <CTableDataCell>{restaurant.address}</CTableDataCell>
+        <CTableDataCell>{restaurant.title}</CTableDataCell>
         <CTableDataCell>{restaurant.phoneNumber}</CTableDataCell>
       </CTableRow>
     })
@@ -71,7 +71,7 @@ const RestaurantsList = () => {
             <CTableHead>
               <CTableRow>
                 <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Address</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Title</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Phone number</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
