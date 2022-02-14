@@ -89,9 +89,9 @@ function Index() {
                     />
                     <Row>
                         <Col md={12}>
-                            <OwlCarousel nav loop {...options} className="owl-carousel-four owl-theme">
+                            {!!items && <OwlCarousel nav loop {...options} className="owl-carousel-four owl-theme">
                                 {items}
-                            </OwlCarousel>
+                            </OwlCarousel>}
                         </Col>
                     </Row>
                 </Container>

@@ -33,9 +33,13 @@ function CategoriesCarousel() {
     }
 
     return (
-        <OwlCarousel nav loop {...options} className="owl-carousel-category owl-theme">
-            {content}
-        </OwlCarousel>
+        <>
+            {!!content &&
+                <OwlCarousel nav loop {...options} className="owl-carousel-category owl-theme">
+                    {content}
+                </OwlCarousel>
+            }
+        </>
     );
 }
 

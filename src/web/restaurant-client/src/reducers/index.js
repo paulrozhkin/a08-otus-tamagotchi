@@ -1,8 +1,10 @@
 import {combineReducers} from "redux";
 import accountReducer from "./account";
+import orderReducer from "./order";
 
 const reducers = combineReducers({
-  account: accountReducer
+  account: accountReducer,
+  order: orderReducer
 });
 
 

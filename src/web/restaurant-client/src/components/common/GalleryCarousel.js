@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import {Image} from 'react-bootstrap';
 import {imageService} from "../../services/image-service";
 

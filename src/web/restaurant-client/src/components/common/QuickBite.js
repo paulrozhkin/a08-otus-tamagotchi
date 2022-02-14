@@ -49,13 +49,14 @@ class QuickBite extends React.Component {
 	         }
 		   <Media>
 		      {this.props.image?
-		      	<Image className={"mr-3 rounded-pill " +this.props.imageClass} src={this.props.image} alt={this.props.imageAlt} />
+		      	<Image className={"mr-3 rounded-circle " +this.props.imageClass} src={this.props.image} alt={this.props.imageAlt} />
 		      	:
 		      	<div className="mr-3"><Icofont icon="ui-press" className={"text-"+this.props.badgeVariant+" food-item"} /></div>
 		      }
 		      <Media.Body>
 		         <h6 className="mb-1">{this.props.title} {this.props.showBadge?<Badge variant={this.props.badgeVariant}>{this.props.badgeText}</Badge>:""}</h6>
-		         <p className="text-gray mb-0">{this.props.priceUnit}{this.props.price}</p>
+		        <p>{this.props.description}</p>
+                <p className="text-gray mb-0">{this.props.priceUnit}{this.props.price}</p>
 		      </Media.Body>
 		   </Media>
 		</div>
@@ -75,11 +76,12 @@ QuickBite.propTypes = {
   badgeText: PropTypes.string,
   price: PropTypes.number.isRequired,
   priceUnit: PropTypes.string.isRequired,
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
   qty: PropTypes.number,
   minValue: PropTypes.number,
   maxValue: PropTypes.number,
-  getValue: PropTypes.func.isRequired
+  getValue: PropTypes.func.isRequired,
+  description: PropTypes.string
 };
 QuickBite.defaultProps = {
   itemClass:'gold-members',
@@ -89,7 +91,8 @@ QuickBite.defaultProps = {
   price: '',
   priceUnit:'$',
   showPromoted: false,
-  badgeVariant: 'danger'
+  badgeVariant: 'danger',
+  description: ''
 }
 
 export default QuickBite;

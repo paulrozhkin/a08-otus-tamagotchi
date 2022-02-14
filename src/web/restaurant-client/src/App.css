@@ -1513,3 +1513,8 @@ p{
 .homepage-search-title {
     z-index: 9999;
 }
+
+.menu-image {
+    height: 128px;
+    width: 128px;
+}

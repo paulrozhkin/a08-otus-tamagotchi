@@ -1,11 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
-import {Row, Col, Container, Form, InputGroup, Button, Tab, Nav, Image, Badge} from 'react-bootstrap';
-import ItemsCarousel from './common/ItemsCarousel';
+import {Row, Col, Container, Form, Button, Tab, Nav, Image, Badge} from 'react-bootstrap';
 import GalleryCarousel from './common/GalleryCarousel';
 import CheckoutItem from './common/CheckoutItem';
-import BestSeller from './common/BestSeller';
-import QuickBite from './common/QuickBite';
 import StarRating from './common/StarRating';
 import RatingBar from './common/RatingBar';
 import Review from './common/Review';
@@ -13,11 +10,13 @@ import Icofont from 'react-icofont';
 import {restaurantsService} from "../services/restaurants-service";
 import {imageService} from "../services/image-service";
 import RestaurantInfo from "./ResturantInfo";
+import Order from "./Order";
+import {connect} from "react-redux";
+import {selectRestaurant} from "../actions/select-restaurant";
 
-function Detail() {
+function Detail(props) {
 
     const defaultState = {
-        showAddressModal: false,
         users: [
             {
                 name: 'Osahan Singh',
@@ -47,7 +46,6 @@ function Detail() {
     const [state, setState] = useState(defaultState);
     const [restaurant, setRestaurant] = useState()
 
-    const hideAddressModal = () => setState({showAddressModal: false});
     const getQty = ({id, quantity}) => {
         //console.log(id);
         //console.log(quantity);
@@ -60,10 +58,11 @@ function Detail() {
     useEffect(() => {
             restaurantsService.getRestaurant(id)
                 .then(restaurant => {
+                    props.selectRestaurant(restaurant)
                     setRestaurant(restaurant)
                 })
         },
-        [])
+        [id])
 
     return (
         <>
@@ -151,221 +150,11 @@ function Detail() {
                                             </Tab.Pane>
                                             <Tab.Pane eventKey="second">
                                                 <div className='position-relative'>
-                                                    <GalleryCarousel images={restaurant.photos} />
+                                                    <GalleryCarousel images={restaurant.photos}/>
                                                 </div>
                                             </Tab.Pane>
                                             <Tab.Pane eventKey="third">
-                                                <h5 className="mb-4">Recommended</h5>
-                                                <Form className="explore-outlets-search mb-4">
-                                                    <InputGroup>
-                                                        <Form.Control type="text" placeholder="Search for dishes..."/>
-                                                        <InputGroup.Append>
-                                                            <Button type="button" variant="link">
-                                                                <Icofont icon="search"/>
-                                                            </Button>
-                                                        </InputGroup.Append>
-                                                    </InputGroup>
-                                                </Form>
-                                                <h6 className="mb-3">Most Popular <Badge variant="success"> <Icofont
-                                                    icon="tags"/> 15% Off All Items </Badge></h6>
-                                                <ItemsCarousel/>
-
-                                                <Row>
-                                                    <h5 className="mb-4 mt-3 col-md-12">Best Sellers</h5>
-                                                    <Col md={4} sm={6} className="mb-4">
-                                                        <BestSeller
-                                                            id={1}
-                                                            title='World Famous'
-                                                            subTitle='North Indian • American • Pure veg'
-                                                            imageAlt='Product'
-                                                            image='img/list/1.png'
-                                                            imageClass='img-fluid item-img'
-                                                            price={250}
-                                                            priceUnit='$'
-                                                            isNew={true}
-                                                            showPromoted={true}
-                                                            promotedVariant='dark'
-                                                            favIcoIconColor='text-danger'
-                                                            rating='3.1 (300+)'
-                                                            getValue={getQty}
-                                                        />
-                                                    </Col>
-
-                                                    <Col md={4} sm={6} className="mb-4">
-                                                        <BestSeller
-                                                            id={2}
-                                                            title='The osahan Restaurant'
-                                                            subTitle='North Indian • American • Pure veg'
-                                                            imageAlt='Product'
-                                                            image='img/list/6.png'
-                                                            imageClass='img-fluid item-img'
-                                                            price={250}
-                                                            priceUnit='$'
-                                                            qty={1}
-                                                            showPromoted={true}
-                                                            promotedVariant='dark'
-                                                            favIcoIconColor='text-danger'
-                                                            rating='3.1 (300+)'
-                                                            getValue={getQty}
-                                                        />
-                                                    </Col>
-
-                                                    <Col md={4} sm={6} className="mb-4">
-                                                        <BestSeller
-                                                            id={3}
-                                                            title='Bite Me Sandwiches'
-                                                            subTitle='North Indian • American • Pure veg'
-                                                            imageAlt='Product'
-                                                            image='img/list/3.png'
-                                                            imageClass='img-fluid item-img'
-                                                            price={250}
-                                                            priceUnit='$'
-                                                            showPromoted={true}
-                                                            promotedVariant='dark'
-                                                            favIcoIconColor='text-danger'
-                                                            rating='3.1 (300+)'
-                                                            getValue={getQty}
-                                                        />
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <h5 className="mb-4 mt-3 col-md-12">Quick Bites <small
-                                                        className="h6 text-black-50">3 ITEMS</small></h5>
-                                                    <Col md={12}>
-                                                        <div className="bg-white rounded border shadow-sm mb-4">
-                                                            <QuickBite
-                                                                id={1}
-                                                                title='Chicken Tikka Sub'
-                                                                price={250}
-                                                                priceUnit='$'
-                                                                getValue={getQty}
-                                                            />
-                                                            <QuickBite
-                                                                id={2}
-                                                                title='Cheese corn Roll'
-                                                                price={600}
-                                                                showBadge={true}
-                                                                badgeText='BEST SELLER'
-                                                                qty={1}
-                                                                priceUnit='$'
-                                                                getValue={getQty}
-                                                            />
-                                                            <QuickBite
-                                                                id={3}
-                                                                title='Chicken Tikka Sub'
-                                                                price={250}
-                                                                showBadge={true}
-                                                                badgeText='Pure Veg'
-                                                                badgeVariant="success"
-                                                                qty={2}
-                                                                priceUnit='$'
-                                                                getValue={getQty}
-                                                            />
-                                                        </div>
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <h5 className="mb-4 mt-3 col-md-12">Starters <small
-                                                        className="h6 text-black-50">3 ITEMS</small></h5>
-                                                    <Col md={12}>
-                                                        <div className="bg-white rounded border shadow-sm mb-4">
-                                                            <QuickBite
-                                                                id={1}
-                                                                itemClass="menu-list"
-                                                                image="/img/5.jpg"
-                                                                title='Chicken Tikka Sub'
-                                                                price={250}
-                                                                priceUnit='$'
-                                                                getValue={getQty}
-                                                            />
-                                                            <QuickBite
-                                                                id={2}
-                                                                itemClass="menu-list"
-                                                                title='Cheese corn Roll'
-                                                                image="/img/2.jpg"
-                                                                price={600}
-                                                                showBadge={true}
-                                                                badgeText='BEST SELLER'
-                                                                qty={1}
-                                                                priceUnit='$'
-                                                                getValue={getQty}
-                                                            />
-                                                            <QuickBite
-                                                                id={3}
-                                                                itemClass="menu-list"
-                                                                image="/img/3.jpg"
-                                                                title='Chicken Tikka Sub'
-                                                                price={250}
-                                                                showBadge={true}
-                                                                badgeText='Pure Veg'
-                                                                badgeVariant="success"
-                                                                priceUnit='$'
-                                                                getValue={getQty}
-                                                            />
-                                                        </div>
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <h5 className="mb-4 mt-3 col-md-12">Soups <small
-                                                        className="h6 text-black-50">8 ITEMS</small></h5>
-                                                    <Col md={12}>
-                                                        <div className="bg-white rounded border shadow-sm">
-                                                            <QuickBite
-                                                                id={1}
-                                                                title='Chicken Tikka Sub'
-                                                                price={250}
-                                                                priceUnit='$'
-                                                                getValue={getQty}
-                                                            />
-                                                            <QuickBite
-                                                                id={2}
-                                                                title='Cheese corn Roll'
-                                                                price={600}
-                                                                showBadge={true}
-                                                                badgeText='BEST SELLER'
-                                                                qty={1}
-                                                                priceUnit='$'
-                                                                getValue={getQty}
-                                                            />
-                                                            <QuickBite
-                                                                id={3}
-                                                                title='Chicken Tikka Sub'
-                                                                price={250}
-                                                                showBadge={true}
-                                                                badgeText='Pure Veg'
-                                                                badgeVariant="success"
-                                                                priceUnit='$'
-                                                                getValue={getQty}
-                                                            />
-                                                            <QuickBite
-                                                                id={1}
-                                                                title='Chicken Tikka Sub'
-                                                                price={250}
-                                                                priceUnit='$'
-                                                                getValue={getQty}
-                                                            />
-                                                            <QuickBite
-                                                                id={2}
-                                                                title='Cheese corn Roll'
-                                                                price={600}
-                                                                showBadge={true}
-                                                                badgeText='BEST SELLER'
-                                                                priceUnit='$'
-                                                                getValue={getQty}
-                                                            />
-                                                            <QuickBite
-                                                                id={3}
-                                                                title='Chicken Tikka Sub'
-                                                                price={250}
-                                                                showBadge={true}
-                                                                badgeText='Pure Veg'
-                                                                badgeVariant="success"
-                                                                priceUnit='$'
-                                                                getValue={getQty}
-                                                            />
-                                                        </div>
-                                                    </Col>
-                                                </Row>
+                                                <Order restaurantId={restaurant.id}/>
                                             </Tab.Pane>
                                             <Tab.Pane eventKey="fourth">
                                                 <div id="book-a-table"
@@ -501,18 +290,7 @@ function Detail() {
                                     </div>
                                 </Col>
                                 <Col md={4}>
-                                    <div
-                                        className="bg-white rounded shadow-sm text-white mb-4 p-4 clearfix restaurant-detailed-earn-pts card-icon-overlap">
-                                        <Image fluid className="float-left mr-3" src="/img/earn-score-icon.png"/>
-                                        <h6 className="pt-0 text-primary mb-1 font-weight-bold">OFFER</h6>
-                                        <p className="mb-0">60% off on orders above $99 | Use coupon <span
-                                            className="text-danger font-weight-bold">OSAHAN50</span></p>
-                                        <div className="icon-overlap">
-                                            <Icofont icon="sale-discount"/>
-                                        </div>
-                                    </div>
                                     <div className="generator-bg rounded shadow-sm mb-4 p-4 osahan-cart-item">
-
                                         <h5 className="mb-1 text-white">Your Order
                                         </h5>
                                         <p className="mb-4 text-white">6 Items</p>
@@ -601,5 +379,15 @@ function Detail() {
     );
 }
 
+function mapStateToProps(state) {
+    return {
+    }
+}
 
-export default Detail;
+function mapDispatchToProps(dispatch) {
+    return {
+        selectRestaurant: (restaurant) => dispatch(selectRestaurant(restaurant))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Detail);
