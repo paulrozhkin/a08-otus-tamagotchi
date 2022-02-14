@@ -23,12 +23,19 @@ const orderReducer = (state = initialOrder, {type, ...rest}) => {
             const menuItem = rest.payload.menuItem
             const count = rest.payload.count
             const menu = state.menu
-            let newMenu = menu.filter(item => item.menuItem.id !== menuItem.id)
-
+            let newMenu
             if (count > 0) {
-                newMenu = [...newMenu, {menuItem, count}]
+                const menuItemList = menu.filter(item => item.menuItem.id === menuItem.id)
+                if (menuItemList.length > 0) {
+                    menuItemList[0].count = count
+                    newMenu = [...menu]
+                } else {
+                    newMenu = [...menu, {menuItem, count}]
+                }
+            } else {
+                newMenu = menu.filter(item => item.menuItem.id !== menuItem.id)
             }
-            console.log(newMenu)
+
             return {
                 ...state,
                 menu: newMenu,

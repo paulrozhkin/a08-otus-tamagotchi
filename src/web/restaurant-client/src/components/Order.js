@@ -31,6 +31,21 @@ function Order(props) {
             })
     }, [restaurantId])
 
+    useEffect(() => {
+        for (let i = 0; i < menu.length; i++) {
+            const menuItem = menu[i]
+            const menuItemInOrder = props.menu.filter(x => x.menuItem.id === menuItem.id)
+            if (menuItemInOrder.length > 0) {
+                menuItem.count = menuItemInOrder[0].count
+            } else {
+                menuItem.count = 0
+            }
+        }
+
+        setMenu([...menu])
+    }, [props.menu]);
+
+
     const getQty = ({id, quantity}) => {
         props.updateMenu(menu.filter(x => x.id === id)[0], quantity)
     }
@@ -62,7 +77,7 @@ function Order(props) {
                                 image={imageService.getUrlById(menuItem.dish.photos[0])}
                                 imageClass="img-responsive menu-image"
                                 getValue={getQty}
-                                qty={props.count}
+                                qty={menuItem.count}
                                 description={menuItem.dish.description}
                             />
                         </div>))

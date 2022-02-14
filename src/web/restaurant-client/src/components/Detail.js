@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
 import {Row, Col, Container, Form, Button, Tab, Nav, Image, Badge} from 'react-bootstrap';
 import GalleryCarousel from './common/GalleryCarousel';
-import CheckoutItem from './common/CheckoutItem';
 import StarRating from './common/StarRating';
 import RatingBar from './common/RatingBar';
 import Review from './common/Review';
@@ -13,6 +12,7 @@ import RestaurantInfo from "./ResturantInfo";
 import Order from "./Order";
 import {connect} from "react-redux";
 import {selectRestaurant} from "../actions/select-restaurant";
+import OrderCart from "./OrderCart";
 
 function Detail(props) {
 
@@ -43,13 +43,9 @@ function Detail(props) {
 
     const {id} = useParams()
 
-    const [state, setState] = useState(defaultState);
+    const [state] = useState(defaultState);
     const [restaurant, setRestaurant] = useState()
 
-    const getQty = ({id, quantity}) => {
-        //console.log(id);
-        //console.log(quantity);
-    }
     const getStarValue = ({value}) => {
         console.log(value);
         //console.log(quantity);
@@ -290,84 +286,7 @@ function Detail(props) {
                                     </div>
                                 </Col>
                                 <Col md={4}>
-                                    <div className="generator-bg rounded shadow-sm mb-4 p-4 osahan-cart-item">
-                                        <h5 className="mb-1 text-white">Your Order
-                                        </h5>
-                                        <p className="mb-4 text-white">6 Items</p>
-                                        <div className="bg-white rounded shadow-sm mb-2">
-                                            <CheckoutItem
-                                                itemName="Chicken Tikka Sub"
-                                                price={314}
-                                                priceUnit="$"
-                                                id={1}
-                                                qty={2}
-                                                show={true}
-                                                minValue={0}
-                                                maxValue={7}
-                                                getValue={getQty}
-                                            />
-                                            <CheckoutItem
-                                                itemName="Cheese corn Roll"
-                                                price={260}
-                                                priceUnit="$"
-                                                id={2}
-                                                qty={1}
-                                                show={true}
-                                                minValue={0}
-                                                maxValue={7}
-                                                getValue={getQty}
-                                            />
-                                            <CheckoutItem
-                                                itemName="Mixed Veg"
-                                                price={122}
-                                                priceUnit="$"
-                                                id={3}
-                                                qty={1}
-                                                show={true}
-                                                minValue={0}
-                                                maxValue={7}
-                                                getValue={getQty}
-                                            />
-                                            <CheckoutItem
-                                                itemName="Black Dal Makhani"
-                                                price={652}
-                                                priceUnit="$"
-                                                id={1}
-                                                qty={1}
-                                                show={true}
-                                                minValue={0}
-                                                maxValue={7}
-                                                getValue={getQty}
-                                            />
-                                            <CheckoutItem
-                                                itemName="Mixed Veg"
-                                                price={122}
-                                                priceUnit="$"
-                                                id={4}
-                                                qty={1}
-                                                show={true}
-                                                minValue={0}
-                                                maxValue={7}
-                                                getValue={getQty}
-                                            />
-
-                                        </div>
-                                        <div className="mb-2 bg-white rounded p-2 clearfix">
-                                            <Image fluid className="float-left" src="/img/wallet-icon.png"/>
-                                            <h6 className="font-weight-bold text-right mb-2">Subtotal : <span
-                                                className="text-danger">$456.4</span></h6>
-                                            <p className="seven-color mb-1 text-right">Extra charges may apply</p>
-                                            <p className="text-black mb-0 text-right">You have saved $955 on the
-                                                bill</p>
-                                        </div>
-                                        <Link to="/thanks" className="btn btn-success btn-block btn-lg">Checkout
-                                            <Icofont icon="long-arrow-right"/></Link>
-                                        <div className="pt-2"></div>
-                                        <div className="alert alert-success" role="alert">
-                                            You have saved <strong>$1,884</strong> on the bill
-                                        </div>
-                                        <div className="pt-2"></div>
-                                    </div>
+                                    <OrderCart/>
                                 </Col>
                             </Row>
                         </Container>
@@ -380,8 +299,7 @@ function Detail(props) {
 }
 
 function mapStateToProps(state) {
-    return {
-    }
+    return {}
 }
 
 function mapDispatchToProps(dispatch) {
