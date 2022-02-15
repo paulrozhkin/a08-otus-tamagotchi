@@ -13,6 +13,7 @@ import Order from "./Order";
 import {connect} from "react-redux";
 import {selectRestaurant} from "../actions/select-restaurant";
 import OrderCart from "./OrderCart";
+import ClientBookInformation from "./ClientBookInformation";
 
 function Detail(props) {
 
@@ -153,47 +154,7 @@ function Detail(props) {
                                                 <Order restaurantId={restaurant.id}/>
                                             </Tab.Pane>
                                             <Tab.Pane eventKey="fourth">
-                                                <div id="book-a-table"
-                                                     className="bg-white rounded shadow-sm p-4 mb-5 rating-review-select-page">
-                                                    <h5 className="mb-4">Book A Table</h5>
-                                                    <Form>
-                                                        <Row>
-                                                            <Col sm={6}>
-                                                                <Form.Group>
-                                                                    <Form.Label>Full Name</Form.Label>
-                                                                    <Form.Control type="text"
-                                                                                  placeholder="Enter Full Name"/>
-                                                                </Form.Group>
-                                                            </Col>
-                                                            <Col sm={6}>
-                                                                <Form.Group>
-                                                                    <Form.Label>Email Address</Form.Label>
-                                                                    <Form.Control type="text"
-                                                                                  placeholder="Enter Email address"/>
-                                                                </Form.Group>
-                                                            </Col>
-                                                        </Row>
-                                                        <Row>
-                                                            <Col sm={6}>
-                                                                <Form.Group>
-                                                                    <Form.Label>Mobile number</Form.Label>
-                                                                    <Form.Control type="text"
-                                                                                  placeholder="Enter Mobile number"/>
-                                                                </Form.Group>
-                                                            </Col>
-                                                            <Col sm={6}>
-                                                                <Form.Group>
-                                                                    <Form.Label>Date And Time</Form.Label>
-                                                                    <Form.Control type="text"
-                                                                                  placeholder="Enter Date And Time"/>
-                                                                </Form.Group>
-                                                            </Col>
-                                                        </Row>
-                                                        <Form.Group className="text-right">
-                                                            <Button variant="primary" type="button"> Submit </Button>
-                                                        </Form.Group>
-                                                    </Form>
-                                                </div>
+                                                <ClientBookInformation />
                                             </Tab.Pane>
                                             <Tab.Pane eventKey="fifth">
                                                 <div id="ratings-and-reviews"

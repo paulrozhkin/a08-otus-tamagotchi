@@ -4,7 +4,6 @@ const initialOrder = {
     numberOfPersons: 0,
     visitTime: null,
     comment: null,
-    email: null,
     isRestaurantSet: false,
     isMenuSet: false,
     isBookInfoSet: false
@@ -45,9 +44,8 @@ const orderReducer = (state = initialOrder, {type, ...rest}) => {
             return {
                 ...state,
                 numberOfPersons: rest.payload.numberOfPersons,
-                visitTime: rest.payload.numberOfPersons,
-                comment: rest.payload.numberOfPersons,
-                email: rest.payload.numberOfPersons,
+                visitTime: rest.payload.visitTime,
+                comment: rest.payload.comment,
                 isBookInfoSet: !!rest.payload
             }
         default:

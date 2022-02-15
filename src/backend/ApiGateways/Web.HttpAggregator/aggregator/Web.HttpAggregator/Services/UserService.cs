@@ -147,7 +147,7 @@ public class UserService : IUserService
 
         var userClaims = new List<Claim>()
         {
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.NameIdentifier, user.Id),
             new(ClaimTypes.Name, user.UserName),
             new(ClaimTypes.Surname, user.Name)
         };
