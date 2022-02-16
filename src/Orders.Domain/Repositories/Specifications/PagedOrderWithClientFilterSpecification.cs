@@ -11,6 +11,7 @@ namespace Orders.Domain.Repositories.Specifications
         {
             ApplyOrderBy(x => x.CreatedDate);
             ApplyPaging(pageNumber, pageSize);
+            AddInclude(x => x.Menu);
         }
     }
 }

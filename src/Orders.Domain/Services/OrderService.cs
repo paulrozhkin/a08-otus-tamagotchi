@@ -28,7 +28,7 @@ namespace Orders.Domain.Services
         {
             var paginationSpecification = new PagedOrderWithClientFilterSpecification(clientId, pageNumber, pageSize);
             var orders = (await _restaurantsRepository.FindAsync(paginationSpecification)).ToList();
-            var totalCount = await _restaurantsRepository.CountAsync();
+            var totalCount = await _restaurantsRepository.CountAsync(x => x.ClientId == clientId);
 
             return new PagedList<Order>(orders, totalCount, pageNumber, pageSize);
         }

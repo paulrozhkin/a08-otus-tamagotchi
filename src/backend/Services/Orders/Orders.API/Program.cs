@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Infrastructure.Core.Config;
+using Infrastructure.Core.Extensions;
 using Microsoft.Extensions.Configuration;
+using Orders.Infrastructure.Repository;
 
 namespace Orders.API
 {
@@ -9,7 +11,7 @@ namespace Orders.API
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().MigrateDatabase<OrdersDataContext>().Run();
         }
 
         // Additional configuration is required to successfully run gRPC on macOS.

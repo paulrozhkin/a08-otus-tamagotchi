@@ -1,55 +1,89 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import OrderCard from '../common/OrderCard';
+import {ordersService} from "../../services/orders-service";
+import {imageService} from "../../services/image-service";
 
-class Orders extends React.Component {
+function Orders() {
 
-	render() {
-    	return (
-    		<>
-    		    <div className='p-4 bg-white shadow-sm'>
-	              <h4 className="font-weight-bold mt-0 mb-4">Past Orders</h4>
-			      <OrderCard
-			      	image='/img/3.jpg'
-			      	imageAlt=''
-			      	orderNumber='25102589748'
-			      	orderDate='Mon, Nov 12, 6:26 PM'
-			      	deliveredDate='Mon, Nov 12, 7:18 PM'
-			      	orderTitle="Gus's World Famous Fried Chicken"
-			      	address='730 S Mendenhall Rd, Memphis, TN 38117, USA'
-			      	orderProducts='Veg Masala Roll x 1, Veg Burger x 1, Veg Penne Pasta in Red Sauce x 1'
-			      	orderTotal='$300' 
-			      	helpLink='#'
-			      	detailLink='/detail' 
-			      />
-			      <OrderCard
-			      	image='/img/4.jpg'
-			      	imageAlt=''
-			      	orderNumber='25102589748'
-			      	orderDate='Mon, Nov 12, 6:26 PM'
-			      	deliveredDate='Mon, Nov 12, 7:18 PM'
-			      	orderTitle="Jimmy's Famous American Tavern"
-			      	address='730 S Mendenhall Rd, Memphis, TN 38117, USA'
-			      	orderProducts='Veg Masala Roll x 1, Veg Burger x 1, Veg Penne Pasta in Red Sauce x 1'
-			      	orderTotal='$300' 
-			      	helpLink='#'
-			      	detailLink='/detail' 
-			      />
-			      <OrderCard
-			      	image='/img/5.jpg'
-			      	imageAlt=''
-			      	orderNumber='25102589748'
-			      	orderDate='Mon, Nov 12, 6:26 PM'
-			      	deliveredDate='Mon, Nov 12, 7:18 PM'
-			      	orderTitle="The Famous Restaurant"
-			      	address='730 S Mendenhall Rd, Memphis, TN 38117, USA'
-			      	orderProducts='Veg Masala Roll x 1, Veg Burger x 1, Veg Penne Pasta in Red Sauce x 1'
-			      	orderTotal='$300' 
-			      	helpLink='#'
-			      	detailLink='/detail' 
-			      />
-			    </div>
-		    </>
-    	);
-    }
+	const [orders, setOrders] = useState([])
+	const [isLoaded, setIsLoaded] = useState(false)
+
+    useEffect(() => {
+		ordersService.getAccountOrders().then(orders => {
+			setOrders(orders.reverse())
+			setIsLoaded(true)
+		})
+    }, [])
+
+	function getDateTimeForUser(isoDateTime) {
+		const date = new Date(isoDateTime)
+		return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+	}
+
+	function getMenuFromOrder(order) {
+		return order.menu.map(x => `${x.menuItem.dish.name} x ${x.count}`).join()
+	}
+
+	function mapOrderStatusToText(orderStatus) {
+		switch (orderStatus) {
+			case "Created":
+				return "Принят"
+			case "Wait":
+				return "Поступил на кухню"
+			case "Work":
+				return "Готовится"
+			case "Ready":
+				return "Готов"
+			case "Completed":
+				return "Завершен"
+			case "Skipped":
+				return "Вы не явились"
+		}
+	}
+
+	function mapOrderStatusToVariant(orderStatus) {
+		switch (orderStatus) {
+			case "Created":
+				return "info"
+			case "Wait":
+				return "warning"
+			case "Work":
+				return "warning"
+			case "Ready":
+				return "warning"
+			case "Completed":
+				return "success"
+			case "Skipped":
+				return "danger"
+		}
+	}
+
+    return (
+        <>
+            <div className='p-4 bg-white shadow-sm'>
+                <h4 className="font-weight-bold mt-0 mb-4">Заказы</h4>
+				{!isLoaded && <p>Загрузка...</p>}
+				{isLoaded && orders.length === 0 && <p>Заказов нет</p>}
+				{orders.length > 0 && orders.map(order =>
+					(<OrderCard
+						image={imageService.getUrlById(order.restaurant.photos[0])}
+						imageAlt='Фото ресторана'
+						orderNumber={order.id}
+						orderDate={getDateTimeForUser(order.createdTime)}
+						deliveredDate={getDateTimeForUser(order.visitTime)}
+						orderTitle={`Заказ в ${order.restaurant.title}`}
+						address={order.restaurant.address}
+						orderProducts={getMenuFromOrder(order)}
+						orderTotal={`₽${order.amountRubles}`}
+						helpLink='#'
+						detailLink='#'
+						orderState={mapOrderStatusToText(order.orderStatus)}
+						orderStateVariant={mapOrderStatusToVariant(order.orderStatus)}
+					/>)
+				)}
+            </div>
+        </>
+    );
 }
+
 export default Orders;

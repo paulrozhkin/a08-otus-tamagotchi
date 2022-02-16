@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Web.HttpAggregator.Models;
 
@@ -7,7 +8,7 @@ public class OrderResponse
 {
     public Guid Id { get; set; }
 
-    public Guid RestaurantId { get; set; }
+    public RestaurantResponse Restaurant { get; set; }
 
     public List<OrderPositionResponse> Menu { get; set; }
 
@@ -19,7 +20,10 @@ public class OrderResponse
 
     public int AmountRubles { get; set; }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderStatus OrderStatus { get; set; }
+
+    public DateTime CreatedTime { get; set; }
 }
 
 public enum OrderStatus
@@ -28,5 +32,6 @@ public enum OrderStatus
     Wait,
     Work,
     Ready,
-    Completed
+    Completed,
+    Skipped
 }

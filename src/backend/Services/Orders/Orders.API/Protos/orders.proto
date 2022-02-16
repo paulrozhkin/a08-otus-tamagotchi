@@ -2,8 +2,6 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Orders.API";
-
 package orders_api;
 
 service Orders {

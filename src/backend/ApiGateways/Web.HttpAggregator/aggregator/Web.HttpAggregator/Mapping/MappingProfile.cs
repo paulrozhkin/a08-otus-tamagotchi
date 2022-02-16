@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
 using DishesApi;
+using Google.Protobuf.WellKnownTypes;
 using Infrastructure.Core.Messages.OrderQueueMessages;
 using Infrastructure.Core.Messages.ResourcesMessages;
 using MenuApi;
+using OrdersApi;
 using ResourcesApi;
 using TablesApi;
 using RestaurantsApi;
 using UsersApi;
 using Web.HttpAggregator.Models;
 using Web.HttpAggregator.Models.OrderQueue;
+using Menu = OrdersApi.Menu;
 using MenuItemResponse = Web.HttpAggregator.Models.MenuItemResponse;
 
 namespace Web.HttpAggregator.Mapping
@@ -76,6 +79,24 @@ namespace Web.HttpAggregator.Mapping
             CreateMap<GetUsersResponse, PaginationResponse<UserResponse>>()
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Users));
 
+            CreateMap<Models.OrderPositionRequest, Menu>();
+            CreateMap<Menu, Models.OrderPositionRequest>();
+            CreateMap<Models.OrderRequest, Order>()
+                .ForMember(dest => dest.VisitTime, opt => opt.MapFrom(src => Timestamp.FromDateTime(src.VisitTime)))
+                .ForMember(dest => dest.AmountRubles, opt => opt.Ignore())
+                .ForMember(dest => dest.Status, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.ClientId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedDate, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore());
+            CreateMap<Order, OrderResponse>()
+                .ForMember(dest => dest.VisitTime, opt => opt.MapFrom(src => src.VisitTime.ToDateTime()))
+                .ForMember(dest => dest.OrderStatus, opt => opt.Ignore())
+                .ForMember(dest => dest.Menu, opt => opt.Ignore())
+                .ForMember(dest => dest.Restaurant, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedTime, opt => opt.MapFrom(src => src.CreatedDate.ToDateTime()));
+            CreateMap<GetOrdersResponse, PaginationResponse<OrderResponse>>()
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Orders));
         }
     }
 }

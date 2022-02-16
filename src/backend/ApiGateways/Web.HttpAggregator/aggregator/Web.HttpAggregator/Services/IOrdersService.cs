@@ -1,5 +1,4 @@
 ﻿using System;
-using Orders.API;
 using System.Threading.Tasks;
 using Web.HttpAggregator.Models;
 

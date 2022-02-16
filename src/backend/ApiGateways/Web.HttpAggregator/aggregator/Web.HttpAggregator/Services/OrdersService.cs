@@ -6,27 +6,30 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain.Core.Exceptions;
 using Grpc.Core;
-using Orders.API;
+using OrdersApi;
 using Web.HttpAggregator.Models;
-using static Orders.API.Orders;
-using OrderStatus = Orders.API.OrderStatus;
+using OrderStatus = Web.HttpAggregator.Models.OrderStatus;
 
 namespace Web.HttpAggregator.Services
 {
     public class OrdersService : IOrdersService
     {
-        private readonly OrdersClient _ordersClient;
+        private readonly Orders.OrdersClient _ordersClient;
         private ILogger<OrdersService> _logger;
         private readonly IMapper _mapper;
         private readonly IMenuService _menuService;
+        private readonly IRestaurantsService _restaurantsService;
 
-        public OrdersService(OrdersClient ordersClient, ILogger<OrdersService> logger, IMapper mapper,
-            IMenuService menuService)
+        public OrdersService(Orders.OrdersClient ordersClient, 
+            ILogger<OrdersService> logger, IMapper mapper,
+            IMenuService menuService,
+            IRestaurantsService restaurantsService)
         {
             _ordersClient = ordersClient;
             _logger = logger;
             _mapper = mapper;
             _menuService = menuService;
+            _restaurantsService = restaurantsService;
         }
 
         public async Task<PaginationResponse<OrderResponse>> GetOrdersAsync(int pageNumber, int pageSize, Guid userId)
@@ -42,11 +45,13 @@ namespace Web.HttpAggregator.Services
             var orders = _mapper.Map<PaginationResponse<OrderResponse>>(ordersResponse);
 
             var menus = new Dictionary<string, MenuItemResponse>();
+            var restaurants = new Dictionary<string, RestaurantResponse>();
+
             foreach (var orderDto in ordersResponse.Orders)
             {
                 var orderId = Guid.Parse(orderDto.Id);
                 var orderResponse = orders.Items.First(x => x.Id == orderId);
-                await FillRestaurantResponse(orderDto, orderResponse, menus);
+                await FillRestaurantResponse(orderDto, orderResponse, menus, restaurants);
             }
 
             return orders;
@@ -65,7 +70,9 @@ namespace Web.HttpAggregator.Services
 
                 var result = _mapper.Map<OrderResponse>(orderResponse.Order);
                 var menus = new Dictionary<string, MenuItemResponse>();
-                await FillRestaurantResponse(orderResponse.Order, result, menus);
+                var restaurants = new Dictionary<string, RestaurantResponse>();
+
+                await FillRestaurantResponse(orderResponse.Order, result, menus, restaurants);
 
                 return result;
             }
@@ -75,9 +82,13 @@ namespace Web.HttpAggregator.Services
             }
         }
 
-        private async Task FillRestaurantResponse(Order orderDto, OrderResponse orderResponse,
-            IDictionary<string, MenuItemResponse> menus)
+        // TODO: Store order in NoSQL
+        private async Task FillRestaurantResponse(Order orderDto,
+            OrderResponse orderResponse,
+            IDictionary<string, MenuItemResponse> menus,
+            IDictionary<string, RestaurantResponse> restaurants)
         {
+            orderResponse.Menu = new List<OrderPositionResponse>();
             foreach (var menuItem in orderDto.Menu)
             {
                 if (!menus.ContainsKey(menuItem.Id))
@@ -94,16 +105,24 @@ namespace Web.HttpAggregator.Services
                 });
             }
 
+            if (!restaurants.ContainsKey(orderDto.RestaurantId))
+            {
+                var restaurantItemCache = await _restaurantsService.GetRestaurantByIdAsync(Guid.Parse(orderDto.RestaurantId));
+                restaurants.Add(orderDto.RestaurantId, restaurantItemCache);
+            }
+
+            orderResponse.Restaurant = restaurants[orderDto.RestaurantId];
+
             switch (orderDto.Status)
             {
-                case OrderStatus.Created:
-                    orderResponse.OrderStatus = Models.OrderStatus.Created;
+                case OrdersApi.OrderStatus.Created:
+                    orderResponse.OrderStatus = OrderStatus.Created;
                     break;
-                case OrderStatus.Service:
+                case OrdersApi.OrderStatus.Service:
                     // TODO: invoke service
                     break;
-                case OrderStatus.Completed:
-                    orderResponse.OrderStatus = Models.OrderStatus.Completed;
+                case OrdersApi.OrderStatus.Completed:
+                    orderResponse.OrderStatus = OrderStatus.Completed;
                     break;
             }
         }
