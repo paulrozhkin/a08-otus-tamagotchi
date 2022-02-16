@@ -27,10 +27,11 @@ namespace Orders.API.Services
         public override async Task<BookRestauranResponse> BookRestaurant(BookRestauranRequest request,
             ServerCallContext context)
         {
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:new-kitchen-order"));
-            await endpoint.Send(_mapper.Map<NewKitchenOrderMessage>(request));
+            throw new NotImplementedException();
+            //var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:new-kitchen-order"));
+            //await endpoint.Send(_mapper.Map<NewKitchenOrderMessage>(request));
 
-            return new BookRestauranResponse {RestaurantId = request.RestaurantId};
+            //return new BookRestauranResponse {RestaurantId = request.RestaurantId};
         }
     }
 }

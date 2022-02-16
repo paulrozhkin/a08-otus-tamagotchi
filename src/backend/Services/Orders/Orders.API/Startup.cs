@@ -1,4 +1,7 @@
-﻿using Infrastructure.Core.Config;
+﻿using System;
+using Infrastructure.Core.Config;
+using Infrastructure.Core.Extensions;
+using Infrastructure.Core.Grpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,7 +10,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Orders.API.Config;
 using Orders.API.Services;
+using Orders.Domain.Services;
+using Orders.Infrastructure.Repository;
 
 namespace Orders.API
 {
@@ -33,6 +40,13 @@ namespace Orders.API
             services.AddMassTransitHostedService();
 
             services.AddGrpc();
+
+            services.Configure<OrdersOptions>(_configuration.GetSection(OrdersOptions.Orders));
+
+            services.AddMenuService(_configuration);
+
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddDataAccess<OrdersDataContext>(_configuration.GetConnectionString("OrdersDb"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +72,25 @@ namespace Orders.API
                             "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                     });
             });
+        }
+    }
+
+    public static class GrpcServiceCollectionExtensions
+    {
+        public static IServiceCollection AddMenuService(this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.AddTransient<GrpcExceptionInterceptor>();
+
+            services.AddScoped<IMenuAmountService, MenuAmountService>();
+
+            services.AddGrpcClient<MenuApi.Menu.MenuClient>((serviceProvider, options) =>
+            {
+                var menuApi = serviceProvider.GetRequiredService<IOptions<OrdersOptions>>().Value.MenuGrpc;
+                options.Address = new Uri(menuApi);
+            }).AddInterceptor<GrpcExceptionInterceptor>();
+
+            return services;
         }
     }
 }

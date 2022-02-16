@@ -4,7 +4,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Web.HttpAggregator.Models;
+using Web.HttpAggregator.Models.QueryParameters;
 using Web.HttpAggregator.Services;
 
 namespace Web.HttpAggregator.Controllers
@@ -24,6 +26,15 @@ namespace Web.HttpAggregator.Controllers
             _ordersService = ordersService;
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<OrderResponse>))]
+        public async Task<ActionResult> GetOrdersAsync(
+            [FromQuery] QueryStringParameters parameters)
+        {
+            //var dishes = await _dishesService.GetDishesAsync(parameters.PageNumber, parameters.PageSize);
+            //return Ok(dishes);
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Order table in selected restaurant
@@ -32,16 +43,18 @@ namespace Web.HttpAggregator.Controllers
         [HttpPost]
         public async Task<ActionResult> OrderAsync([FromBody] OrderRequest orderRequest)
         {
-            try
-            {
-                var userId = HttpContext.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
-                //await _ordersService.BookRestaurantAsync(orderRequest.RestaurantId);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            throw new NotImplementedException();
+
+            //try
+            //{
+            //    var userId = HttpContext.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            //    await _ordersService.BookRestaurantAsync(orderRequest);
+            //    return Ok();
+            //}
+            //catch (Exception)
+            //{
+            //    return BadRequest();
+            //}
         }
     }
 }

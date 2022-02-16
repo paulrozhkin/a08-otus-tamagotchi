@@ -1,4 +1,6 @@
 syntax = "proto3";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "Orders.API";
 
@@ -6,12 +8,51 @@ package orders_api;
 
 service Orders {
   rpc BookRestaurant (BookRestauranRequest) returns (BookRestauranResponse);
+  rpc GetOrders (GetOrdersRequest) returns (GetOrdersResponse);
+}
+
+message GetOrdersRequest {
+	int32 page_number = 1;
+	int32 page_size = 2;
+	string user_id =3;
+}
+
+message GetOrdersResponse {
+	int32 current_page = 1;
+	int32 page_size = 2;
+	int32 total_count = 3;
+	repeated Order orders = 4;
 }
 
 message BookRestauranRequest {
-  string restaurantId = 1;
+  Order Order = 1;
 }
 
 message BookRestauranResponse {
-  string restaurantId = 1;
+  Order Order = 1;
+}
+
+enum OrderStatus {
+    ORDER_STATUS_CREATED = 0;
+	ORDER_STATUS_SERVICE = 1;
+    ORDER_STATUS_COMPLETED = 2;
+}
+
+message Menu {
+	string id = 1;
+	int32 count = 2;
+}
+
+message Order {
+	string id = 1;
+	string restaurant_id = 2;
+	int32 number_of_persons = 3;
+	google.protobuf.Timestamp visit_time = 4;
+	string comment = 5;
+	int32 amount_rubles = 6;
+	OrderStatus status = 7;
+	string client_id = 8;
+	repeated Menu menu = 9;
+	google.protobuf.Timestamp updated_date = 10;
+	google.protobuf.Timestamp created_date = 11;
 }

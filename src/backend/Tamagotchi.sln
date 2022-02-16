@@ -103,15 +103,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resources.UnitTests", "Serv
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Users", "Users", "{88C6998D-FB3E-4518-B9C8-61581CCBA737}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.API", "Services\Users\Users.API\Users.API.csproj", "{6026C543-02EC-4BC3-8F51-CF466F169317}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Users.API", "Services\Users\Users.API\Users.API.csproj", "{6026C543-02EC-4BC3-8F51-CF466F169317}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.Domain", "Services\Users\Users.Domain\Users.Domain.csproj", "{87923CC2-B56A-4698-9782-87C287AF864B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Users.Domain", "Services\Users\Users.Domain\Users.Domain.csproj", "{87923CC2-B56A-4698-9782-87C287AF864B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.Infrastructure", "Services\Users\Users.Infrastructure\Users.Infrastructure.csproj", "{C427749E-6473-44C0-9F85-D788FA68E35B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Users.Infrastructure", "Services\Users\Users.Infrastructure\Users.Infrastructure.csproj", "{C427749E-6473-44C0-9F85-D788FA68E35B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D6C8746C-C7EB-48B7-81F8-242299387838}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.UnitTests", "Services\Users\Tests\Users.UnitTests\Users.UnitTests.csproj", "{D5DE89E8-16C3-4D4A-BF09-39CD00C8DFB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Users.UnitTests", "Services\Users\Tests\Users.UnitTests\Users.UnitTests.csproj", "{D5DE89E8-16C3-4D4A-BF09-39CD00C8DFB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.Domain", "..\Orders.Domain\Orders.Domain.csproj", "{A34E9357-486C-44F9-AC99-A909F06D382A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.Infrastructure", "..\Orders.Infrastructure\Orders.Infrastructure.csproj", "{F2800BC6-0A13-419D-BE22-7A9FF1632F2E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -247,6 +251,14 @@ Global
 		{D5DE89E8-16C3-4D4A-BF09-39CD00C8DFB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5DE89E8-16C3-4D4A-BF09-39CD00C8DFB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5DE89E8-16C3-4D4A-BF09-39CD00C8DFB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A34E9357-486C-44F9-AC99-A909F06D382A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A34E9357-486C-44F9-AC99-A909F06D382A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A34E9357-486C-44F9-AC99-A909F06D382A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A34E9357-486C-44F9-AC99-A909F06D382A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2800BC6-0A13-419D-BE22-7A9FF1632F2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2800BC6-0A13-419D-BE22-7A9FF1632F2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2800BC6-0A13-419D-BE22-7A9FF1632F2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2800BC6-0A13-419D-BE22-7A9FF1632F2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -304,6 +316,8 @@ Global
 		{C427749E-6473-44C0-9F85-D788FA68E35B} = {88C6998D-FB3E-4518-B9C8-61581CCBA737}
 		{D6C8746C-C7EB-48B7-81F8-242299387838} = {88C6998D-FB3E-4518-B9C8-61581CCBA737}
 		{D5DE89E8-16C3-4D4A-BF09-39CD00C8DFB5} = {D6C8746C-C7EB-48B7-81F8-242299387838}
+		{A34E9357-486C-44F9-AC99-A909F06D382A} = {AB97B6DD-AC1D-4A89-9920-7D40D8DA6E26}
+		{F2800BC6-0A13-419D-BE22-7A9FF1632F2E} = {AB97B6DD-AC1D-4A89-9920-7D40D8DA6E26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E6920DB2-90AF-40B7-BB52-EEA169E4CD74}

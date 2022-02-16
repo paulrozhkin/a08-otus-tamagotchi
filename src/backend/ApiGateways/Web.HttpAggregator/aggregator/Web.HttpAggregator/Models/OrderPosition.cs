@@ -1,8 +1,9 @@
 ﻿using System;
+using DishesApi;
 
 namespace Web.HttpAggregator.Models;
 
-public class OrderPosition
+public class OrderPositionRequest
 {
     public Guid Id { get; set; }
 

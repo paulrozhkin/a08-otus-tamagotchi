@@ -15,6 +15,12 @@ message KitchenOrder {
 	string create_date = 4;
 }
 
+enum KitchenStatus {
+	KITCHEN_STATUS_WAIT = 0;
+    KITCHEN_STATUS_WORK = 1;
+    KITCHEN_STATUS_READY = 2;
+}
+
 message GetKitchenOrdersRequest {
 }
 
