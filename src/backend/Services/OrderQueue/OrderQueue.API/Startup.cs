@@ -40,11 +40,15 @@ namespace OrderQueue.API
             services.AddMassTransit(config =>
             {
                 config.AddConsumer<NewKitchenOrderConsumer>();
+                config.AddConsumer<NewKitchenStatusConsumer>();
+
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
                     cfg.Host(_configuration["RabbitMq:Host"]);
                     cfg.ReceiveEndpoint("new-kitchen-order",
                         c => { c.ConfigureConsumer<NewKitchenOrderConsumer>(ctx); });
+                    cfg.ReceiveEndpoint("new-status",
+                        c => { c.ConfigureConsumer<NewKitchenStatusConsumer>(ctx); });
                 });
             });
 

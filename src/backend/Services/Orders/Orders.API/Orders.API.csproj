@@ -10,20 +10,31 @@
 
   <ItemGroup>
     <Protobuf Include="Protos\orders.proto" GrpcServices="Server" />
+    <Protobuf Include="..\..\..\Services\Menu\Menu.API\Protos\dishes.proto" GrpcService="Client" Link="Protos\dishes.proto" />
+    <Protobuf Include="..\..\..\Services\Menu\Menu.API\Protos\menu.proto" GrpcService="Client" Link="Protos\menu.proto" ProtoRoot="..\..\..\Services\Menu\Menu.API\Protos" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.28" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.28" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.9.6" />
     <PackageReference Include="MassTransit" Version="7.2.4" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.2.4" />
     <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.2.4" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Orders.Domain\Orders.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Orders.Infrastructure\Orders.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\Core\Infrastructure.Core\Infrastructure.Core.csproj" />
   </ItemGroup>
 

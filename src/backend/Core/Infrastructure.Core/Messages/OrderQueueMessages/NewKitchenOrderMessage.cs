@@ -2,8 +2,10 @@
 
 namespace Infrastructure.Core.Messages.OrderQueueMessages
 {
-    public class NewKitchenOrderMessage
+    public class NewKitchenStatusMessage
     {
         public Guid OrderId { get; set; }
+
+        public string NewStatus { get; set; }
     }
 }

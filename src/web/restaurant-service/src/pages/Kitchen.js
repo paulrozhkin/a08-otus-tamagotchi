@@ -1,20 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {Container} from "react-bootstrap";
+import {Container, ListGroup} from "react-bootstrap";
 import {HubConnectionBuilder} from "@microsoft/signalr";
 import {BASE_URL, KITCHEN_ORDER_HUB_URL} from "../config";
 import axios from "axios";
+import Order from "./Order";
 
 const Kitchen = () => {
     const [connection, setConnection] = useState(null);
     const [orders, setOrders] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(() => {
-        axios.get(BASE_URL + "api/v1/OrderQueue")
+        axios.get("/OrderQueue")
             .then(res => {
-                const newOrders = res.data.map((order) => {
-                    return { id: order.id, createTime: order.createTime };
-                });
-                setOrders(newOrders);
+                setIsLoaded(true)
+                setOrders(res.data);
             })
             .catch(e => console.log(e.message()));
     }, []);
@@ -45,24 +45,11 @@ const Kitchen = () => {
 
     return (
         <Container>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Номер заказа</th>
-                        <th>Время создания</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {
-                    orders.map((order, idx) => (
-                      <tr key={idx}>
-                          <td>{order.id}</td>
-                          <td>{order.createTime}</td>
-                      </tr>
-                    ))
-                }
-                </tbody>
-            </table>
+            {!isLoaded && <p>Загрузка...</p>}
+            {isLoaded && orders.length === 0 && <p>Активные заказы отсутсвуют</p>}
+            <ListGroup>
+                {orders.map(order => (<Order key={order.id} order={order} />))}
+            </ListGroup>
         </Container>
     );
 }

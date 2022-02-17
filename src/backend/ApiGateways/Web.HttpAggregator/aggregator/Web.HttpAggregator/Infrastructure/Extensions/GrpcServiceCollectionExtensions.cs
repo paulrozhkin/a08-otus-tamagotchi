@@ -1,17 +1,17 @@
 using System;
 using DishesApi;
 using Infrastructure.Core.Grpc;
-using MenuApi;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OrderQueue.API.Protos;
+using OrdersApi;
 using ResourcesApi;
 using RestaurantsApi;
 using TablesApi;
 using UsersApi;
 using Web.HttpAggregator.Config;
 using Web.HttpAggregator.Services;
-using static Orders.API.Orders;
+using Menu = MenuApi.Menu;
 
 namespace Web.HttpAggregator.Infrastructure.Extensions
 {
@@ -41,7 +41,7 @@ namespace Web.HttpAggregator.Infrastructure.Extensions
                 options.Address = new Uri(basketApi);
             }).AddInterceptor<GrpcExceptionInterceptor>();
 
-            services.AddGrpcClient<OrdersClient>((serviceProvider, options) =>
+            services.AddGrpcClient<Orders.OrdersClient>((serviceProvider, options) =>
             {
                 var ordersApi = serviceProvider.GetRequiredService<IOptions<UrlsOptions>>().Value.OrdersGrpc;
                 options.Address = new Uri(ordersApi);

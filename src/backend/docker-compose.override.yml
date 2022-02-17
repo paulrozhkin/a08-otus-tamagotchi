@@ -70,6 +70,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "Tamagotchi_RabbitMq__Host=amqp://guest:guest@rabbitmq:5672"
+      - "Tamagotchi_ConnectionStrings__OrdersDb=Server=postgres;Port=5432;Database=tamagotchi_orders;User Id=postgres;Password=sql"
+      - "Tamagotchi_ConnectionStrings__HangfireConnection=Server=postgres;Port=5432;Database=tamagotchi_hangfire;User Id=postgres;Password=sql"    
+      - "Tamagotchi_Orders__MenuGrpc=http://menu.api"
     ports:
       - "5011:80"         
 

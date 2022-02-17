@@ -23,17 +23,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18a7b4a2-361d-41d6-ad94-feb105e57123" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../backend/docker-compose.override.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../backend/docker-compose.override.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../backend/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../backend/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../orders-app/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/../orders-app/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
@@ -46,8 +48,13 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="1zDSq5MFb7SQ6yLsyng0Lx8I9yQ" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -56,13 +63,21 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../orders-app" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../restaurant-client" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Data\Projects\BigProjects\Tamagotchi\tamagotchi-otus\src\web\restaurant-service" />
+      <recent name="C:\Data\Projects\BigProjects\Tamagotchi\tamagotchi-otus\src\web\restaurant-service\src" />
+      <recent name="C:\Data\Projects\BigProjects\Tamagotchi\tamagotchi-otus\src\web\restaurant-service\src\components" />
+      <recent name="C:\Data\Projects\BigProjects\Tamagotchi\tamagotchi-otus\src\web\restaurant-service\src\services" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="start" type="js.build_tools.npm" nameIsGenerated="true">
@@ -88,6 +103,7 @@
       <updated>1633681352946</updated>
       <workItem from="1633681354738" duration="2242000" />
       <workItem from="1636829626151" duration="1261000" />
+      <workItem from="1645107511532" duration="10659000" />
     </task>
     <servers />
   </component>
@@ -95,6 +111,14 @@
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
-    <option name="oldMeFiltersMigrated" value="true" />
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

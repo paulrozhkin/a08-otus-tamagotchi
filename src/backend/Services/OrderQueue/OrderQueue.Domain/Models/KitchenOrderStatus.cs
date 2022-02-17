@@ -2,11 +2,13 @@
 {
     public enum KitchenOrderStatus
     {
-        //Готовится
+        // Не взят
+        Wait,
+        // Готовится
         Cooking,
-        //Готово к подаче
+        // Готово к подаче
         ReadyToServe,
-        //Подано
+        // Подано
         Served
     }
 }

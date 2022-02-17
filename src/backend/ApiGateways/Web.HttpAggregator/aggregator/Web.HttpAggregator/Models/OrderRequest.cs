@@ -7,7 +7,7 @@ namespace Web.HttpAggregator.Models
     {
         public Guid RestaurantId { get; set; }
 
-        public List<OrderPosition> Menu { get; set; }
+        public List<OrderPositionRequest> Menu { get; set; }
 
         public int NumberOfPersons { get; set; }
 
