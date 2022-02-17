@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Infrastructure.Core.Config;
 using Infrastructure.Core.Extensions;
 using Infrastructure.Core.Grpc;
@@ -47,10 +50,21 @@ namespace Orders.API
 
             services.AddScoped<IOrderService, OrderService>();
             services.AddDataAccess<OrdersDataContext>(_configuration.GetConnectionString("OrdersDb"));
+            services.AddSingleton<OrdersStatusUpdater>();
+
+            // Add Hangfire services. Database manual create: CREATE DATABASE tamagotchi_hangfire;
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UsePostgreSqlStorage(_configuration.GetConnectionString("HangfireConnection")));
+
+            // Add the processing server as IHostedService
+            services.AddHangfireServer();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, IBackgroundJobClient backgroundJobs, OrdersStatusUpdater ordersStatusUpdater)
         {
             logger.LogInformation(ConfigurationSerializer.Serialize(_configuration).ToString());
 
@@ -59,18 +73,16 @@ namespace Orders.API
                 app.UseDeveloperExceptionPage();
             }
 
+            RecurringJob.AddOrUpdate(
+                nameof(OrdersStatusUpdater.JobId),
+                () => ordersStatusUpdater.UpdateStatusForOrders(),
+                Cron.Minutely);
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<OrdersService>();
-
-                endpoints.MapGet("/",
-                    async context =>
-                    {
-                        await context.Response.WriteAsync(
-                            "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
-                    });
             });
         }
     }

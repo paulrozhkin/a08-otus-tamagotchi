@@ -6,7 +6,6 @@ using Domain.Core.Exceptions;
 using Grpc.Core;
 using Infrastructure.Core.Localization;
 using Infrastructure.Core.Messages.OrderQueueMessages;
-using MassTransit;
 using Microsoft.Extensions.Logging;
 using Orders.Domain.Services;
 using OrdersApi;
@@ -15,18 +14,14 @@ namespace Orders.API.Services
 {
     public class OrdersService : OrdersApi.Orders.OrdersBase
     {
-        private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly ILogger<OrdersService> _logger;
         private readonly IMapper _mapper;
         private readonly IOrderService _orderService;
 
-        public OrdersService(
-            ISendEndpointProvider sendEndpointProvider,
-            ILogger<OrdersService> logger,
+        public OrdersService(ILogger<OrdersService> logger,
             IMapper mapper,
             IOrderService orderService)
         {
-            _sendEndpointProvider = sendEndpointProvider;
             _logger = logger;
             _mapper = mapper;
             _orderService = orderService;
@@ -64,10 +59,7 @@ namespace Orders.API.Services
                 {
                     Order = _mapper.Map<Order>(restaurant)
                 };
-
-                //var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:new-kitchen-order"));
-                //await endpoint.Send(_mapper.Map<NewKitchenOrderMessage>(request));
-
+                
                 return response;
             }
             catch (EntityAlreadyExistsException)

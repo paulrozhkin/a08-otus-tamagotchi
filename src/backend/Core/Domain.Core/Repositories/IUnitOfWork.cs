@@ -1,8 +1,9 @@
-﻿using Domain.Core.Models;
+﻿using System;
+using Domain.Core.Models;
 
 namespace Domain.Core.Repositories
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         IRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity;
 

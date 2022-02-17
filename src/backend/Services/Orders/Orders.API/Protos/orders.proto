@@ -34,6 +34,7 @@ enum OrderStatus {
     ORDER_STATUS_CREATED = 0;
 	ORDER_STATUS_SERVICE = 1;
     ORDER_STATUS_COMPLETED = 2;
+	ORDER_STATUS_SKIPPED = 3;
 }
 
 message Menu {

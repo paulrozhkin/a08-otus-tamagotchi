@@ -124,6 +124,9 @@ namespace Web.HttpAggregator.Services
                 case OrdersApi.OrderStatus.Completed:
                     orderResponse.OrderStatus = OrderStatus.Completed;
                     break;
+                case OrdersApi.OrderStatus.Skipped:
+                    orderResponse.OrderStatus = OrderStatus.Skipped;
+                    break;
             }
         }
     }

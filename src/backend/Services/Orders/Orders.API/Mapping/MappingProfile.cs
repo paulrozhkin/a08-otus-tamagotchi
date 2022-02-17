@@ -46,9 +46,8 @@ namespace Orders.API.Mapping
                 .ForMember(dest => dest.UpdatedDate, opt => opt.Ignore())
                 .ForMember(dest => dest.AmountOfRubles, opt => opt.Ignore());
 
-
-            CreateMap<OrdersApi.BookRestauranRequest, NewKitchenOrderMessage>()
-                .ForMember(dst => dst.OrderId, opt => opt.Ignore());
+            CreateMap<Order, NewKitchenOrderMessage>()
+                .ForMember(dst => dst.OrderId, opt => opt.MapFrom(src => src.Id));
         }
     }
 }
