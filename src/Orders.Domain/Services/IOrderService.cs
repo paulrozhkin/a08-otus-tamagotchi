@@ -8,5 +8,7 @@ namespace Orders.Domain.Services
         public Task<PagedList<Order>> GetOrdersAsync(int pageNumber, int pageSize, Guid clientId);
 
         public Task<Order> AddOrderAsync(Order order);
+
+        public Task<Order> GetOrderByIdAsync(Guid id);
     }
 }

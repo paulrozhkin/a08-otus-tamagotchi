@@ -5,6 +5,8 @@ import Home from '../pages/Home';
 import Kitchen from '../pages/Kitchen';
 import Hall from '../pages/Hall';
 import SignIn from "../pages/SignIn";
+import PrivateRoute from "./PrivateRoute";
+import PublicRoute from "./PublicRoute";
 
 const NavBar = () => {
     return (
@@ -16,7 +18,6 @@ const NavBar = () => {
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Link as={Link} to="/kitchen">Кухня</Nav.Link>
-                            <Nav.Link as={Link} to="/hall">Зал</Nav.Link>
                         </Nav>
                         <Nav>
                             <Nav.Link as={Link} to="/signin">Войти</Nav.Link>
@@ -25,10 +26,9 @@ const NavBar = () => {
                 </Container>
             </Navbar>
             <Switch>
-                <Route exact path='/' component={Home} />
-                <Route exact path='/kitchen' component={Kitchen} />
-                <Route exact path='/hall' component={Hall} />
-                <Route exact path='/signin' component={SignIn} />
+                <PrivateRoute exact path='/' component={Home}/>
+                <PrivateRoute exact path='/kitchen' component={Kitchen}/>
+                <PublicRoute exact path='/signin' component={SignIn}/>
             </Switch>
         </>
     );

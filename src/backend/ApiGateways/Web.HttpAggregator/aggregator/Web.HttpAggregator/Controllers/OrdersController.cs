@@ -38,7 +38,8 @@ namespace Web.HttpAggregator.Controllers
             [FromQuery] QueryStringParameters parameters)
         {
             var userId = HttpContext.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var orders = await _ordersService.GetOrdersAsync(parameters.PageNumber, parameters.PageSize, Guid.Parse(userId));
+            var orders =
+                await _ordersService.GetOrdersAsync(parameters.PageNumber, parameters.PageSize, Guid.Parse(userId));
             return Ok(orders);
         }
 
@@ -48,21 +49,28 @@ namespace Web.HttpAggregator.Controllers
         /// <param name="orderRequest"></param>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(OrderResponse))]
-
         public async Task<ActionResult> OrderAsync([FromBody] OrderRequest orderRequest)
         {
             try
             {
                 var userId = HttpContext.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
                 var createdOrder = await _ordersService.BookRestaurantAsync(orderRequest, Guid.Parse(userId));
-                return CreatedAtAction("Order", new { id = createdOrder.Id }, createdOrder);
+                return CreatedAtAction("Order", new {id = createdOrder.Id}, createdOrder);
             }
             catch (EntityAlreadyExistsException e)
             {
                 _logger.LogError(e.ToString());
-                return Problem(statusCode: (int)HttpStatusCode.Conflict, detail: e.Message,
+                return Problem(statusCode: (int) HttpStatusCode.Conflict, detail: e.Message,
                     title: Errors.Entities_Entity_already_exits);
             }
+        }
+
+        [HttpPost("{orderId:Guid}/status")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NextStatusResponse))]
+        public async Task<ActionResult> NextStatusAsync(Guid orderId)
+        {
+            var newStatus = await _ordersService.GoToNextStatusAsync(orderId);
+            return Ok(newStatus);
         }
     }
 }

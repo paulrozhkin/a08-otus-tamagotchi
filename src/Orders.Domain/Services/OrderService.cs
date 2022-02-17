@@ -12,7 +12,7 @@ namespace Orders.Domain.Services
     {
         private readonly ILogger<OrderService> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IRepository<Order> _restaurantsRepository;
+        private readonly IRepository<Order> _ordersRepository;
         private readonly IMenuAmountService _menuAmountService;
 
         public OrderService(ILogger<OrderService> logger, IUnitOfWork unitOfWork,
@@ -20,15 +20,15 @@ namespace Orders.Domain.Services
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
-            _restaurantsRepository = _unitOfWork.Repository<Order>();
+            _ordersRepository = _unitOfWork.Repository<Order>();
             _menuAmountService = menuAmountService;
         }
 
         public async Task<PagedList<Order>> GetOrdersAsync(int pageNumber, int pageSize, Guid clientId)
         {
             var paginationSpecification = new PagedOrderWithClientFilterSpecification(clientId, pageNumber, pageSize);
-            var orders = (await _restaurantsRepository.FindAsync(paginationSpecification)).ToList();
-            var totalCount = await _restaurantsRepository.CountAsync(x => x.ClientId == clientId);
+            var orders = (await _ordersRepository.FindAsync(paginationSpecification)).ToList();
+            var totalCount = await _ordersRepository.CountAsync(x => x.ClientId == clientId);
 
             return new PagedList<Order>(orders, totalCount, pageNumber, pageSize);
         }
@@ -38,8 +38,21 @@ namespace Orders.Domain.Services
             var amount = await _menuAmountService.CalculateAmountForMenuPositions(order.Menu);
             order.AmountOfRubles = amount;
 
-            await _restaurantsRepository.AddAsync(order);
+            await _ordersRepository.AddAsync(order);
             _unitOfWork.Complete();
+
+            return order;
+        }
+
+        public async Task<Order> GetOrderByIdAsync(Guid id)
+        {
+            var spec = new OrderWithMenuSpecification(id);
+            var order = (await _ordersRepository.FindAsync(spec)).FirstOrDefault();
+
+            if (order == null)
+            {
+                throw new EntityNotFoundException(nameof(Order));
+            }
 
             return order;
         }

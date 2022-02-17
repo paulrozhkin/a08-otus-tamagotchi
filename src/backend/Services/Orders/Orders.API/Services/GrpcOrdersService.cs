@@ -69,5 +69,23 @@ namespace Orders.API.Services
         }
 
 
+        public override async Task<GetOrderResponse> GetOrder(GetOrderRequest request, ServerCallContext context)
+        {
+            try
+            {
+                var order = await _orderService.GetOrderByIdAsync(Guid.Parse(request.Id));
+                var response = new GetOrderResponse()
+                {
+                    Order = _mapper.Map<Order>(order)
+                };
+
+                return response;
+            }
+            catch (EntityNotFoundException)
+            {
+                _logger.LogError($"{Errors.Entities_Entity_not_found}, Order {request.Id}");
+                throw new RpcException(new Status(StatusCode.NotFound, Errors.Entities_Entity_not_found));
+            }
+        }
     }
 }

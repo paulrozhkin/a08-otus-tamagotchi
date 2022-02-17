@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.Core.Models;
 using Microsoft.AspNetCore.Authorization;
+using Web.HttpAggregator.Models;
 using Web.HttpAggregator.Models.OrderQueue;
 using Web.HttpAggregator.Services;
 
@@ -11,7 +12,7 @@ namespace Web.HttpAggregator.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Authorize(Roles = Roles.Administrator)]
+    //[Authorize(Roles = Roles.Administrator)]
     [Authorize(Roles = Roles.Stuff)]
     public class OrderQueueController
         : ControllerBase
@@ -26,7 +27,7 @@ namespace Web.HttpAggregator.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<KitchenOrderResponse>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<OrderResponse>>> GetAllAsync()
         {
             var response = await _orderQueueService.GetKitchenOrdersAsync();
             return Ok(response);
