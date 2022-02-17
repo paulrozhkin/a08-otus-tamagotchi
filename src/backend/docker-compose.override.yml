@@ -127,8 +127,8 @@ services:
     container_name: restaurant.ui
     ports:
       - "5006:80"
-  orders.ui:
-    container_name: orders.ui
+  client.ui:
+    container_name: client.ui
     ports:
       - "5007:80"
 

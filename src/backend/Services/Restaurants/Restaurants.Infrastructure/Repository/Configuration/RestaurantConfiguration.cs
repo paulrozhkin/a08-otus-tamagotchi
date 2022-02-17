@@ -9,6 +9,7 @@ namespace Restaurants.Infrastructure.Repository.Configuration
         protected override void ConfigureOtherProperties(EntityTypeBuilder<Restaurant> builder)
         {
             builder.Ignore(x => x.Address);
+            builder.Property(x => x.Title).IsRequired();
         }
     }
 }

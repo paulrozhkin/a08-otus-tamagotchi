@@ -24,6 +24,7 @@ message Restaurant {
 	google.protobuf.Timestamp updated_date = 9;
 	google.protobuf.Timestamp created_date = 10;
 	repeated string photos = 11;
+	string title = 12;
 }
 
 message GetRestaurantsRequest {

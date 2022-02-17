@@ -53,6 +53,10 @@ namespace Restaurants.Infrastructure.Migrations
                     b.Property<List<Guid>>("Photos")
                         .HasColumnType("uuid[]");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTimeOffset>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 

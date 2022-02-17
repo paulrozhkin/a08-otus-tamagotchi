@@ -11,7 +11,7 @@ namespace Users.Domain.Services
 
         public Task<User> GetUserByIdAsync(Guid id);
 
-        public Task<User> AddUserAsync(User user, IEnumerable<string> roleNames);
+        public Task<User> AddUserAsync(User user, string password, IEnumerable<string> roleNames);
 
         public Task<User> UpdateUser(User user, IEnumerable<string> roleNames);
 

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Web.HttpAggregator.Models;
@@ -30,11 +32,10 @@ namespace Web.HttpAggregator.Controllers
         [HttpPost]
         public async Task<ActionResult> OrderAsync([FromBody] OrderRequest orderRequest)
         {
-            Console.WriteLine($"You order restaurant with id {orderRequest.RestaurantId}");
-
             try
             {
-                await _ordersService.BookRestaurantAsync(orderRequest.RestaurantId);
+                var userId = HttpContext.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+                //await _ordersService.BookRestaurantAsync(orderRequest.RestaurantId);
                 return Ok();
             }
             catch (Exception)

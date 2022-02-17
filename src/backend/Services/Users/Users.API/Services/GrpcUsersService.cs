@@ -92,10 +92,11 @@ namespace Users.API.Services
         public override async Task<CreateUserResponse> CreateUser(CreateUserRequest request, ServerCallContext context)
         {
             var userModel = _mapper.Map<Domain.Models.User>(request);
+            var password = request.Password;
 
             try
             {
-                var createdUser = await _usersService.AddUserAsync(userModel, request.User.Roles);
+                var createdUser = await _usersService.AddUserAsync(userModel, password, request.User.Roles);
 
                 return new CreateUserResponse()
                 {

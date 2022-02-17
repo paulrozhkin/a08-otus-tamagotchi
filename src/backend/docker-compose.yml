@@ -113,10 +113,10 @@ services:
     depends_on:
       - web.httpaggregator
 
-  orders.ui:
-    image: ${DOCKER_REGISTRY-}ordersui
+  client.ui:
+    image: ${DOCKER_REGISTRY-}clientui
     build:
-      context: ../web/orders-app/
+      context: ../web/restaurant-client/
       dockerfile: Dockerfile
     depends_on:
       - web.httpaggregator

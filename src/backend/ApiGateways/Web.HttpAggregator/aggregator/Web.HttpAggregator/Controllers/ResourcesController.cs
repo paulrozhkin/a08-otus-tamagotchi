@@ -25,6 +25,7 @@ namespace Web.HttpAggregator.Controllers
         private readonly MinioClient _minioClient;
         private readonly ILogger<ResourcesController> _logger;
         private readonly IResourcesMetadataService _resourcesMetadataService;
+        private const int CacheAgeSeconds = 60 * 60 * 24 * 30; // 30 days 
 
         public ResourcesController(MinioClient minioClient,
             ILogger<ResourcesController> logger,
@@ -80,6 +81,8 @@ namespace Web.HttpAggregator.Controllers
                 }
 
                 steamFile.Position = 0;
+
+                Response.Headers["Cache-Control"] = $"public,max-age={CacheAgeSeconds}";
 
                 var fileType = resourcesMetadata.ResourceType;
                 var fileName = resourcesMetadata.ResourceName;
