@@ -46,6 +46,7 @@ const Kitchen = () => {
     return (
         <Container>
             {!isLoaded && <p>Загрузка...</p>}
+            {isLoaded && orders.length === 0 && <p>Активные заказы отсутсвуют</p>}
             <ListGroup>
                 {orders.map(order => (<Order key={order.id} order={order} />))}
             </ListGroup>

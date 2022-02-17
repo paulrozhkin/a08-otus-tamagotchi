@@ -6,19 +6,22 @@ package kitchen_orders;
 
 service KitchenOrders {
 	rpc GetKitchenOrders (GetKitchenOrdersRequest) returns (GetKitchenOrdersResponse);
+	rpc GetKitchenOrder (GetKitchenOrderRequest) returns (GetKitchenOrderResponse);
+	rpc SetNewOrderState (SetNewOrderStateRequest) returns (SetNewOrderStateResponse);
 }
 
 message KitchenOrder {
 	string id = 1;
 	string order_id = 2;
-	string status = 3;
+	KitchenStatus status = 3;
 	string create_date = 4;
 }
 
 enum KitchenStatus {
 	KITCHEN_STATUS_WAIT = 0;
-    KITCHEN_STATUS_WORK = 1;
-    KITCHEN_STATUS_READY = 2;
+    KITCHEN_STATUS_COOKING = 1;
+    KITCHEN_STATUS_READY_TO_SERVE = 2;
+	KITCHEN_STATUS_SERVED = 3;
 }
 
 message GetKitchenOrdersRequest {
@@ -26,4 +29,21 @@ message GetKitchenOrdersRequest {
 
 message GetKitchenOrdersResponse {
 	repeated KitchenOrder kitchen_orders = 1;
+}
+
+message GetKitchenOrderRequest {
+	string id = 1;
+}
+
+message GetKitchenOrderResponse {
+	KitchenOrder kitchen_order = 1;
+}
+
+message SetNewOrderStateRequest {
+	string id = 1;
+	KitchenStatus status = 2;
+}
+
+message SetNewOrderStateResponse {
+	KitchenOrder kitchen_order = 1;
 }

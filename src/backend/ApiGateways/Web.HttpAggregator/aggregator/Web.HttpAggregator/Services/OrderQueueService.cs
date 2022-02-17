@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OrderQueue.API.Protos;
 using Web.HttpAggregator.Models;
 using Web.HttpAggregator.Models.OrderQueue;
 using static OrderQueue.API.Protos.KitchenOrders;
@@ -33,7 +34,7 @@ namespace Web.HttpAggregator.Services
 
             var menus = new Dictionary<string, MenuItemResponse>();
             var restaurants = new Dictionary<string, RestaurantResponse>();
-            var statuses = new Dictionary<string, string>();
+            var statuses = new Dictionary<string, KitchenStatus>();
 
             foreach (var ordersResponseKitchenOrder in ordersResponse.KitchenOrders)
             {

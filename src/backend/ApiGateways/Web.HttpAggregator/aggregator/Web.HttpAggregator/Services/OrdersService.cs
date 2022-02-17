@@ -7,6 +7,9 @@ using AutoMapper;
 using Domain.Core.Exceptions;
 using Grpc.Core;
 using Infrastructure.Core.Localization;
+using Infrastructure.Core.Messages.OrderQueueMessages;
+using MassTransit;
+using OrderQueue.API.Protos;
 using OrdersApi;
 using Web.HttpAggregator.Models;
 using OrderStatus = Web.HttpAggregator.Models.OrderStatus;
@@ -20,17 +23,23 @@ namespace Web.HttpAggregator.Services
         private readonly IMapper _mapper;
         private readonly IMenuService _menuService;
         private readonly IRestaurantsService _restaurantsService;
+        private readonly KitchenOrders.KitchenOrdersClient _kitchenOrdersClient;
+        private readonly ISendEndpointProvider _sendEndpointProvider;
 
         public OrdersService(Orders.OrdersClient ordersClient,
             ILogger<OrdersService> logger, IMapper mapper,
             IMenuService menuService,
-            IRestaurantsService restaurantsService)
+            IRestaurantsService restaurantsService,
+            KitchenOrders.KitchenOrdersClient kitchenOrdersClient,
+            ISendEndpointProvider sendEndpointProvider)
         {
             _ordersClient = ordersClient;
             _logger = logger;
             _mapper = mapper;
             _menuService = menuService;
             _restaurantsService = restaurantsService;
+            _kitchenOrdersClient = kitchenOrdersClient;
+            _sendEndpointProvider = sendEndpointProvider;
         }
 
         public async Task<PaginationResponse<OrderResponse>> GetOrdersAsync(int pageNumber, int pageSize, Guid userId)
@@ -47,7 +56,7 @@ namespace Web.HttpAggregator.Services
 
             var menus = new Dictionary<string, MenuItemResponse>();
             var restaurants = new Dictionary<string, RestaurantResponse>();
-            var statuses = new Dictionary<string, string>();
+            var statuses = new Dictionary<string, KitchenStatus>();
 
             foreach (var orderDto in ordersResponse.Orders)
             {
@@ -73,7 +82,7 @@ namespace Web.HttpAggregator.Services
                 var result = _mapper.Map<OrderResponse>(orderResponse.Order);
                 var menus = new Dictionary<string, MenuItemResponse>();
                 var restaurants = new Dictionary<string, RestaurantResponse>();
-                var statuses = new Dictionary<string, string>();
+                var statuses = new Dictionary<string, KitchenStatus>();
 
                 await FillRestaurantResponse(orderResponse.Order, result, menus, restaurants, statuses);
 
@@ -88,7 +97,7 @@ namespace Web.HttpAggregator.Services
         public async Task<OrderResponse> GetOrderByIdAsync(Guid id,
             Dictionary<string, MenuItemResponse> menus,
             IDictionary<string, RestaurantResponse> restaurants,
-            IDictionary<string, string> orderStatuses)
+            IDictionary<string, KitchenStatus> orderStatuses)
         {
             try
             {
@@ -108,9 +117,47 @@ namespace Web.HttpAggregator.Services
         {
             var orderResponse = (await _ordersClient.GetOrderAsync(new GetOrderRequest() {Id = orderId.ToString()}))
                 .Order;
-            var statuses = new Dictionary<string, string>();
+            var statuses = new Dictionary<string, KitchenStatus>();
             var orderStatus = await GetOrderStatusAsync(orderResponse, statuses);
             var nextStatus = GetNextStatus(orderStatus);
+
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:new-status"));
+
+            switch (nextStatus)
+            {
+                case OrderStatus.Work:
+                    await endpoint.Send(new NewKitchenStatusMessage()
+                    {
+                        OrderId = orderId,
+                        NewStatus = KitchenStatus.Cooking.ToString()
+                    });
+
+                    break;
+                case OrderStatus.Ready:
+                    await endpoint.Send(new NewKitchenStatusMessage()
+                    {
+                        OrderId = orderId,
+                        NewStatus = KitchenStatus.ReadyToServe.ToString()
+                    });
+
+                    break;
+                case OrderStatus.Completed:
+                    await _ordersClient.SetNewOrderStateAsync(new OrdersApi.SetNewOrderStateRequest()
+                    {
+                        Id = orderResponse.Id,
+                        Status = OrdersApi.OrderStatus.Completed
+                    });
+
+                    await endpoint.Send(new NewKitchenStatusMessage()
+                    {
+                        OrderId = orderId,
+                        NewStatus = KitchenStatus.Served.ToString()
+                    });
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             return new NextStatusResponse() {OrderStatus = nextStatus};
         }
 
@@ -134,7 +181,7 @@ namespace Web.HttpAggregator.Services
             OrderResponse orderResponse,
             IDictionary<string, MenuItemResponse> menus,
             IDictionary<string, RestaurantResponse> restaurants,
-            IDictionary<string, string> statuses)
+            IDictionary<string, KitchenStatus> statuses)
         {
             orderResponse.Menu = new List<OrderPositionResponse>();
             foreach (var menuItem in orderDto.Menu)
@@ -165,15 +212,37 @@ namespace Web.HttpAggregator.Services
         }
 
         private async Task<OrderStatus> GetOrderStatusAsync(Order orderDto,
-            IDictionary<string, string> statuses)
+            IDictionary<string, KitchenStatus> statuses)
         {
             switch (orderDto.Status)
             {
                 case OrdersApi.OrderStatus.Created:
                     return OrderStatus.Created;
                 case OrdersApi.OrderStatus.Service:
-                    // TODO: invoke service
-                    return OrderStatus.Wait;
+                    if (!statuses.ContainsKey(orderDto.Id))
+                    {
+                        var response = await _kitchenOrdersClient.GetKitchenOrderAsync(new GetKitchenOrderRequest()
+                        {
+                            Id = orderDto.Id
+                        });
+                        statuses.Add(orderDto.Id, response.KitchenOrder.Status);
+                    }
+
+                    var status = statuses[orderDto.Id];
+
+                    switch (status)
+                    {
+                        case KitchenStatus.Wait:
+                            return OrderStatus.Wait;
+                        case KitchenStatus.Cooking:
+                            return OrderStatus.Work;
+                        case KitchenStatus.ReadyToServe:
+                            return OrderStatus.Ready;
+                        case KitchenStatus.Served:
+                            return OrderStatus.Completed;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 case OrdersApi.OrderStatus.Completed:
                     return OrderStatus.Completed;
                 case OrdersApi.OrderStatus.Skipped:

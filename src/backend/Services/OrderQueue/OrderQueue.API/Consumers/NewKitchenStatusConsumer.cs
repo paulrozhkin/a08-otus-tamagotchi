@@ -30,8 +30,6 @@ namespace OrderQueue.API.Consumers
 
         public async Task Consume(ConsumeContext<NewKitchenStatusMessage> context)
         {
-            var newKitchenOrder = _mapper.Map<KitchenOrder>(context.Message);
-
             var orderIdSpecification = new ByOrderIdSpecification(context.Message.OrderId);
             var order = (await _kitchenOrderRepository.FindAsync(orderIdSpecification)).First();
             order.Status = Enum.Parse<KitchenOrderStatus>(context.Message.NewStatus);

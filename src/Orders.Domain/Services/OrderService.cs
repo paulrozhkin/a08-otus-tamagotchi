@@ -56,5 +56,14 @@ namespace Orders.Domain.Services
 
             return order;
         }
+
+        public async Task<Order> SetNewOrderStateAsync(Guid id, OrderStatus newStatus)
+        {
+            var order = await GetOrderByIdAsync(id);
+            order.Status = newStatus;
+            _ordersRepository.Update(order);
+            _unitOfWork.Complete();
+            return order;
+        }
     }
 }

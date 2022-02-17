@@ -10,5 +10,7 @@ namespace Orders.Domain.Services
         public Task<Order> AddOrderAsync(Order order);
 
         public Task<Order> GetOrderByIdAsync(Guid id);
+
+        Task<Order> SetNewOrderStateAsync(Guid id, OrderStatus newStatus);
     }
 }

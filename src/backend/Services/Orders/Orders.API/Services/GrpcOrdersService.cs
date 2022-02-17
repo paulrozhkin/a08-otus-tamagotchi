@@ -87,5 +87,17 @@ namespace Orders.API.Services
                 throw new RpcException(new Status(StatusCode.NotFound, Errors.Entities_Entity_not_found));
             }
         }
+
+        public override async Task<SetNewOrderStateResponse> SetNewOrderState(SetNewOrderStateRequest request, ServerCallContext context)
+        {
+            var order = await _orderService.SetNewOrderStateAsync(Guid.Parse(request.Id), _mapper.Map<Domain.Models.OrderStatus>(request.Status));
+
+            var response = new SetNewOrderStateResponse()
+            {
+                Order = _mapper.Map<Order>(order)
+            };
+
+            return response;
+        }
     }
 }

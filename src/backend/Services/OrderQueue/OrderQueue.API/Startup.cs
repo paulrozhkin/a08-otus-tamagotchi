@@ -47,6 +47,8 @@ namespace OrderQueue.API
                     cfg.Host(_configuration["RabbitMq:Host"]);
                     cfg.ReceiveEndpoint("new-kitchen-order",
                         c => { c.ConfigureConsumer<NewKitchenOrderConsumer>(ctx); });
+                    cfg.ReceiveEndpoint("new-status",
+                        c => { c.ConfigureConsumer<NewKitchenStatusConsumer>(ctx); });
                 });
             });
 

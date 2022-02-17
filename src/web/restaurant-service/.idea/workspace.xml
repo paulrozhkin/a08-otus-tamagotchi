@@ -23,23 +23,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="18a7b4a2-361d-41d6-ad94-feb105e57123" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/reducers/account.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reducers/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Orders.Domain/Services/IOrderService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Orders.Domain/Services/IOrderService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Orders.Domain/Services/OrderService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Orders.Domain/Services/OrderService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../backend/ApiGateways/Web.HttpAggregator/aggregator/Web.HttpAggregator/Controllers/OrdersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../backend/ApiGateways/Web.HttpAggregator/aggregator/Web.HttpAggregator/Controllers/OrdersController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../backend/ApiGateways/Web.HttpAggregator/aggregator/Web.HttpAggregator/Services/IOrdersService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../backend/ApiGateways/Web.HttpAggregator/aggregator/Web.HttpAggregator/Services/IOrdersService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../backend/ApiGateways/Web.HttpAggregator/aggregator/Web.HttpAggregator/Services/OrdersService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../backend/ApiGateways/Web.HttpAggregator/aggregator/Web.HttpAggregator/Services/OrdersService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../backend/Services/Orders/Orders.API/Protos/orders.proto" beforeDir="false" afterPath="$PROJECT_DIR$/../../backend/Services/Orders/Orders.API/Protos/orders.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../backend/Services/Orders/Orders.API/Services/GrpcOrdersService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../backend/Services/Orders/Orders.API/Services/GrpcOrdersService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../restaurant-client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../restaurant-client/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/NavBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/NavBar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Kitchen.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Kitchen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/SignIn.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SignIn.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,7 +103,7 @@
       <updated>1633681352946</updated>
       <workItem from="1633681354738" duration="2242000" />
       <workItem from="1636829626151" duration="1261000" />
-      <workItem from="1645107511532" duration="9423000" />
+      <workItem from="1645107511532" duration="10659000" />
     </task>
     <servers />
   </component>

@@ -8,7 +8,7 @@ service Orders {
   rpc BookRestaurant (BookRestauranRequest) returns (BookRestauranResponse);
   rpc GetOrders (GetOrdersRequest) returns (GetOrdersResponse);
   rpc GetOrder (GetOrderRequest) returns (GetOrderResponse);
-
+  rpc SetNewOrderState (SetNewOrderStateRequest) returns (SetNewOrderStateResponse);
 }
 
 message GetOrdersRequest {
@@ -37,6 +37,15 @@ message GetOrderRequest {
 }
 
 message GetOrderResponse {
+	Order order = 1;
+}
+
+message SetNewOrderStateRequest {
+	string id = 1;
+	OrderStatus status = 2;
+}
+
+message SetNewOrderStateResponse {
 	Order order = 1;
 }
 

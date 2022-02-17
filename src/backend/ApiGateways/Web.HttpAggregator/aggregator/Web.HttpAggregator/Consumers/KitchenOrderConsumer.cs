@@ -3,6 +3,7 @@ using MassTransit;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using Infrastructure.Core.Messages.OrderQueueMessages;
+using OrderQueue.API.Protos;
 using Web.HttpAggregator.Hubs;
 using Web.HttpAggregator.Models;
 using Web.HttpAggregator.Services;
@@ -24,7 +25,7 @@ namespace Web.HttpAggregator.Consumers
         {
             var menus = new Dictionary<string, MenuItemResponse>();
             var restaurants = new Dictionary<string, RestaurantResponse>();
-            var statuses = new Dictionary<string, string>();
+            var statuses = new Dictionary<string, KitchenStatus>();
 
             var order = await _ordersService.GetOrderByIdAsync(context.Message.OrderId, menus, restaurants, statuses);
             await _kitchenOrderHubContext.Clients.All.SendAsync("messageReceived", order);
