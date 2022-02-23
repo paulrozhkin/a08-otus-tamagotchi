@@ -4,20 +4,25 @@ using System.Threading.Tasks;
 using Geocoding.API.Config;
 using Geocoding.API.Models;
 using Geocoding.Google;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Geocoding.API.Services.Geocoding
 {
     public class GoogleGeocoding : IGeocoding
     {
+        private readonly ILogger<GoogleGeocoding> _logger;
         private readonly IGeocoder _geocoder;
 
-        public GoogleGeocoding(IOptions<GeocodingOptions> googleMapConfig)
+        public GoogleGeocoding(IOptions<GeocodingOptions> googleMapConfig,
+            ILogger<GoogleGeocoding> logger)
         {
             if (string.IsNullOrWhiteSpace(googleMapConfig.Value.GoogleApiKey))
             {
                 throw new ArgumentNullException(nameof(googleMapConfig.Value.GoogleApiKey));
             }
+
+            _logger = logger;
 
             _geocoder = new GoogleGeocoder()
             {
@@ -45,10 +50,18 @@ namespace Geocoding.API.Services.Geocoding
 
         public async Task<string> ReverseGeocodeAsync(double latitude, double longitude)
         {
-            var addresses = await _geocoder.ReverseGeocodeAsync(latitude, longitude);
-            var firstAddress = addresses.FirstOrDefault();
+            try
+            {
+                var addresses = await _geocoder.ReverseGeocodeAsync(latitude, longitude);
+                var firstAddress = addresses.FirstOrDefault();
 
-            return firstAddress?.FormattedAddress;
+                return firstAddress?.FormattedAddress;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Google error: {e}");
+                throw;
+            }
         }
     }
 }

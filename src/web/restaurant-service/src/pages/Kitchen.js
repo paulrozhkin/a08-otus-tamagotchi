@@ -41,7 +41,7 @@ const Kitchen = () => {
                 })
                 .catch(e => console.log('Connection failed: ', e));
         }
-    });
+    }, [connection]);
 
     return (
         <Container>

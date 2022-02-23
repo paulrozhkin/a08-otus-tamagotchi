@@ -98,7 +98,7 @@ services:
     container_name: geocoding.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development  
-      - "Tamagotchi_Geocoding__UseGeocoding=false"
+      - "Tamagotchi_Geocoding__UseGeocoding=true"
       - "Tamagotchi_Geocoding__GoogleApiKey=${Tamagotchi_Geocoding__GoogleApiKey}"
       - "Tamagotchi_Geocoding__Language=ru"
       - "Tamagotchi_Geocoding__RedisCache=redis"
